@@ -1,6 +1,9 @@
-package com.example.model;
+package com.CMS.Model;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -8,8 +11,12 @@ import javax.persistence.Table;
 @Table(name="User")
 public class User {
     @Id
+    @GeneratedValue(generator = "increment")
+    @GenericGenerator(name = "increment", strategy = "increment")
     private Long id;
     private String fullName;
+    private String salt;
+    private String password;
     private String userType;
 
     public void setId(Long id) {
