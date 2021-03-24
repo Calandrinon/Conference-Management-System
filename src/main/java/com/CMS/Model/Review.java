@@ -65,4 +65,12 @@ public class Review {
     public void setNotes(String notes){
         this.notes = notes;
     }
+
+    public Review(Long id, Proposal proposal, User user, Long score, String notes){
+        this.id = id;
+        this.proposal = proposal;
+        this.user = user;
+        this.score = score;
+        this.notes = notes;
+    }
 }
