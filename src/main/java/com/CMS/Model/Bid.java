@@ -19,26 +19,28 @@ public class Bid {
         this.id = id;
     }
 
-    @Column(name = "proposalID")
-    private Long proposalId;
+    @ManyToOne
+    @JoinColumn(name = "ProposalID")
+    private Proposal proposal;
 
-    public Long getProposalId() {
-        return proposalId;
+    public Proposal getProposal() {
+        return proposal;
     }
 
-    public void setProposalId(Long proposalId) {
-        this.proposalId = proposalId;
+    public void setProposal(Proposal proposal) {
+        this.proposal = proposal;
     }
 
-    @Column(name = "userID")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "UserID")
+    private User user;
 
-    public Long getUserID() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserID(Long userID) {
-        this.userId = userID;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Column(name = "bidStatus")
@@ -49,6 +51,14 @@ public class Bid {
     }
 
     public void setBidStatus(String bidStatus) {
+        this.bidStatus = bidStatus;
+    }
+
+    public Bid(Long ID, Proposal proposal, User user, String bidStatus)
+    {
+        id = ID;
+        this.proposal = proposal;
+        this.user = user;
         this.bidStatus = bidStatus;
     }
 }
