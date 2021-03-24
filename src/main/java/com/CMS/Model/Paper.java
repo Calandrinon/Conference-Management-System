@@ -1,58 +1,86 @@
 package com.CMS.Model;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Paper")
 public class Paper {
-    private String name;
-    private String subject;
-    private String author;
+    @Id
+    @Column(name = "ID")
+    private Long ID;
+
+    public Long getID() {
+        return ID;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    @Column(name = "Title")
     private String title;
-    private String filename;
-
-    public Paper(String name, String subject, String author, String title, String filename) {
-        this.name = name;
-        this.subject = subject;
-        this.author = author;
-        this.title = title;
-        this.filename = filename;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
 
     public String getTitle() {
         return title;
     }
 
-    public String getFilename() {
-        return filename;
+    public void setTitle(String name) {
+        this.title = title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    @Column(name = "Subject")
+    private String subject;
+
+    public String getSubject() {
+        return subject;
     }
 
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
-    public void setAuthor(String author) {
+    @ManyToOne
+    @JoinColumn(name = "AuthorID")
+    private User author;
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
         this.author = author;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @Column(name = "FileName")
+    private String filename;
+
+    public String getFilename() {
+        return filename;
     }
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "SectionID")
+    private Section section;
+
+    public Section getSection() {
+        return section;
+    }
+
+    public void setSection(Section section) {
+        this.section = section;
+    }
+
+    public Paper(Long id, String title, String subject, User author, String filename, Section section) {
+        this.ID = id;
+        this.title = title;
+        this.subject = subject;
+        this.author = author;
+        this.filename = filename;
+        this.section = section;
     }
 }

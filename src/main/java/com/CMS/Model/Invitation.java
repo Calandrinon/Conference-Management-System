@@ -30,7 +30,7 @@ class Invitation {
     }
 
     @ManyToOne
-    @JoinColumn(name = "senderID")
+    @JoinColumn(name = "SenderID")
     private User sender;
 
     public User getSender() {

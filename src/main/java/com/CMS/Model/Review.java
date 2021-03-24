@@ -20,7 +20,7 @@ public class Review {
     }
 
     @ManyToOne
-    @JoinColumn(name = "proposalID")
+    @JoinColumn(name = "ProposalID")
     private Proposal proposal;
 
     public Proposal getProposal(){
@@ -32,7 +32,7 @@ public class Review {
     }
 
     @ManyToOne
-    @JoinColumn(name = "userID")
+    @JoinColumn(name = "UserID")
     private User user;
 
     public User getUser(){
