@@ -18,36 +18,32 @@ public class Proposal {
         this.id = id;
     }
 
-    @Column(name = "Keywords")
-    private String keywords;
+    @ManyToOne
+    @JoinColumn(name = "PaperID")
+    private Paper paper;
 
-    public String getKeywords() {
-        return keywords;
+    public Paper getPaper() {
+        return paper;
     }
 
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
+    public void setPaper(Paper paper) {
+        this.paper = paper;
     }
 
-    @Column(name = "Topics")
-    private String topics;
+    @Column(name = "Status")
+    private String status;
 
-    public String getTopics() {
-        return topics;
+    public String getStatus() {
+        return status;
     }
 
-    public void setTopics(String topics) {
-        this.topics = topics;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    @Column(name = "Authors")
-    private String authors;
-
-    public String getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(String authors) {
-        this.authors = authors;
+    public Proposal(Long id, Paper paper, String status) {
+        this.id = id;
+        this.paper = paper;
+        this.status = status;
     }
 }

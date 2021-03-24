@@ -40,4 +40,10 @@ public class Conference {
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
+
+    public Conference(Long id, String title, Date deadline){
+        this.id = id;
+        this.title = title;
+        this.deadline = deadline;
+    }
 }

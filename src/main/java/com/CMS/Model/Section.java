@@ -29,14 +29,21 @@ public class Section {
         this.name = name;
     }
 
-    @Column(name = "Supervisor")
-    private String supervisor;
+    @ManyToOne
+    @JoinColumn(name = "SupervisorID")
+    private User supervisor;
 
-    public String getSupervisor() {
+    public User getSupervisor() {
         return supervisor;
     }
 
-    public void setSupervisor(String supervisor) {
+    public void setSupervisor(User supervisor) {
+        this.supervisor = supervisor;
+    }
+
+    public Section(Long id, String name, User supervisor) {
+        this.id = id;
+        this.name = name;
         this.supervisor = supervisor;
     }
 }

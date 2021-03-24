@@ -40,6 +40,28 @@ public class Paper {
         this.subject = subject;
     }
 
+    @Column(name = "Keywords")
+    private String keywords;
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    @Column(name = "Topics")
+    private String topics;
+
+    public String getTopics() {
+        return topics;
+    }
+
+    public void setTopics(String topics) {
+        this.topics = topics;
+    }
+
     @ManyToOne
     @JoinColumn(name = "AuthorID")
     private User author;
@@ -75,10 +97,12 @@ public class Paper {
         this.section = section;
     }
 
-    public Paper(Long id, String title, String subject, User author, String filename, Section section) {
+    public Paper(Long id, String title, String subject, String keywords, String topics, User author, String filename, Section section) {
         this.ID = id;
         this.title = title;
         this.subject = subject;
+        this.keywords = keywords;
+        this.topics = topics;
         this.author = author;
         this.filename = filename;
         this.section = section;

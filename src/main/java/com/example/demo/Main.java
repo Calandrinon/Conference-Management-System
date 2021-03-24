@@ -10,7 +10,7 @@ public class Main {
         System.out.println("Hello, Hibernate!");
         EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("org.hibernate.postgres.jpa");
 
-        User user = new User();
+        User user = new User(1L, "", "", "", "");
         user.setFullName("John Doe");
         user.setUserType("Listener");
         user.setSalt("f1nd1ngn3m0");

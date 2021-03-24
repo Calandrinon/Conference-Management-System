@@ -3,6 +3,7 @@ package com.CMS.Model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.security.PublicKey;
 
 
 @Entity
@@ -61,6 +62,14 @@ public class User {
     }
 
     public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public User(Long id, String fullName, String userType, String salt, String password){
+        this.id = id;
+        this.fullName = fullName;
+        this.userType = userType;
+        this.salt = salt;
         this.password = password;
     }
 }
