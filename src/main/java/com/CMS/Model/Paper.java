@@ -1,3 +1,5 @@
+package com.CMS.Model;
+
 public class Paper {
     private String name;
     private String subject;
