@@ -9,9 +9,8 @@ import javax.persistence.*;
 @Table(name="_User_")
 public class User {
     @Id
-    @Column(name = "id")
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     public void setId(Long id) {
@@ -22,7 +21,7 @@ public class User {
         return id;
     }
 
-    @Column(name = "fullName")
+    @Column(name = "FullName")
     private String fullName;
 
     public String getFullName() {
@@ -33,7 +32,7 @@ public class User {
         this.fullName = fullName;
     }
 
-    @Column(name = "userType")
+    @Column(name = "UserType")
     private String userType;
     public String getUserType() {
         return userType;
@@ -43,7 +42,7 @@ public class User {
         this.userType = userType;
     }
 
-    @Column(name = "salt")
+    @Column(name = "Salt")
     private String salt;
 
     public String getSalt() {
