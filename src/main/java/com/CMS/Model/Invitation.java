@@ -53,11 +53,23 @@ class Invitation {
         this.text = text;
     }
 
-    public Invitation(Long id, String mail, User sender, String text)
+    @Column(name = "token")
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Invitation(Long id, String mail, User sender, String text, String token)
     {
         this.id = id;
         this.mail = mail;
         this.sender = sender;
         this.text = text;
+        this.token = token;
     }
 }
