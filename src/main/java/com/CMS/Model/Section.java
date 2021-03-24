@@ -41,9 +41,22 @@ public class Section {
         this.supervisor = supervisor;
     }
 
-    public Section(Long id, String name, User supervisor) {
+    @ManyToOne
+    @JoinColumn(name = "ConferenceID")
+    private Conference conference;
+
+    public Conference getConference() {
+        return conference;
+    }
+
+    public void setConference(Conference conference) {
+        this.conference = conference;
+    }
+
+    public Section(Long id, String name, User supervisor, Conference conference) {
         this.id = id;
         this.name = name;
         this.supervisor = supervisor;
+        this.conference = conference;
     }
 }
