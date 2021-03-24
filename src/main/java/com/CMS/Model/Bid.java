@@ -19,15 +19,15 @@ public class Bid {
         this.id = id;
     }
 
-    @Column(name = "paperID")
-    private Long paperId;
+    @Column(name = "proposalID")
+    private Long proposalId;
 
-    public Long getPaperId() {
-        return paperId;
+    public Long getProposalId() {
+        return proposalId;
     }
 
-    public void setPaperId(Long paperId) {
-        this.paperId = paperId;
+    public void setProposalId(Long proposalId) {
+        this.proposalId = proposalId;
     }
 
     @Column(name = "userID")
