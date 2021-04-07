@@ -18,15 +18,15 @@ public class Invitation {
         this.id = id;
     }
 
-    @Column(name = "Mail")
-    private String mail;
+    @Column(name = "ReceiverID")
+    private User receiver;
 
-    public String getMail() {
-        return mail;
+    public User getReceiver() {
+        return receiver;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setReceiver(User receiver) {
+        this.receiver = receiver;
     }
 
     @ManyToOne
@@ -68,9 +68,9 @@ public class Invitation {
 
     }
 
-    public Invitation(String mail, User sender, String text, String token)
+    public Invitation(User receiver, User sender, String text, String token)
     {
-        this.mail = mail;
+        this.receiver = receiver;
         this.sender = sender;
         this.text = text;
         this.token = token;

@@ -44,7 +44,7 @@ public class AdminController {
     }
 
     private void sendInvitationEmail(Invitation invitation){
-        String to = invitation.getMail();
+        String to = invitation.getReceiver().getEmail();
         String from = invitation.getSender().getEmail();
         String host = "localhost";
         Properties properties = System.getProperties();
@@ -62,8 +62,8 @@ public class AdminController {
         }
     }
 
-    public void inviteChair(String toEmail, long senderId, String text, String token){
-        Invitation invitation = new Invitation(toEmail, userRepository.getOne(senderId), text, token);
+    public void inviteChair(long receiverId, long senderId, String text, String token){
+        Invitation invitation = new Invitation(userRepository.getOne(receiverId), userRepository.getOne(senderId), text, token);
         invitationRepository.save(invitation);
         this.sendInvitationEmail(invitation);
     }
