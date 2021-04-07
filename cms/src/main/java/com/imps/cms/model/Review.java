@@ -70,8 +70,7 @@ public class Review {
 
     }
 
-    public Review(Long id, Proposal proposal, User user, Long score, String notes){
-        this.id = id;
+    public Review(Proposal proposal, User user, Long score, String notes){
         this.proposal = proposal;
         this.user = user;
         this.score = score;

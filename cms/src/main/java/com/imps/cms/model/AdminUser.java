@@ -21,8 +21,8 @@ public class AdminUser extends User{
 
     }
 
-    public AdminUser(Long id, String fullName, String userType, String salt, String password, Conference conference) {
-        super(id, fullName, userType, salt, password);
+    public AdminUser(String fullName, UserType userType, String salt, String password, String email, Conference conference) {
+        super(fullName, userType, salt, email, password);
         this.conference = conference;
     }
 }

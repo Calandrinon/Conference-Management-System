@@ -68,9 +68,8 @@ public class Invitation {
 
     }
 
-    public Invitation(Long id, String mail, User sender, String text, String token)
+    public Invitation(String mail, User sender, String text, String token)
     {
-        this.id = id;
         this.mail = mail;
         this.sender = sender;
         this.text = text;

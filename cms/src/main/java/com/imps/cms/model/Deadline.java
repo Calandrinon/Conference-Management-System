@@ -43,13 +43,14 @@ public class Deadline {
     }
 
     @Column(name = "DeadlineType")
-    private String deadlineType;
+    @Enumerated(EnumType.STRING)
+    private DeadlineType deadlineType;
 
-    public String getDeadlineType() {
+    public DeadlineType getDeadlineType() {
         return deadlineType;
     }
 
-    public void setDeadlineType(String deadlineType) {
+    public void setDeadlineType(DeadlineType deadlineType) {
         this.deadlineType = deadlineType;
     }
 
@@ -57,8 +58,7 @@ public class Deadline {
 
     }
 
-    public Deadline(Long id, Conference conference, Date date, String deadlineType) {
-        this.id = id;
+    public Deadline(Conference conference, Date date, DeadlineType deadlineType) {
         this.conference = conference;
         this.date = date;
         this.deadlineType = deadlineType;

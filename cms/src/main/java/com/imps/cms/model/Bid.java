@@ -44,13 +44,14 @@ public class Bid {
     }
 
     @Column(name = "bidStatus")
-    private String bidStatus;
+    @Enumerated(EnumType.STRING)
+    private BidStatus bidStatus;
 
-    public String getBidStatus() {
+    public BidStatus getBidStatus() {
         return bidStatus;
     }
 
-    public void setBidStatus(String bidStatus) {
+    public void setBidStatus(BidStatus bidStatus) {
         this.bidStatus = bidStatus;
     }
 
@@ -58,9 +59,8 @@ public class Bid {
 
     }
 
-    public Bid(Long ID, Proposal proposal, User user, String bidStatus)
+    public Bid(Proposal proposal, User user, BidStatus bidStatus)
     {
-        id = ID;
         this.proposal = proposal;
         this.user = user;
         this.bidStatus = bidStatus;

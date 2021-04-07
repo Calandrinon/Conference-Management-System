@@ -57,8 +57,7 @@ public class Section {
 
     }
 
-    public Section(Long id, String name, User supervisor, Conference conference) {
-        this.id = id;
+    public Section(String name, User supervisor, Conference conference) {
         this.name = name;
         this.supervisor = supervisor;
         this.conference = conference;

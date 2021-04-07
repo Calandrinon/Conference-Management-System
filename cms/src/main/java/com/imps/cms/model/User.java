@@ -1,9 +1,6 @@
 package com.imps.cms.model;
 
-import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
-import java.security.PublicKey;
 
 
 @Entity
@@ -33,13 +30,15 @@ public class User {
         this.fullName = fullName;
     }
 
+
     @Column(name = "UserType")
-    private String userType;
-    public String getUserType() {
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
+    public UserType getUserType() {
         return userType;
     }
 
-    public void setUserType(String userType) {
+    public void setUserType(UserType userType) {
         this.userType = userType;
     }
 
@@ -52,6 +51,17 @@ public class User {
 
     public void setSalt(String salt) {
         this.salt = salt;
+    }
+
+    @Column(name = "Email")
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Column(name = "Password")
@@ -69,11 +79,23 @@ public class User {
 
     }
 
-    public User(Long id, String fullName, String userType, String salt, String password){
-        this.id = id;
+    @ManyToOne
+    @JoinColumn(name = "SectionID")
+    private Section section;
+
+    public Section getSection(){return section;}
+
+    public void setSection(Section section){
+        this.section = section;
+    }
+
+    public User(String fullName, UserType userType, String salt, String email, String password){
         this.fullName = fullName;
         this.userType = userType;
         this.salt = salt;
+        this.email = email;
         this.password = password;
     }
+
+
 }

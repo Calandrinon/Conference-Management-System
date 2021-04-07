@@ -45,8 +45,7 @@ public class Proposal {
 
     }
 
-    public Proposal(Long id, Paper paper, String status) {
-        this.id = id;
+    public Proposal(Paper paper, String status) {
         this.paper = paper;
         this.status = status;
     }

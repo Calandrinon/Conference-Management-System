@@ -101,14 +101,12 @@ public class Paper {
 
     }
 
-    public Paper(Long id, String title, String subject, String keywords, String topics, User author, String filename, Section section) {
-        this.ID = id;
+    public Paper(String title, String subject, String keywords, String topics, User author, String filename) {
         this.title = title;
         this.subject = subject;
         this.keywords = keywords;
         this.topics = topics;
         this.author = author;
         this.filename = filename;
-        this.section = section;
     }
 }

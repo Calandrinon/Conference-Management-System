@@ -45,8 +45,7 @@ public class Conference {
 
     }
 
-    public Conference(Long id, String title, Date deadline){
-        this.id = id;
+    public Conference(String title, Date deadline){
         this.title = title;
         this.deadline = deadline;
     }
