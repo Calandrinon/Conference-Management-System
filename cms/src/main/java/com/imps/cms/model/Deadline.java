@@ -63,5 +63,4 @@ public class Deadline {
         this.date = date;
         this.deadlineType = deadlineType;
     }
-
 }

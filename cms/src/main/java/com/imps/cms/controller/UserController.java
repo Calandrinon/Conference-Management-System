@@ -50,10 +50,8 @@ public class UserController {
             return false;
         }
 
-        User user = new User(fullName, userType, salt, email, password);
+        User user = new User(fullName, salt, email, password);
         this.userRepository.save(user);
-
         return true;
     }
-
 }

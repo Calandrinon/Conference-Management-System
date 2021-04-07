@@ -1,10 +1,7 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
-import com.imps.cms.repository.ConferenceRepository;
-import com.imps.cms.repository.DeadlineRepository;
-import com.imps.cms.repository.InvitationRepository;
-import com.imps.cms.repository.UserRepository;
+import com.imps.cms.repository.*;
 import org.springframework.stereotype.Controller;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -17,25 +14,32 @@ import java.util.Properties;
 public class AdminController {
     private final ConferenceRepository conferenceRepository;
     private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
     private final DeadlineRepository deadlineRepository;
     private final InvitationRepository invitationRepository;
 
 
-    public AdminController(ConferenceRepository conferenceRepository, UserRepository userRepository, DeadlineRepository deadlineRepository, InvitationRepository invitationRepository) {
+    public AdminController(ConferenceRepository conferenceRepository, UserRepository userRepository, UserRoleRepository userRoleRepository, DeadlineRepository deadlineRepository, InvitationRepository invitationRepository) {
         this.conferenceRepository = conferenceRepository;
         this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
         this.deadlineRepository = deadlineRepository;
         this.invitationRepository = invitationRepository;
     }
 
-    public void addAdmin(String name, String salt, String email, String password, long conferenceID){
-        User admin = new AdminUser(name, UserType.ADMIN, salt, email, password, conferenceRepository.getOne(conferenceID));
-        this.userRepository.save(admin);
+    public void addAdmin(long userID, long conferenceID){
+        UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.ADMIN);
+        userRoleRepository.save(userRole);
     }
 
-    public void addConference(String title, Date deadLine){
-        Conference conference = new Conference(title, deadLine);
+    public void addConference(String title){
+        Conference conference = new Conference(title);
         conferenceRepository.save(conference);
+    }
+
+    public void addDeadline(long conferenceID, Date date, DeadlineType deadlineType){
+        Deadline deadline = new Deadline(this.conferenceRepository.getOne(conferenceID), date, deadlineType);
+        deadlineRepository.save(deadline);
     }
 
     public void addDeadlines(long conferenceID, Date date, DeadlineType deadlineType){

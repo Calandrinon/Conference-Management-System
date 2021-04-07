@@ -18,7 +18,8 @@ public class Invitation {
         this.id = id;
     }
 
-    @Column(name = "ReceiverID")
+    @ManyToOne
+    @JoinColumn(name = "ReceiverID")
     private User receiver;
 
     public User getReceiver() {
