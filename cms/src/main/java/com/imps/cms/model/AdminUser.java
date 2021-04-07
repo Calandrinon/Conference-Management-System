@@ -3,7 +3,6 @@ package com.imps.cms.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "AdminUser")
 public class AdminUser extends User{
     @ManyToOne
     @JoinColumn(name = "ConferenceID")
