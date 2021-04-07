@@ -2,5 +2,6 @@ package com.imps.cms.model;
 
 public enum BidStatus {
     ACCEPTED,
-    REJECTED
+    REJECTED,
+    WAITING
 }

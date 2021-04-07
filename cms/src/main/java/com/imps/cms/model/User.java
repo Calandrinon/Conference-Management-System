@@ -30,18 +30,6 @@ public class User {
         this.fullName = fullName;
     }
 
-
-    @Column(name = "UserType")
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
-    public UserType getUserType() {
-        return userType;
-    }
-
-    public void setUserType(UserType userType) {
-        this.userType = userType;
-    }
-
     @Column(name = "Salt")
     private String salt;
 
@@ -89,9 +77,8 @@ public class User {
         this.section = section;
     }
 
-    public User(String fullName, UserType userType, String salt, String email, String password){
+    public User(String fullName, String salt, String email, String password){
         this.fullName = fullName;
-        this.userType = userType;
         this.salt = salt;
         this.email = email;
         this.password = password;
