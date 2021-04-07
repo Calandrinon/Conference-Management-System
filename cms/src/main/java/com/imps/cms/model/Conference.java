@@ -30,23 +30,11 @@ public class Conference {
         this.title = title;
     }
 
-    @Column(name = "Deadline")
-    private Date deadline;
-
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
     public Conference() {
 
     }
 
-    public Conference(String title, Date deadline){
+    public Conference(String title){
         this.title = title;
-        this.deadline = deadline;
     }
 }

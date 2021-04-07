@@ -33,8 +33,8 @@ public class AdminController {
         this.userRepository.save(admin);
     }
 
-    public void addConference(String title, Date deadLine){
-        Conference conference = new Conference(title, deadLine);
+    public void addConference(String title){
+        Conference conference = new Conference(title);
         conferenceRepository.save(conference);
     }
 
