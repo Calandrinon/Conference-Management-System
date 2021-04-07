@@ -28,8 +28,8 @@ public class AdminController {
         this.invitationRepository = invitationRepository;
     }
 
-    public void addAdmin(String name, String salt, String email, String password){
-        User admin = new User(name, UserType.ADMIN, salt, email, password);
+    public void addAdmin(String name, String salt, String email, String password, long conferenceID){
+        User admin = new AdminUser(name, UserType.ADMIN, salt, email, password, conferenceRepository.getOne(conferenceID));
         this.userRepository.save(admin);
     }
 
