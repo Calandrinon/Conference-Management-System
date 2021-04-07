@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring boot tutorial</title>
+</head>
+<body>
+<h1>Section list</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Supervisor</th>
+        <th>Conference</th>
+    </tr>
+    <tr th:each="section: ${sections}">
+        <td th:text="${section.id}">123</td>
+        <td th:text="${section.name}">Joe</td>
+        <td th:text="${section.supervisor.fullName}">smith</td>
+        <td th:text="${section.conference.title}">abcd</td>
+    </tr>
+</table>
+</body>
+
+</html>

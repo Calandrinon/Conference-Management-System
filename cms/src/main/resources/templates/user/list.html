@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring boot tutorial</title>
+</head>
+<body>
+<h1>User list</h1>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>User Type</th>
+        <th>Salt</th>
+        <th>Password</th>
+    </tr>
+    <tr th:each="user: ${users}">
+        <td th:text="${user.id}">123</td>
+        <td th:text="${user.fullName}">Joe</td>
+        <td th:text="${user.userType}">smith</td>
+        <td th:text="${user.salt}">abcd</td>
+        <td th:text="${user.password}">0000</td>
+    </tr>
+</table>
+</body>
+
+</html>
