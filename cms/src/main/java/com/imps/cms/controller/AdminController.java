@@ -2,15 +2,24 @@ package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
 import com.imps.cms.repository.*;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.validation.Valid;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Properties;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class AdminController {
     private final ConferenceRepository conferenceRepository;
     private final UserRepository userRepository;
@@ -27,27 +36,49 @@ public class AdminController {
         this.invitationRepository = invitationRepository;
     }
 
-    public void addAdmin(long userID, long conferenceID){
-        UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.ADMIN);
+    @PostMapping("/addAdmin")
+    public ResponseEntity<UserRole> addAdmin(@Valid @RequestBody UserRole userRole) throws URISyntaxException {
+        // long userID, long conferenceID
+        /*
+        * UserRole userRole = UserRole.builder()
+                .user(userRepository.getOne(userID))
+                .conference(conferenceRepository.getOne(conferenceID))
+                .userType(UserType.ADMIN)
+                .build();
+        * */
+        // UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.ADMIN);
         userRoleRepository.save(userRole);
+        // return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
+        return ResponseEntity.ok(userRole);
     }
 
-    public void addConference(String title){
-        Conference conference = new Conference(title);
+    @PostMapping("/conference")
+    public ResponseEntity<Conference> addConference(@Valid @RequestBody Conference conference) throws URISyntaxException {
+        // String title
+        /*
+        * Conference conference = Conference.builder().title(title).build();
+        * */
         conferenceRepository.save(conference);
+        return ResponseEntity.created(new URI("/api/conference/" + conference.getId())).body(conference);
     }
 
-    public void addDeadline(long conferenceID, Date date, DeadlineType deadlineType){
-        Deadline deadline = new Deadline(this.conferenceRepository.getOne(conferenceID), date, deadlineType);
+    @PostMapping("/deadline")
+    public ResponseEntity<Deadline> addDeadline(@Valid @RequestBody Deadline deadline) throws URISyntaxException {
+        // long conferenceID, Date date, DeadlineType deadlineType
+        /*
+        Deadline deadline = Deadline.builder()
+                .conference(conferenceRepository.getOne(conferenceID))
+                .date(date)
+                .deadlineType(deadlineType)
+                .build();
+
+         */
+        // Deadline deadline = new Deadline(this.conferenceRepository.getOne(conferenceID), date, deadlineType);
         deadlineRepository.save(deadline);
+        return ResponseEntity.created(new URI("/api/deadline/" + deadline.getId())).body(deadline);
     }
 
-    public void addDeadlines(long conferenceID, Date date, DeadlineType deadlineType){
-        Deadline deadline = new Deadline(conferenceRepository.getOne(conferenceID), date, deadlineType);
-        deadlineRepository.save(deadline);
-    }
-
-    private void sendInvitationEmail(Invitation invitation){
+    private void sendInvitationEmail(@Valid @RequestBody Invitation invitation){
         String to = invitation.getReceiver().getEmail();
         String from = invitation.getSender().getEmail();
         String host = "localhost";
@@ -66,9 +97,21 @@ public class AdminController {
         }
     }
 
-    public void inviteChair(long receiverId, long senderId, String text, String token){
-        Invitation invitation = new Invitation(userRepository.getOne(receiverId), userRepository.getOne(senderId), text, token);
+
+    @PostMapping("/invitation")
+    public ResponseEntity<Invitation> inviteChair(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
+        // long receiverId, long senderId, String text, String token
+        /*
+        Invitation invitation = Invitation.builder()
+                .receiver(userRepository.getOne(receiverId))
+                .sender(userRepository.getOne(senderId))
+                .text(text)
+                .token(token)
+                .build();
+         */
+        // Invitation invitation = new Invitation(userRepository.getOne(receiverId), userRepository.getOne(senderId), text, token);
         invitationRepository.save(invitation);
         this.sendInvitationEmail(invitation);
+        return ResponseEntity.created(new URI("api/invitation/" + invitation.getId())).body(invitation);
     }
 }

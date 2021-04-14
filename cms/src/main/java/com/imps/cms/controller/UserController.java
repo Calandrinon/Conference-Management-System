@@ -3,13 +3,22 @@ package com.imps.cms.controller;
 import com.imps.cms.model.User;
 import com.imps.cms.model.UserType;
 import com.imps.cms.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigInteger;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
+@RestController
+@RequestMapping("/api")
 public class UserController {
     private final UserRepository userRepository;
 
@@ -31,27 +40,36 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    public boolean loginUser(String email, String password) {
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
         User user = this.userRepository.findByEmail(email).get(0);
 
         try {
             String hashed_password = sha256hex(user.getSalt() + password);
         }
         catch (NoSuchAlgorithmException e) {
-            return false;
+            return ResponseEntity.ok(false);
         }
-
-        return user.getPassword().equals(password);
+        return ResponseEntity.ok(user.getPassword().equals(password));
     }
 
-    public boolean registerUser(String fullName, UserType userType, String salt, String email, String password) {
-        List<User> users = this.userRepository.findByEmail(email);
+    @PostMapping("/registerUser")
+    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) throws URISyntaxException {
+        List<User> users = this.userRepository.findByEmail(user.getEmail());
         if ((long) users.size() != 0) {
-            return false;
+            return ResponseEntity.of(Optional.empty());
         }
+        /*
+        User user = User.builder()
+                .fullName(fullName)
+                .salt(salt)
+                .email(email)
+                .password(password)
+                .build();
 
-        User user = new User(fullName, salt, email, password);
+         */
+        // User user = new User(fullName, salt, email, password);
         this.userRepository.save(user);
-        return true;
+        return ResponseEntity.created(new URI("api/registerUser/" + user.getId())).body(user);
     }
 }
