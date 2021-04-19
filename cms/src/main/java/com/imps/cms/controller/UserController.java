@@ -2,6 +2,7 @@ package com.imps.cms.controller;
 
 import com.imps.cms.model.User;
 import com.imps.cms.model.UserType;
+import com.imps.cms.model.dto.LoginDto;
 import com.imps.cms.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,16 +42,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> loginUser(@RequestParam("email") String email, @RequestParam("password") String password) {
-        User user = this.userRepository.findByEmail(email).get(0);
+    public ResponseEntity<Boolean> loginUser(@RequestBody LoginDto loginDto) {
+
+        User user = this.userRepository.findByEmail(loginDto.getEmail()).get(0);
 
         try {
-            String hashed_password = sha256hex(user.getSalt() + password);
+            String hashed_password = sha256hex(user.getSalt() + loginDto.getPassword());
         }
         catch (NoSuchAlgorithmException e) {
             return ResponseEntity.ok(false);
         }
-        return ResponseEntity.ok(user.getPassword().equals(password));
+        return ResponseEntity.ok(user.getPassword().equals(loginDto.getPassword()));
     }
 
     @PostMapping("/registerUser")
