@@ -31,51 +31,39 @@ public class AuthorController {
     }
 
     @PostMapping("/userRole")
-    public ResponseEntity<UserRole> addAuthor(@Valid @RequestBody UserRole userRole) throws URISyntaxException {
-        // long userID, long conferenceID
-        /*
+    public ResponseEntity<UserRole> addAuthor(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userID))
-                .conference(conferenceRepository.getOne(conferenceID))
+                .user(userRepository.getOne(userRoleDto.getUser().getId()))
+                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
                 .userType(UserType.AUTHOR)
                 .build();
 
-         */
-        // UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.AUTHOR);
         this.userRoleRepository.save(userRole);
         return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
     }
 
     @PostMapping("/paper")
-    public ResponseEntity<Paper> addPaper(@Valid @RequestBody Paper paper) throws URISyntaxException {
-        // String title, String subject, String keywords, String topics, Long authorID, String filename
-        /*
+    public ResponseEntity<Paper> addPaper(@Valid @RequestBody PaperDto paperDto) throws URISyntaxException {
         Paper paper = Paper.builder()
-                .title(title)
-                .subject(subject)
-                .keywords(keywords)
-                .topics(topics)
-                .author(userRepository.getOne(authorID))
-                .filename(filename)
+                .title(paperDto.getTitle())
+                .subject(paperDto.getSubject())
+                .keywords(paperDto.getKeywords())
+                .topics(paperDto.getTopics())
+                .author(userRepository.getOne(paperDto.getAuthor().getId()))
+                .filename(paperDto.getFilename())
                 .build();
 
-         */
-        // Paper paper = new Paper(title, subject, keywords, topics, userRepository.getOne(authorID), filename);
         paperRepository.save(paper);
         return ResponseEntity.created(new URI("/api/paper/" + paper.getID())).body(paper);
     }
 
     @PostMapping("/proposal")
-    public ResponseEntity<Proposal> addProposal(@Valid @RequestBody Proposal proposal) throws URISyntaxException {
-        // long paperId
-        /*
+    public ResponseEntity<Proposal> addProposal(@Valid @RequestBody ProposalDto proposalDto) throws URISyntaxException {
         Proposal proposal = Proposal.builder()
-                .paper(paperRepository.getOne(paperId))
+                .paper(paperRepository.getOne(proposalDto.getPaper().getId()))
                 .status("Unknown")
                 .build();
 
-         */
-        // Proposal proposal = new Proposal(paperRepository.getOne(paperId), "Unknown");
         proposalRepository.save(proposal);
         return ResponseEntity.created(new URI("/api/proposal/" + proposal.getId())).body(proposal);
     }

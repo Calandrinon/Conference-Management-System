@@ -37,43 +37,30 @@ public class AdminController {
     }
 
     @PostMapping("/addAdmin")
-    public ResponseEntity<UserRole> addAdmin(@Valid @RequestBody UserRole userRole) throws URISyntaxException {
-        // long userID, long conferenceID
-        /*
-        * UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userID))
-                .conference(conferenceRepository.getOne(conferenceID))
+    public ResponseEntity<UserRole> addAdmin(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
+        UserRole userRole = UserRole.builder()
+                .user(userRepository.getOne(userRoleDto.getUser().getId()))
+                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
                 .userType(UserType.ADMIN)
                 .build();
-        * */
-        // UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.ADMIN);
         userRoleRepository.save(userRole);
-        // return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
-        return ResponseEntity.ok(userRole);
+        return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
     }
 
     @PostMapping("/conference")
-    public ResponseEntity<Conference> addConference(@Valid @RequestBody Conference conference) throws URISyntaxException {
-        // String title
-        /*
-        * Conference conference = Conference.builder().title(title).build();
-        * */
+    public ResponseEntity<Conference> addConference(@Valid @RequestBody ConferenceDto conferenceDto) throws URISyntaxException {
+        Conference conference = Conference.builder().title(conferenceDto.getTitle()).build();
         conferenceRepository.save(conference);
         return ResponseEntity.created(new URI("/api/conference/" + conference.getId())).body(conference);
     }
 
     @PostMapping("/deadline")
-    public ResponseEntity<Deadline> addDeadline(@Valid @RequestBody Deadline deadline) throws URISyntaxException {
-        // long conferenceID, Date date, DeadlineType deadlineType
-        /*
+    public ResponseEntity<Deadline> addDeadline(@Valid @RequestBody DeadlineDto deadlineDto) throws URISyntaxException {
         Deadline deadline = Deadline.builder()
-                .conference(conferenceRepository.getOne(conferenceID))
-                .date(date)
-                .deadlineType(deadlineType)
+                .conference(conferenceRepository.getOne(deadlineDto.getConference().getId()))
+                .date(deadlineDto.getDate())
+                .deadlineType(deadlineDto.getDeadlineType())
                 .build();
-
-         */
-        // Deadline deadline = new Deadline(this.conferenceRepository.getOne(conferenceID), date, deadlineType);
         deadlineRepository.save(deadline);
         return ResponseEntity.created(new URI("/api/deadline/" + deadline.getId())).body(deadline);
     }
@@ -99,17 +86,14 @@ public class AdminController {
 
 
     @PostMapping("/invitation")
-    public ResponseEntity<Invitation> inviteChair(@Valid @RequestBody Invitation invitation) throws URISyntaxException {
-        // long receiverId, long senderId, String text, String token
-        /*
+    public ResponseEntity<Invitation> inviteChair(@Valid @RequestBody InvitationDto invitationDto) throws URISyntaxException {
         Invitation invitation = Invitation.builder()
-                .receiver(userRepository.getOne(receiverId))
-                .sender(userRepository.getOne(senderId))
-                .text(text)
-                .token(token)
+                .receiver(userRepository.getOne(invitationDto.getReceiver().getId()))
+                .sender(userRepository.getOne(invitationDto.getSender().getId()))
+                .text(invitationDto.getText())
+                .token(invitationDto.getToken())
                 .build();
-         */
-        // Invitation invitation = new Invitation(userRepository.getOne(receiverId), userRepository.getOne(senderId), text, token);
+
         invitationRepository.save(invitation);
         this.sendInvitationEmail(invitation);
         return ResponseEntity.created(new URI("api/invitation/" + invitation.getId())).body(invitation);
