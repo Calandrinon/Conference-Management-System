@@ -1,9 +1,6 @@
 package com.imps.cms.controller;
 
-import com.imps.cms.model.Section;
-import com.imps.cms.model.User;
-import com.imps.cms.model.UserRole;
-import com.imps.cms.model.UserType;
+import com.imps.cms.model.*;
 import com.imps.cms.repository.ConferenceRepository;
 import com.imps.cms.repository.SectionRepository;
 import com.imps.cms.repository.UserRepository;
@@ -33,25 +30,21 @@ public class ListenerController {
     }
 
     @PostMapping("/addListener")
-    public ResponseEntity<UserRole> addListener(@Valid @RequestBody UserRole userRole) throws URISyntaxException {
-        // long userID, long conferenceID
-        /*
+    public ResponseEntity<UserRole> addListener(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userID))
-                .conference(conferenceRepository.getOne(conferenceID))
+                .user(userRepository.getOne(userRoleDto.getUser().getId()))
+                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
                 .userType(UserType.LISTENER)
                 .build();
 
-         */
-        // UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.LISTENER);
         userRoleRepository.save(userRole);
         return ResponseEntity.created(new URI("/api/addListener/" + userRole.getId())).body(userRole);
     }
 
-    // @PutMapping("/userRole/{id}")
-    public ResponseEntity<User> selectSection(@Valid @RequestBody User listener, @Valid @RequestBody Section section){
-        // User listener = userRepository.getOne(userID);
-        // Section section = sectionRepository.getOne(sectionID);
+    @PutMapping("/selectSection/{userId}")
+    public ResponseEntity<User> selectSection(@PathVariable Long userId, @Valid @RequestBody SectionDto sectionDto){
+        User listener = userRepository.getOne(userId);
+        Section section = sectionRepository.getOne(sectionDto.getId());
         listener.setSection(section);
         userRepository.save(listener);
         return ResponseEntity.ok().body(listener);
