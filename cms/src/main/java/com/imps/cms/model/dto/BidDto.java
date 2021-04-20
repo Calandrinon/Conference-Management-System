@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BitDto implements Serializable {
+public class BidDto implements Serializable {
     private Long id;
     private Long proposalId;
     private Long userId;
