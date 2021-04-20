@@ -7,13 +7,13 @@ import org.springframework.data.rest.core.config.Projection;
         name="paperDto"
         , types = { Paper.class }
 )
-public interface PaperDto {
+public interface PaperInterface {
     Long getId();
     String getTitle();
     String getSubject();
     String getKeywords();
     String getTopics();
-    UserDto getAuthor();
-    SectionDto getSection();
+    UserDtoInterface getAuthor();
+    SectionInterface getSection();
     String getFilename();
 }

@@ -6,12 +6,12 @@ import org.springframework.data.rest.core.config.Projection;
         name = "userRoleDto"
         , types = { UserRole.class }
 )
-public interface UserRoleDto {
+public interface UserRoleDtoInterface {
     long getId();
 
-    UserDto getUser();
+    UserDtoInterface getUser();
 
-    ConferenceDto getConference();
+    ConferenceInterface getConference();
 
     UserType userType();
 }

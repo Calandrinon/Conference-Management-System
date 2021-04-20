@@ -9,9 +9,9 @@ import java.util.Date;
         name = "deadlineDto"
         , types = { Deadline.class }
 )
-public interface DeadlineDto {
+public interface DeadlineInterface {
     Long getId();
-    ConferenceDto getConference();
+    ConferenceInterface getConference();
     Date getDate();
     DeadlineType getDeadlineType();
 }

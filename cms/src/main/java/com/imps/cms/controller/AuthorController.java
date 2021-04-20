@@ -1,6 +1,9 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.dto.PaperDto;
+import com.imps.cms.model.dto.ProposalDto;
+import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,8 +36,8 @@ public class AuthorController {
     @PostMapping("/userRole")
     public ResponseEntity<UserRole> addAuthor(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userRoleDto.getUser().getId()))
-                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
+                .user(userRepository.findById(userRoleDto.getUserId()).orElseThrow(() -> new RuntimeException("no user with this id")))
+                .conference(conferenceRepository.findById(userRoleDto.getConferenceId()).orElseThrow(() -> new RuntimeException("no conference with this id")))
                 .userType(UserType.AUTHOR)
                 .build();
 
@@ -49,8 +52,8 @@ public class AuthorController {
                 .subject(paperDto.getSubject())
                 .keywords(paperDto.getKeywords())
                 .topics(paperDto.getTopics())
-                .author(userRepository.getOne(paperDto.getAuthor().getId()))
-                .filename(paperDto.getFilename())
+                .author(userRepository.findById(paperDto.getUserId()).orElseThrow(() -> new RuntimeException("no user with this id")))
+                .filename(paperDto.getFileName())
                 .build();
 
         paperRepository.save(paper);
@@ -60,7 +63,7 @@ public class AuthorController {
     @PostMapping("/proposal")
     public ResponseEntity<Proposal> addProposal(@Valid @RequestBody ProposalDto proposalDto) throws URISyntaxException {
         Proposal proposal = Proposal.builder()
-                .paper(paperRepository.getOne(proposalDto.getPaper().getId()))
+                .paper(paperRepository.findById(proposalDto.getPaperId()).orElseThrow(() -> new RuntimeException("no paper with this id")))
                 .status("Unknown")
                 .build();
 

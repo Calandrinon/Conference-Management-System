@@ -7,10 +7,10 @@ import org.springframework.data.rest.core.config.Projection;
         name = "reviewDto"
         , types = { Review.class }
 )
-public interface ReviewDto {
+public interface ReviewInterface {
     Long getId();
-    ProposalDto getProposal();
-    UserDto getUser();
+    ProposalInterface getProposal();
+    UserDtoInterface getUser();
     Long getScore();
     String getNotes();
 }

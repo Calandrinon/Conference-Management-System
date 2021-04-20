@@ -6,12 +6,12 @@ import org.springframework.data.rest.core.config.Projection;
         name = "userDto"
         , types = { User.class }
 )
-public interface UserDto {
+public interface UserDtoInterface {
 
     long getId();
 
     String getFullName();
 
-    SectionDto getSection();
+    SectionInterface getSection();
 
 }

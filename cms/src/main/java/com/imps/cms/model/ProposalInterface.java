@@ -7,8 +7,8 @@ import org.springframework.data.rest.core.config.Projection;
         name = "proposalDto"
         , types = { Proposal.class }
 )
-public interface ProposalDto {
+public interface ProposalInterface {
     Long getId();
-    PaperDto getPaper();
+    PaperInterface getPaper();
     String getStatus();
 }
