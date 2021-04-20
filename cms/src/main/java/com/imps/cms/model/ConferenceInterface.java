@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.config.Projection;
         name = "conferenceDto"
         , types = { Conference.class }
 )
-public interface ConferenceDto {
+public interface ConferenceInterface {
     Long getId();
     String getTitle();
 }

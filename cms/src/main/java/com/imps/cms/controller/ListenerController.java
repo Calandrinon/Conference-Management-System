@@ -1,13 +1,13 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.dto.SectionDto;
+import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.ConferenceRepository;
 import com.imps.cms.repository.SectionRepository;
 import com.imps.cms.repository.UserRepository;
 import com.imps.cms.repository.UserRoleRepository;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -32,8 +32,8 @@ public class ListenerController {
     @PostMapping("/addListener")
     public ResponseEntity<UserRole> addListener(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userRoleDto.getUser().getId()))
-                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
+                .user(userRepository.findById(userRoleDto.getUserId()).orElseThrow(() -> new RuntimeException("no user with this id")))
+                .conference(conferenceRepository.findById(userRoleDto.getConferenceId()).orElseThrow(() -> new RuntimeException("no conference with this id")))
                 .userType(UserType.LISTENER)
                 .build();
 
@@ -43,8 +43,8 @@ public class ListenerController {
 
     @PutMapping("/selectSection/{userId}")
     public ResponseEntity<User> selectSection(@PathVariable Long userId, @Valid @RequestBody SectionDto sectionDto){
-        User listener = userRepository.getOne(userId);
-        Section section = sectionRepository.getOne(sectionDto.getId());
+        User listener = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("no conference with this id"));
+        Section section = sectionRepository.findById(sectionDto.getId()).orElseThrow(() -> new RuntimeException("no conference with this id"));
         listener.setSection(section);
         userRepository.save(listener);
         return ResponseEntity.ok().body(listener);

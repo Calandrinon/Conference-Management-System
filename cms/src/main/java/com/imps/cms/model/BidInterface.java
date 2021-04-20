@@ -6,8 +6,8 @@ import org.springframework.data.rest.core.config.Projection;
         name = "bidDto"
         , types = { Bid.class }
 )
-public interface BidDto {
+public interface BidInterface {
     Long getId();
-    UserDto getUser();
+    UserDtoInterface getUser();
     BidStatus getBidStatus();
 }

@@ -1,6 +1,10 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.dto.ConferenceDto;
+import com.imps.cms.model.dto.DeadlineDto;
+import com.imps.cms.model.dto.InvitationDto;
+import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +19,6 @@ import javax.validation.Valid;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.Properties;
 
 @RestController
@@ -39,8 +42,8 @@ public class AdminController {
     @PostMapping("/addAdmin")
     public ResponseEntity<UserRole> addAdmin(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.getOne(userRoleDto.getUser().getId()))
-                .conference(conferenceRepository.getOne(userRoleDto.getConference().getId()))
+                .user(userRepository.findById(userRoleDto.getUserId()).orElseThrow(() -> new RuntimeException("no user with this id")))
+                .conference(conferenceRepository.findById(userRoleDto.getConferenceId()).orElseThrow(() -> new RuntimeException("no conference with this id")))
                 .userType(UserType.ADMIN)
                 .build();
         userRoleRepository.save(userRole);
@@ -57,10 +60,10 @@ public class AdminController {
     @PostMapping("/deadline")
     public ResponseEntity<Deadline> addDeadline(@Valid @RequestBody DeadlineDto deadlineDto) throws URISyntaxException {
         Deadline deadline = Deadline.builder()
-                .conference(conferenceRepository.getOne(deadlineDto.getConference().getId()))
-                .date(deadlineDto.getDate())
+                .conference(conferenceRepository.findById(deadlineDto.getConferenceId()).orElseThrow(() -> new RuntimeException("no conference with this id")))
                 .deadlineType(deadlineDto.getDeadlineType())
                 .build();
+                // todo set the date properly
         deadlineRepository.save(deadline);
         return ResponseEntity.created(new URI("/api/deadline/" + deadline.getId())).body(deadline);
     }
@@ -88,8 +91,8 @@ public class AdminController {
     @PostMapping("/invitation")
     public ResponseEntity<Invitation> inviteChair(@Valid @RequestBody InvitationDto invitationDto) throws URISyntaxException {
         Invitation invitation = Invitation.builder()
-                .receiver(userRepository.getOne(invitationDto.getReceiver().getId()))
-                .sender(userRepository.getOne(invitationDto.getSender().getId()))
+                .receiver(userRepository.findById(invitationDto.getReceiverId()).orElseThrow(() -> new RuntimeException("no user with this id")))
+                .sender(userRepository.findById(invitationDto.getSenderId()).orElseThrow(() -> new RuntimeException("no user with this id")))
                 .text(invitationDto.getText())
                 .token(invitationDto.getToken())
                 .build();

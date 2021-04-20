@@ -7,10 +7,10 @@ import org.springframework.data.rest.core.config.Projection;
         name = "invitationDto"
         , types = { Invitation.class }
 )
-public interface InvitationDto {
+public interface InvitationInterface {
     Long getId();
-    UserDto getSender();
-    UserDto getReceiver();
+    UserDtoInterface getSender();
+    UserDtoInterface getReceiver();
     String getText();
     String getToken();
 }

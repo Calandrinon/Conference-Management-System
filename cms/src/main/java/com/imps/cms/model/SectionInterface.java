@@ -6,9 +6,9 @@ import org.springframework.data.rest.core.config.Projection;
         name = "sectionDto"
         , types = { Section.class }
 )
-public interface SectionDto {
+public interface SectionInterface {
     Long getId();
     String getName();
-    UserDto getSupervisor();
-    ConferenceDto getConference();
+    UserDtoInterface getSupervisor();
+    ConferenceInterface getConference();
 }

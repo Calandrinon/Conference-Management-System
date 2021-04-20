@@ -3,6 +3,7 @@ package com.imps.cms.controller;
 import com.imps.cms.model.User;
 import com.imps.cms.model.UserType;
 import com.imps.cms.model.dto.LoginDto;
+import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -57,21 +58,19 @@ public class UserController {
     }
 
     @PostMapping("/registerUser")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody User user) throws URISyntaxException {
-        List<User> users = this.userRepository.findByEmail(user.getEmail());
+    public ResponseEntity<User> registerUser(@Valid @RequestBody UserDto userDto) throws URISyntaxException {
+        List<User> users = this.userRepository.findByEmail(userDto.getEmail());
         if ((long) users.size() != 0) {
             return ResponseEntity.of(Optional.empty());
         }
-        /*
         User user = User.builder()
-                .fullName(fullName)
-                .salt(salt)
-                .email(email)
-                .password(password)
+                .fullName(userDto.getFullName())
+                .salt(userDto.getSalt())
+                .email(userDto.getEmail())
+                .password(userDto.getPassword())
                 .build();
 
-         */
-        // User user = new User(fullName, salt, email, password);
+
         this.userRepository.save(user);
         return ResponseEntity.created(new URI("api/registerUser/" + user.getId())).body(user);
     }
