@@ -8,6 +8,8 @@ import { NavigationBarComponent } from './navigation-bar/navigation-bar.componen
 import { AuthenticationComponent } from './authentication/authentication.component';
 import { PresentationsComponent } from './presentations/presentations.component';
 import { ContactComponent } from './contact/contact.component';
+import {AuthenticationService} from "./authentication/service/authentication.service";
+import { HttpClientModule, HttpClient} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -20,9 +22,10 @@ import { ContactComponent } from './contact/contact.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
