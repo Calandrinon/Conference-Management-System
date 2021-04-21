@@ -1,1 +1,6 @@
-<p>presentations works!</p>
+<ul class="list-group" id="myList" role="tablist" *ngFor="let conference of conferences" >
+  <div id="conferenceDiv">
+    <li><a class="list-group-item list-group-item-action darkColoredItem" data-toggle="list" role="tab">Conference #{{conference.id}}</a></li>
+    <li><a class="list-group-item list-group-item-action conferenceDescription" data-toggle="list" role="tab">{{conference.title}}</a></li>
+  </div>
+</ul>
