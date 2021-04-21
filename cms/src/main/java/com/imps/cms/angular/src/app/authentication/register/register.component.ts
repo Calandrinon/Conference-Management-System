@@ -85,7 +85,7 @@ export class RegisterComponent implements OnInit {
 
             // Do something after
             console.log('after delay')
-            // this.router.navigate(['/home'])
+            this.router.navigate(['/profile'])
           })();
 
         } else {
