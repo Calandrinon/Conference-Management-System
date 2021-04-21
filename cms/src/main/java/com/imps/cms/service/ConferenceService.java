@@ -5,6 +5,8 @@ import com.imps.cms.repository.ConferenceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ConferenceService {
     @Autowired
@@ -16,5 +18,9 @@ public class ConferenceService {
 
     public void addConference(Conference conference){
         conferenceRepository.save(conference);
+    }
+
+    public List<Conference> findAll() {
+        return conferenceRepository.findAll();
     }
 }

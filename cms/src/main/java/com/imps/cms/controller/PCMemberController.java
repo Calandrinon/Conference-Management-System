@@ -33,7 +33,7 @@ public class PCMemberController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping(value = "/{userId}/{conferenceId}/{token}")
+    @GetMapping(value = "/pc_member/{userId}/{conferenceId}/{token}")
     public ResponseEntity<Boolean> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
         List<Invitation> invitations = invitationService.findByReceiver(userId);
         for(Invitation invitation: invitations){
