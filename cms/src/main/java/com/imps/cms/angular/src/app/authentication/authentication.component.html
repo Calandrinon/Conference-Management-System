@@ -1,0 +1,32 @@
+<!--
+<div id="login_form">
+  <div class="login-group">
+    <label>E-mail</label>
+    <input type="text" #email>
+  </div>
+  <div class="login-group">
+    <label>Password</label>
+    <input type="password" #password>
+    <button type="submit" (click)="login(email.value, password.value)"> Login </button>
+  </div>
+</div>
+-->
+
+<div class="login-container text-c animated flipInX">
+  <h3>Log in</h3>
+  <div class="container-content">
+    <div class="margin-t">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="E-mail" required="" #email>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" placeholder="Password" required="" #password>
+      </div>
+      <button type="submit" class="form-button button-l margin-b" (click)="login(email.value, password.value)">Sign In</button>
+
+      <a class="text-darkyellow" href="#"><small>Forgot your password?</small></a>
+      <p class="text-darkyellow"><small>Do not have an account?</small></p>
+      <a class="text-darkyellow" href="#"><small>Sign Up</small></a>
+    </div>
+  </div>
+</div>
