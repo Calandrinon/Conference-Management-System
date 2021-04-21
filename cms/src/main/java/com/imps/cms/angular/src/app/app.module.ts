@@ -15,7 +15,6 @@ import { RegisterComponent } from './authentication/register/register.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CookieService} from "ngx-cookie-service";
 
-
 @NgModule({
   declarations: [
     AppComponent,
