@@ -13,4 +13,5 @@ public interface InvitationInterface {
     UserDtoInterface getReceiver();
     String getText();
     String getToken();
+    UserType userType();
 }

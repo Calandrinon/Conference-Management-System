@@ -13,4 +13,5 @@ public interface ReviewInterface {
     UserDtoInterface getUser();
     Long getScore();
     String getNotes();
+    ReviewStatus getReviewStatus();
 }

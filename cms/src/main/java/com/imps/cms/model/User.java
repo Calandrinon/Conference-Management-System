@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Entity
@@ -35,5 +36,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "SectionID")
     private Section section;
+
+    @ManyToMany
+    private List<Proposal> proposals;
 
 }

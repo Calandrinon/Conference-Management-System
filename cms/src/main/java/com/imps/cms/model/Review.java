@@ -34,4 +34,7 @@ public class Review {
     @Column(name = "Notes")
     private String notes;
 
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus reviewStatus;
+
 }

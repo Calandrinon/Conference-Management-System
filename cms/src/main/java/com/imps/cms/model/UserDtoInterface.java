@@ -2,6 +2,8 @@ package com.imps.cms.model;
 
 import org.springframework.data.rest.core.config.Projection;
 
+import java.util.List;
+
 @Projection(
         name = "userDto"
         , types = { User.class }
@@ -13,5 +15,7 @@ public interface UserDtoInterface {
     String getFullName();
 
     SectionInterface getSection();
+
+    List<Proposal> getProposals();
 
 }
