@@ -14,6 +14,9 @@ export class RegisterComponent implements OnInit {
     emailInput: new FormControl('', [
       Validators.required,
       Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")]),
+    fullName: new FormControl('', [
+      Validators.required,
+      Validators.pattern(".{1,}")]),
     firstPasswordInput: new FormControl('', [
       Validators.required,
       Validators.pattern(".{8,}")]),
@@ -37,6 +40,10 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.get('secondPasswordInput')
   }
 
+  get fullName() {
+    return this.registerForm.get('fullName')
+  }
+
   ngOnInit(): void {
   }
 
@@ -50,6 +57,7 @@ export class RegisterComponent implements OnInit {
     if (this.firstPassword.valid &&
       this.secondPassword.valid &&
       this.emailInput.valid &&
+      this.fullName.valid &&
       this.firstPassword.value == this.secondPassword.value)
     {
       console.log("HEY")

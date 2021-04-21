@@ -7,13 +7,22 @@
       <div class="form-group">
         <input [class.is-invalid] = "registerForm.get('emailInput').invalid && registerForm.get('emailInput').touched"
                type="email" class="form-control" formControlName="emailInput" placeholder="E-Mail" />
+      </div>
 
           <div *ngIf="(emailInput.invalid && emailInput.touched) || emailInput.dirty">
             <small *ngIf="emailInput.errors?.required" class="text-danger">An email is required</small>
             <small *ngIf="emailInput.errors?.pattern" class="text-danger">Please provide a valid email address</small>
           </div>
 
+      <div class="form-group">
+        <input [class.is-invalid] = "registerForm.get('fullName').invalid && registerForm.get('fullName').touched"
+               type="text" class="form-control" formControlName="fullName" placeholder="Full name" />
       </div>
+
+        <div *ngIf="(fullName.invalid && fullName.touched) || fullName.dirty">
+          <small *ngIf="fullName.errors?.required" class="text-danger">A full name is required</small>
+        </div>
+
       <div class="form-group">
         <input [class.is-invalid] = "registerForm.get('firstPasswordInput').invalid && registerForm.get('firstPasswordInput').touched"
                type="password" class="form-control" formControlName="firstPasswordInput" placeholder="Password" />
@@ -29,10 +38,10 @@
                type="password" class="form-control" formControlName="secondPasswordInput" placeholder="Rewrite password" />
       </div>
 
-      <div *ngIf="(secondPassword.invalid && secondPassword.touched) || secondPassword.dirty">
-        <small *ngIf="secondPassword.errors?.required" class="text-danger">A password is required</small>
-        <small *ngIf="secondPassword.errors?.pattern" class="text-danger">The passwords needs to be at least 8 characters long</small>
-      </div>
+        <div *ngIf="(secondPassword.invalid && secondPassword.touched) || secondPassword.dirty">
+          <small *ngIf="secondPassword.errors?.required" class="text-danger">A password is required</small>
+          <small *ngIf="secondPassword.errors?.pattern" class="text-danger">The passwords needs to be at least 8 characters long</small>
+        </div>
       <button class="form-button button-l margin-b" type="submit">Sign up</button>
     </div>
     </form>
