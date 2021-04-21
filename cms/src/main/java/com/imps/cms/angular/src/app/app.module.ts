@@ -12,6 +12,7 @@ import { HttpClientModule, HttpClient} from "@angular/common/http";
 import { ProfileComponent } from './profile/profile.component';
 import {AuthenticationComponent} from "./authentication/login/authentication.component";
 import { RegisterComponent } from './authentication/register/register.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,9 @@ import { RegisterComponent } from './authentication/register/register.component'
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]
