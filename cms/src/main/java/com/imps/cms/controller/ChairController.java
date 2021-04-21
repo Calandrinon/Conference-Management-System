@@ -138,6 +138,7 @@ public class ChairController {
         return ResponseEntity.created(new URI("/api/section/" + section.getId())).body(section);
     }
 
+    @PostMapping("/paper/{sectionId}")
     public ResponseEntity<Boolean> assignPaperToSection(@RequestBody PaperDto paperDto, @PathVariable Long sectionId){
         Paper paper = Paper.builder()
                 .section(sectionService.findById(sectionId))
