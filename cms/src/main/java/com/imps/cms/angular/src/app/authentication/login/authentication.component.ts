@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "./service/authentication.service";
 import { Router } from '@angular/router';
 import {Observable} from "rxjs";
+import {AuthenticationService} from "../service/authentication.service";
 
 @Component({
   selector: 'app-authentication',
