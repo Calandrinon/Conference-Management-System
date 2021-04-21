@@ -11,6 +11,7 @@ import {AuthenticationService} from "./authentication/service/authentication.ser
 import { HttpClientModule, HttpClient} from "@angular/common/http";
 import { ProfileComponent } from './profile/profile.component';
 import {AuthenticationComponent} from "./authentication/login/authentication.component";
+import { RegisterComponent } from './authentication/register/register.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {AuthenticationComponent} from "./authentication/login/authentication.com
     AuthenticationComponent,
     PresentationsComponent,
     ContactComponent,
-    ProfileComponent
+    ProfileComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
