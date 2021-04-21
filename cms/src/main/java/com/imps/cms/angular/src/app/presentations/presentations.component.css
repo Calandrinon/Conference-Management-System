@@ -1,0 +1,18 @@
+#myList {
+  margin: auto;
+  width: 90%;
+  list-style-type: none;
+}
+
+#conferenceDiv {
+  margin-top: 20px;
+}
+
+.darkColoredItem {
+  background-color: darkslategrey;
+  color: white;
+}
+
+.conferenceDescription {
+  color: black;
+}

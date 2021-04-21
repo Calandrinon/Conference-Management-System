@@ -1,37 +1,71 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.dto.PaperDto;
+import com.imps.cms.model.dto.ProposalDto;
+import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.*;
-import org.springframework.stereotype.Controller;
+import com.imps.cms.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+
+@RestController
+@RequestMapping("/api")
 public class AuthorController {
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final ConferenceRepository conferenceRepository;
-    private final ProposalRepository proposalRepository;
-    private final PaperRepository paperRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private ConferenceService conferenceService;
+    @Autowired
+    private ProposalService proposalService;
+    @Autowired
+    private PaperService paperService;
 
-    public AuthorController(UserRepository userRepository, UserRoleRepository userRoleRepository, ConferenceRepository conferenceRepository, ProposalRepository proposalRepository, PaperRepository paperRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.conferenceRepository = conferenceRepository;
-        this.proposalRepository = proposalRepository;
-        this.paperRepository = paperRepository;
+    @PostMapping("/userRole")
+    public ResponseEntity<UserRole> addAuthor(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
+        UserRole userRole = UserRole.builder()
+                .user(userService.findById(userRoleDto.getUserId()))
+                .conference(conferenceService.findById(userRoleDto.getConferenceId()))
+                .build();
+
+        this.userRoleService.addUserRole(userRole);
+        return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
     }
 
-    public void addAuthor(long userID, long conferenceID){
-        UserRole userRole = new UserRole(userRepository.getOne(userID), conferenceRepository.getOne(conferenceID), UserType.AUTHOR);
-        this.userRoleRepository.save(userRole);
+    @PostMapping("/paper")
+    public ResponseEntity<Paper> addPaper(@Valid @RequestBody PaperDto paperDto) throws URISyntaxException {
+        Paper paper = Paper.builder()
+                .title(paperDto.getTitle())
+                .subject(paperDto.getSubject())
+                .keywords(paperDto.getKeywords())
+                .topics(paperDto.getTopics())
+                .author(userService.findById(paperDto.getUserId()))
+                .filename(paperDto.getFileName())
+                .build();
+
+        paperService.addPaper(paper);
+        return ResponseEntity.created(new URI("/api/paper/" + paper.getID())).body(paper);
     }
 
-    public void addPaper(String title, String subject, String keywords, String topics, Long authorID, String filename){
-        Paper paper = new Paper(title, subject, keywords, topics, userRepository.getOne(authorID), filename);
-        paperRepository.save(paper);
-    }
+    @PostMapping("/proposal")
+    public ResponseEntity<Proposal> addProposal(@Valid @RequestBody ProposalDto proposalDto) throws URISyntaxException {
+        Proposal proposal = Proposal.builder()
+                .paper(paperService.findById(proposalDto.getPaperId()))
+                .status("PENDING")
+                .build();
 
-    public void addProposal(long paperId){
-        Proposal proposal = new Proposal(paperRepository.getOne(paperId), "Unknown");
-        proposalRepository.save(proposal);
+        proposalService.addProposal(proposal);
+        return ResponseEntity.created(new URI("/api/proposal/" + proposal.getId())).body(proposal);
     }
 }

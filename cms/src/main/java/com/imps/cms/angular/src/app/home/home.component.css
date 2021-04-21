@@ -1,0 +1,11 @@
+h1 {
+  font-family: Barlow;
+  text-align: center;
+}
+
+#homeContent {
+  text-align: justify;
+  width: 70%;
+  justify-content: center;
+  margin: auto;
+}

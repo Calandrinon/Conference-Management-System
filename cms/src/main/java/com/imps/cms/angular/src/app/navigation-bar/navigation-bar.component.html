@@ -1,0 +1,13 @@
+<nav class="navbar navbar-inverse" style="border-radius: 0;">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" routerLink="/home">Conference Management System</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li [routerLinkActive]="['active']"><a routerLink="/home">Home</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/presentations">Presentations</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/contact">Contact</a></li>
+        <li [routerLinkActive]="['active']"><a routerLink="/auth">Login or register</a></li>
+      </ul>
+    </div>
+</nav>
