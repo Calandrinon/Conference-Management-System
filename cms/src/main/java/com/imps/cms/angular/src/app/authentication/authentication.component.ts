@@ -8,6 +8,7 @@ import {Observable} from "rxjs";
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.css']
 })
+
 export class AuthenticationComponent implements OnInit {
   authenticated: boolean;
 

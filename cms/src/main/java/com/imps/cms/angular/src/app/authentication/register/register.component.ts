@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {RegisterService} from "../service/register.service";
+import {UserDto} from "../model/UserDto";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-register',
@@ -8,7 +11,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class RegisterComponent implements OnInit {
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, private registerService: RegisterService,
+              private router: Router) { }
 
   registerForm = new FormGroup({
     emailInput: new FormControl('', [
@@ -27,6 +31,7 @@ export class RegisterComponent implements OnInit {
 
   test = ""
   invalidInput = false;
+  successfulRegister = "pending";
 
   get emailInput(){
     return this.registerForm.get('emailInput')
@@ -47,8 +52,9 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  sendEmail(): void {
 
+  delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 
   // [A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}
@@ -60,7 +66,34 @@ export class RegisterComponent implements OnInit {
       this.fullName.valid &&
       this.firstPassword.value == this.secondPassword.value)
     {
-      console.log("HEY")
+      console.log("Successful register!")
+      this.invalidInput = false;
+      let userDto = new UserDto(this.emailInput.value, this.fullName.value, this.firstPassword.value)
+      let result = this.registerService.registerAccount(userDto);
+      result.subscribe(result => {
+        // console.log("AuthComponent: response from the server -> ", result);
+
+        if (result) {
+          console.log("all good!")
+          this.successfulRegister = "success";
+
+          (async () => {
+            // Do something before delay
+            console.log('before delay')
+
+            await this.delay(1000);
+
+            // Do something after
+            console.log('after delay')
+            // this.router.navigate(['/home'])
+          })();
+
+        } else {
+          console.log("all bad!")
+          this.successfulRegister = "fail";
+        }
+      }
+      )
     }
     else
     {

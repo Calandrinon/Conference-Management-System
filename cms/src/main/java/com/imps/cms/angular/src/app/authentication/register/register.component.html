@@ -51,3 +51,11 @@
 <div *ngIf="invalidInput == true">
   <h4 class="red-alert">The passwords do not match.</h4>
 </div>
+
+<div *ngIf="successfulRegister == 'success'">
+  <h4 class="red-alert" style="color: forestgreen;">Successful register!.</h4>
+</div>
+
+<div *ngIf="successfulRegister == 'fail'">
+  <h4 class="red-alert" style="color: forestgreen;">Register failed. Try again.</h4>
+</div>
