@@ -195,3 +195,9 @@ body {
   letter-spacing: -10px;
   margin-bottom: 0;
 }
+
+
+.red-alert {
+  color: crimson;
+  text-align: center;
+}

@@ -10,6 +10,7 @@ import { PresentationsComponent } from './presentations/presentations.component'
 import { ContactComponent } from './contact/contact.component';
 import {AuthenticationService} from "./authentication/service/authentication.service";
 import { HttpClientModule, HttpClient} from "@angular/common/http";
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { HttpClientModule, HttpClient} from "@angular/common/http";
     NavigationBarComponent,
     AuthenticationComponent,
     PresentationsComponent,
-    ContactComponent
+    ContactComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
