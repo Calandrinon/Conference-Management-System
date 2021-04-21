@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {Conference} from "./model/conference";
 import {ConferenceService} from "./service/conference.service";
+import {Deadline} from "./model/deadline";
 
 @Component({
   selector: 'app-presentations',
@@ -9,6 +10,8 @@ import {ConferenceService} from "./service/conference.service";
 })
 export class PresentationsComponent implements OnInit {
   conferences: Conference[];
+  deadlinesDictionary: {[id: number] : Deadline[]}= {}
+  toggleDictionary: {[id: number] : boolean} = {}
 
   constructor(private conferenceService: ConferenceService) { }
 
@@ -20,6 +23,18 @@ export class PresentationsComponent implements OnInit {
     this.conferenceService.getConferences().subscribe(conferences => {
       console.log("The requested conferences: ", conferences);
       this.conferences = conferences;
+      for(let i = 0; i < this.conferences.length; i++){
+        this.toggleDictionary[conferences[i].id] = false;
+        this.deadlinesDictionary[conferences[i].id] = [];
+      }
     });
+  }
+
+  getDeadlinesForConference(id: number) {
+    this.conferenceService.getDeadlinesForConferenceId(id).subscribe(deadlines =>{
+      console.log("The requested deadlines: ", deadlines);
+      this.deadlinesDictionary[id] = deadlines;
+      this.toggleDictionary[id] = ! this.toggleDictionary[id];
+    })
   }
 }
