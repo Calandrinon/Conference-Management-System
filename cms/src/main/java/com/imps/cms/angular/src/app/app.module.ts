@@ -13,6 +13,7 @@ import { ProfileComponent } from './profile/profile.component';
 import {AuthenticationComponent} from "./authentication/login/authentication.component";
 import { RegisterComponent } from './authentication/register/register.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {CookieService} from "ngx-cookie-service";
 
 @NgModule({
   declarations: [
@@ -32,7 +33,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

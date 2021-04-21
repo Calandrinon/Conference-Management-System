@@ -32,4 +32,7 @@ public class Invitation {
 
     @Column(name = "token")
     private String token;
+
+    @Enumerated(EnumType.STRING)
+    private UserType userType;
 }
