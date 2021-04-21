@@ -19,6 +19,7 @@ export class PresentationsComponent implements OnInit {
   getConferences(): void {
     this.conferenceService.getConferences().subscribe(conferences => {
       console.log("The requested conferences: ", conferences);
+      this.conferences = conferences;
     });
   }
 }
