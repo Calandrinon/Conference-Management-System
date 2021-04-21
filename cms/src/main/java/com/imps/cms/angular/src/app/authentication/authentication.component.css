@@ -1,287 +1,197 @@
-/*------------------------------------------------------------------
-[Master Stylesheet]
-
-Project    	: Aether
-Version		: 1.0
-Last change	: 2015/03/27
--------------------------------------------------------------------*/
-/*------------------------------------------------------------------
-[Table of contents]
-
-1. General Structure
-2. Anchor Link
-3. Text Outside the Box
-4. Main Form
-5. Login Button
-6. Form Invalid
-7. Form - Main Message
-8. Custom Checkbox & Radio
-9. Misc
--------------------------------------------------------------------*/
-/*=== 1. General Structure ===*/
-html,
+html {
+  height: 100%;
+}
 body {
-  background: #efefef;
-  padding: 10px;
-  font-family: 'Varela Round';
+  height: 100%;
+  margin: 0;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
-/*=== 2. Anchor Link ===*/
-a {
-  color: #aaaaaa;
-  transition: all ease-in-out 200ms;
+
+/* Text Align */
+.text-c {
+  text-align: center;
 }
-a:hover {
-  color: #333333;
-  text-decoration: none;
+.text-l {
+  text-align: left;
 }
-/*=== 3. Text Outside the Box ===*/
-.etc-login-form {
-  color: #919191;
-  padding: 10px 20px;
+.text-r {
+  text-align: right
 }
-.etc-login-form p {
-  margin-bottom: 5px;
+.text-j {
+  text-align: justify;
 }
-/*=== 4. Main Form ===*/
-.login-form-1 {
-  max-width: 300px;
-  border-radius: 5px;
-  display: inline-block;
+
+/* Text Color */
+.text-whitesmoke {
+  color: whitesmoke
 }
-.main-login-form {
-  position: relative;
+.text-darkyellow {
+  color: #000000;
 }
-.login-form-1 .form-control {
-  border: 0;
-  box-shadow: 0 0 0;
-  border-radius: 0;
-  background: transparent;
-  color: #555555;
-  padding: 7px 0;
-  font-weight: bold;
-  height:auto;
+
+/* Lines */
+
+.line-b {
+  border-bottom: 1px solid #FFEB3B !important;
 }
-.login-form-1 .form-control::-webkit-input-placeholder {
-  color: #999999;
+
+/* Buttons */
+.button {
+  border-radius: 3px;
 }
-.login-form-1 .form-control:-moz-placeholder,
-.login-form-1 .form-control::-moz-placeholder,
-.login-form-1 .form-control:-ms-input-placeholder {
-  color: #999999;
+.form-button {
+  background-color: rgba(255, 235, 59, 0.24);
+  border-color: rgba(255, 235, 59, 0.24);
+  color: #000000;
 }
-.login-form-1 .form-group {
-  margin-bottom: 0;
-  border-bottom: 2px solid #efefef;
-  padding-right: 20px;
-  position: relative;
+.form-button:hover,
+.form-button:focus,
+.form-button:active,
+.form-button.active,
+.form-button:active:focus,
+.form-button:active:hover,
+.form-button.active:hover,
+.form-button.active:focus {
+  background-color: rgba(255, 235, 59, 0.473);
+  border-color: rgba(255, 235, 59, 0.473);
+  color: #000000;
 }
-.login-form-1 .form-group:last-child {
-  border-bottom: 0;
+.button-l {
+  width: 100% !important;
 }
-.login-group {
-  background: #ffffff;
-  color: #999999;
-  border-radius: 8px;
-  padding: 10px 20px;
+
+/* Margins g(global) - l(left) - r(right) - t(top) - b(bottom) */
+
+.margin-g {
+  margin: 15px;
 }
-.login-group-checkbox {
-  padding: 5px 0;
+.margin-g-sm {
+  margin: 10px;
 }
-/*=== 5. Login Button ===*/
-.login-form-1 .login-button {
-  position: absolute;
-  right: -25px;
-  top: 50%;
-  background: #ffffff;
-  color: #999999;
-  padding: 11px 0;
-  width: 50px;
-  height: 50px;
-  margin-top: -25px;
-  border: 5px solid #efefef;
-  border-radius: 50%;
-  transition: all ease-in-out 500ms;
+.margin-g-md {
+  margin: 20px;
 }
-.login-form-1 .login-button:hover {
-  color: #555555;
-  transform: rotate(450deg);
+.margin-g-lg {
+  margin: 30px;
 }
-.login-form-1 .login-button.clicked {
-  color: #555555;
+
+.margin-l {
+  margin-left: 15px;
 }
-.login-form-1 .login-button.clicked:hover {
-  transform: none;
+.margin-l-sm {
+  margin-left: 10px;
 }
-.login-form-1 .login-button.clicked.success {
-  color: #2ecc71;
+.margin-l-md {
+  margin-left: 20px;
 }
-.login-form-1 .login-button.clicked.error {
-  color: #e74c3c;
+.margin-l-lg {
+  margin-left: 30px;
 }
-/*=== 6. Form Invalid ===*/
-label.form-invalid {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 5;
+
+.margin-r {
+  margin-right: 15px;
+}
+.margin-r-sm {
+  margin-right: 10px;
+}
+.margin-r-md {
+  margin-right: 20px;
+}
+.margin-r-lg {
+  margin-right: 30px;
+}
+
+.margin-t {
+  margin-top: 15px;
+}
+.margin-t-sm {
+  margin-top: 10px;
+}
+.margin-t-md {
+  margin-top: 20px;
+}
+.margin-t-lg {
+  margin-top: 30px;
+}
+
+.margin-b {
+  margin-bottom: 15px;
+}
+.margin-b-sm {
+  margin-bottom: 10px;
+}
+.margin-b-md {
+  margin-bottom: 20px;
+}
+.margin-b-lg {
+  margin-bottom: 30px;
+}
+
+/* Bootstrap Form Control Extension */
+
+.form-control,
+.border-line {
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #424242;
+  border-radius: 1px;
+  color: inherit;
   display: block;
-  margin-top: -25px;
-  padding: 7px 9px;
-  background: #777777;
-  color: #ffffff;
-  border-radius: 5px;
-  font-weight: bold;
-  font-size: 11px;
+  padding: 6px 12px;
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  width: 100%;
 }
-label.form-invalid:after {
-  top: 100%;
-  right: 10px;
-  border: solid transparent;
-  content: " ";
-  height: 0;
-  width: 0;
-  position: absolute;
-  pointer-events: none;
-  border-color: transparent;
-  border-top-color: #777777;
-  border-width: 6px;
+.form-control:focus,
+.border-line:focus {
+  border-color: #FFEB3B;
+  background-color: #ffffee;
+  color: #000000;
 }
-/*=== 7. Form - Main Message ===*/
-.login-form-main-message {
-  background: #ffffff;
-  color: #999999;
-  border-left: 3px solid transparent;
-  border-radius: 3px;
-  margin-bottom: 8px;
-  font-weight: bold;
-  height: 0;
-  padding: 0 20px 0 17px;
-  opacity: 0;
-  transition: all ease-in-out 200ms;
-}
-.login-form-main-message.show {
-  height: auto;
-  opacity: 1;
-  padding: 10px 20px 10px 17px;
-}
-.login-form-main-message.success {
-  border-left-color: #2ecc71;
-}
-.login-form-main-message.error {
-  border-left-color: #e74c3c;
-}
-/*=== 8. Custom Checkbox & Radio ===*/
-/* Base for label styling */
-[type="checkbox"]:not(:checked),
-[type="checkbox"]:checked,
-[type="radio"]:not(:checked),
-[type="radio"]:checked {
-  position: absolute;
-  left: -9999px;
-}
-[type="checkbox"]:not(:checked) + label,
-[type="checkbox"]:checked + label,
-[type="radio"]:not(:checked) + label,
-[type="radio"]:checked + label {
-  position: relative;
-  padding-left: 25px;
-  padding-top: 1px;
-  cursor: pointer;
-}
-/* checkbox aspect */
-[type="checkbox"]:not(:checked) + label:before,
-[type="checkbox"]:checked + label:before,
-[type="radio"]:not(:checked) + label:before,
-[type="radio"]:checked + label:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 2px;
-  width: 17px;
-  height: 17px;
-  border: 0px solid #aaa;
-  background: #f0f0f0;
-  border-radius: 3px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
-}
-/* checked mark aspect */
-[type="checkbox"]:not(:checked) + label:after,
-[type="checkbox"]:checked + label:after,
-[type="radio"]:not(:checked) + label:after,
-[type="radio"]:checked + label:after {
-  position: absolute;
-  color: #555555;
-  transition: all .2s;
-}
-/* checked mark aspect changes */
-[type="checkbox"]:not(:checked) + label:after,
-[type="radio"]:not(:checked) + label:after {
-  opacity: 0;
-  transform: scale(0);
-}
-[type="checkbox"]:checked + label:after,
-[type="radio"]:checked + label:after {
-  opacity: 1;
-  transform: scale(1);
-}
-/* disabled checkbox */
-[type="checkbox"]:disabled:not(:checked) + label:before,
-[type="checkbox"]:disabled:checked + label:before,
-[type="radio"]:disabled:not(:checked) + label:before,
-[type="radio"]:disabled:checked + label:before {
+.form-control,
+.form-control:focus {
   box-shadow: none;
-  border-color: #8c8c8c;
-  background-color: #878787;
 }
-[type="checkbox"]:disabled:checked + label:after,
-[type="radio"]:disabled:checked + label:after {
-  color: #555555;
+.form-control::-webkit-input-placeholder { color: #BDBDBD; }
+
+/* Container */
+
+.container-content {
+  background-color: #e2e2e2;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+  border-color: #FFEB3B;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 0;
 }
-[type="checkbox"]:disabled + label,
-[type="radio"]:disabled + label {
-  color: #8c8c8c;
+
+/* Backgrounds */
+
+.main-bg {
+
+  background: #424242;
+  background: linear-gradient( #424242, #212121);
 }
-/* accessibility */
-[type="checkbox"]:checked:focus + label:before,
-[type="checkbox"]:not(:checked):focus + label:before,
-[type="checkbox"]:checked:focus + label:before,
-[type="checkbox"]:not(:checked):focus + label:before {
-  border: 1px dotted #f6f6f6;
+
+/* Login & Register Pages*/
+
+.login-container {
+  max-width: 400px;
+  z-index: 100;
+  margin: 0 auto;
+  padding-top: 100px;
 }
-/* hover style just for information */
-label:hover:before {
-  border: 1px solid #f6f6f6 !important;
+.login.login-container {
+  width: 300px;
 }
-/*=== Customization ===*/
-/* radio aspect */
-[type="checkbox"]:not(:checked) + label:before,
-[type="checkbox"]:checked + label:before {
-  border-radius: 3px;
+.wrapper.login-container {
+  margin-top: 140px;
 }
-[type="radio"]:not(:checked) + label:before,
-[type="radio"]:checked + label:before {
-  border-radius: 35px;
-}
-/* selected mark aspect */
-[type="checkbox"]:not(:checked) + label:after,
-[type="checkbox"]:checked + label:after {
-  content: '✔';
-  top: 0;
-  left: 2px;
-  font-size: 14px;
-}
-[type="radio"]:not(:checked) + label:after,
-[type="radio"]:checked + label:after {
-  content: '\2022';
-  top: 0;
-  left: 3px;
-  font-size: 30px;
-  line-height: 25px;
-}
-/*=== 9. Misc ===*/
-.logo {
-  padding: 15px 0;
-  font-size: 25px;
-  color: #aaaaaa;
-  font-weight: bold;
+.logo-badge {
+  color: #e6e6e6;
+  font-size: 80px;
+  font-weight: 800;
+  letter-spacing: -10px;
+  margin-bottom: 0;
 }
