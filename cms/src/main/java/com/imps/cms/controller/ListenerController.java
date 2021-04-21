@@ -7,6 +7,11 @@ import com.imps.cms.repository.ConferenceRepository;
 import com.imps.cms.repository.SectionRepository;
 import com.imps.cms.repository.UserRepository;
 import com.imps.cms.repository.UserRoleRepository;
+import com.imps.cms.service.ConferenceService;
+import com.imps.cms.service.SectionService;
+import com.imps.cms.service.UserRoleService;
+import com.imps.cms.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,45 +22,33 @@ import java.net.URISyntaxException;
 @RestController
 @RequestMapping("/api")
 public class ListenerController {
-    private final UserRepository userRepository;
-    private final UserRoleRepository userRoleRepository;
-    private final ConferenceRepository conferenceRepository;
-    private final SectionRepository sectionRepository;
-
-    public ListenerController(UserRepository userRepository, UserRoleRepository userRoleRepository, ConferenceRepository conferenceRepository, SectionRepository sectionRepository) {
-        this.userRepository = userRepository;
-        this.userRoleRepository = userRoleRepository;
-        this.conferenceRepository = conferenceRepository;
-        this.sectionRepository = sectionRepository;
-    }
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRoleService userRoleService;
+    @Autowired
+    private ConferenceService conferenceService;
+    @Autowired
+    private SectionService sectionService;
 
     @PostMapping("/addListener")
     public ResponseEntity<UserRole> addListener(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
         UserRole userRole = UserRole.builder()
-                .user(userRepository.findById(userRoleDto.getUserId()).orElseThrow(() -> new RuntimeException("no user with this id")))
-                .conference(conferenceRepository.findById(userRoleDto.getConferenceId()).orElseThrow(() -> new RuntimeException("no conference with this id")))
+                .user(userService.findById(userRoleDto.getUserId()))
+                .conference(conferenceService.findById(userRoleDto.getConferenceId()))
                 .userType(UserType.LISTENER)
                 .build();
 
-        userRoleRepository.save(userRole);
+        userRoleService.addUserRole(userRole);
         return ResponseEntity.created(new URI("/api/addListener/" + userRole.getId())).body(userRole);
     }
 
     @PutMapping("/selectSection/{userId}")
     public ResponseEntity<User> selectSection(@PathVariable Long userId, @Valid @RequestBody SectionDto sectionDto){
-        User listener = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("no conference with this id"));
-        Section section = sectionRepository.findById(sectionDto.getId()).orElseThrow(() -> new RuntimeException("no conference with this id"));
+        User listener = userService.findById(userId);
+        Section section = sectionService.findById(sectionDto.getId());
         listener.setSection(section);
-        userRepository.save(listener);
+        userService.updateUser(listener);
         return ResponseEntity.ok().body(listener);
     }
-/*
-*     @PutMapping("/group/{id}")
-    ResponseEntity<Group> updateGroup(@Valid @RequestBody Group group) {
-        log.info("Request to update group: {}", group);
-        Group result = groupRepository.save(group);
-        return ResponseEntity.ok().body(result);
-    }
-* */
-
 }
