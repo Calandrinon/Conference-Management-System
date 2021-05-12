@@ -3,7 +3,7 @@ import {DeadlineType} from "./deadlineType";
 
 export class Deadline{
   id: number
-  conference: Conference
+  conferenceId: number
   date: Date
   deadlineType: DeadlineType
 }

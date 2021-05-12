@@ -1,0 +1,12 @@
+h1 {
+  font-family: Barlow;
+  text-align: center;
+}
+
+#contactContent {
+  text-align: justify;
+  width: 70%;
+  justify-content: center;
+  margin: auto;
+  margin-top: 50px;
+}

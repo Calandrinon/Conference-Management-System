@@ -9,6 +9,7 @@ import {RegisterComponent} from "./authentication/register/register.component";
 import {UserPresentationsComponent} from "./user-presentations/user-presentations.component";
 import {AppComponent} from "./app.component";
 import {ListenerPageComponent} from "./listener/listener-page/listener-page.component";
+import {AdminPageComponent} from "./admin-page/admin-page.component";
 
 const routes: Routes = [
   {path: "home", component: HomeComponent},
@@ -19,7 +20,9 @@ const routes: Routes = [
   {path: "register", component: RegisterComponent},
   {path: "profile", component: ProfileComponent},
   {path: "user-presentations", component: UserPresentationsComponent},
-  {path: "listener", component: ListenerPageComponent}
+  {path: "listener", component: ListenerPageComponent},
+  {path: "user-presentations", component: UserPresentationsComponent},
+  {path: "admin-page", component: AdminPageComponent}
 ];
 
 @NgModule({
