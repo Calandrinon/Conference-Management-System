@@ -1,7 +1,9 @@
 package com.imps.cms.controller;
 import com.imps.cms.model.Conference;
 import com.imps.cms.model.Deadline;
+import com.imps.cms.model.converter.DeadlineConverter;
 import com.imps.cms.model.converter.UserRoleConverter;
+import com.imps.cms.model.dto.DeadlineDto;
 import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.ConferenceRepository;
 import com.imps.cms.service.ConferenceService;
@@ -36,8 +38,8 @@ public class ConferenceController {
     }
 
     @RequestMapping("/deadlines/{conferenceId}")
-    public ResponseEntity<List<Deadline>> getDeadlineForConference(@PathVariable Long conferenceId){
-        return new ResponseEntity<>(deadlineService.findByConferenceId(conferenceId), HttpStatus.OK);
+    public ResponseEntity<List<DeadlineDto>> getDeadlineForConference(@PathVariable Long conferenceId){
+        return new ResponseEntity<>(deadlineService.findByConferenceId(conferenceId).stream().map(DeadlineConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @RequestMapping("/userRoles/{conferenceId}/{userId}")

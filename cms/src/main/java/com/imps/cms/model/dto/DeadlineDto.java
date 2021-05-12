@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 @Data
@@ -15,6 +16,6 @@ public class DeadlineDto implements Serializable {
     private Long id;
     private Long conferenceId;
     // todo
-    private String Date;
+    private Date Date;
     private DeadlineType deadlineType;
 }

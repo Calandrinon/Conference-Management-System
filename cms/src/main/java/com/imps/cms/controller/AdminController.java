@@ -1,6 +1,7 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.DeadlineConverter;
 import com.imps.cms.model.converter.UserConverter;
 import com.imps.cms.model.dto.*;
 import com.imps.cms.repository.*;
@@ -17,12 +18,13 @@ import javax.validation.Valid;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminController {
     @Autowired
     private ConferenceService conferenceService;
@@ -35,38 +37,21 @@ public class AdminController {
     @Autowired
     private InvitationService invitationService;
 
-    @GetMapping("/users/all")
-    public ResponseEntity<List<UserDto>> getUsers(){
-        List<UserDto> userDtoList = this.userService.getAll().stream().map(UserConverter::convertToDto).collect(Collectors.toList());
-        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
-    }
-
-    @PostMapping("/addAdmin")
-    public ResponseEntity<UserRole> addAdmin(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
-        UserRole userRole = UserRole.builder()
-                .user(userService.findById(userRoleDto.getUserId()))
-                .conference(conferenceService.findById(userRoleDto.getConferenceId()))
-                .build();
-        userRoleService.addUserRole(userRole);
-        return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
-    }
-
-    @PostMapping("/conference")
+    @PostMapping("/add-conference")
     public ResponseEntity<Conference> addConference(@Valid @RequestBody ConferenceDto conferenceDto) throws URISyntaxException {
-        Conference conference = Conference.builder().title(conferenceDto.getTitle()).build();
-        conferenceService.addConference(conference);
-        return ResponseEntity.created(new URI("/api/conference/" + conference.getId())).body(conference);
+        Conference conference = new Conference();
+        conference.setTitle(conferenceDto.getTitle());
+        return new ResponseEntity<>(conferenceService.addConference(conference), HttpStatus.OK);
     }
 
-    @PostMapping("/deadline")
-    public ResponseEntity<Deadline> addDeadline(@Valid @RequestBody DeadlineDto deadlineDto) throws URISyntaxException {
+    @PostMapping("/add-deadline")
+    public ResponseEntity<DeadlineDto> addDeadline(@Valid @RequestBody DeadlineDto deadlineDto) throws URISyntaxException {
         Deadline deadline = Deadline.builder()
                 .conference(conferenceService.findById(deadlineDto.getConferenceId()))
                 .deadlineType(deadlineDto.getDeadlineType())
+                .date(deadlineDto.getDate())
                 .build();
-                // todo set the date properly
-        deadlineService.addDeadline(deadline);
-        return ResponseEntity.created(new URI("/api/deadline/" + deadline.getId())).body(deadline);
+        return new ResponseEntity<>(DeadlineConverter.convertToDto(deadlineService.addDeadline(deadline)), HttpStatus.OK);
     }
 
     @PostMapping("/invitation")

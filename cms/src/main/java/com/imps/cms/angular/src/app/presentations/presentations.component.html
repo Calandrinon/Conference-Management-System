@@ -1,6 +1,13 @@
 <ul class="list-group" id="myList" role="tablist" *ngFor="let conference of conferences" >
   <div id="conferenceDiv">
-    <li><a class="list-group-item list-group-item-action darkColoredItem" data-toggle="list" role="tab" (click)="getDeadlinesForConference(conference.id)">Conference #{{conference.id}}</a></li>
+    <li>
+      <a class="list-group-item list-group-item-action darkColoredItem" data-toggle="list" role="tab" (click)="getDeadlinesForConference(conference.id)">Conference #{{conference.id}}</a>
+    </li>
+    <li>
+      <ul>
+        <li *ngFor="let role of rolesDictionary[conference.id]" [routerLinkActive]="['active']"><a routerLink="/{{role.userType.toString().toLocaleLowerCase()}}">{{role.userType.toString()}}</a></li>
+      </ul>
+    </li>
     <li><a class="list-group-item list-group-item-action conferenceDescription" data-toggle="list" role="tab">{{conference.title}}</a></li>
       <div *ngIf="toggleDictionary[conference.id]">
         <div *ngFor="let deadline of deadlinesDictionary[conference.id]">

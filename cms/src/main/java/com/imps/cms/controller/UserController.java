@@ -6,6 +6,8 @@ import com.imps.cms.model.converter.UserConverter;
 import com.imps.cms.model.dto.LoginDto;
 import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.UserRepository;
+import com.imps.cms.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +21,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 public class UserController {
     private final UserRepository userRepository;
+    @Autowired
+    private UserService userService;
 
     public String sha256hex(String input) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -54,6 +59,12 @@ public class UserController {
         else {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/users/all")
+    public ResponseEntity<List<UserDto>> getUsers(){
+        List<UserDto> userDtoList = this.userService.getAll().stream().map(UserConverter::convertToDto).collect(Collectors.toList());
+        return new ResponseEntity<>(userDtoList, HttpStatus.OK);
     }
 
     @PostMapping("/registerUser")

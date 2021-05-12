@@ -12,8 +12,8 @@ public class DeadlineService {
     @Autowired
     private DeadlineRepository deadlineRepository;
 
-    public void addDeadline(Deadline deadline) {
-        deadlineRepository.save(deadline);
+    public Deadline addDeadline(Deadline deadline) {
+        return deadlineRepository.save(deadline);
     }
 
     public List<Deadline> findByConferenceId(Long conferenceId) {

@@ -16,8 +16,8 @@ public class ConferenceService {
         return conferenceRepository.findById(id).orElseThrow(() -> new RuntimeException("No conference with this id"));
     }
 
-    public void addConference(Conference conference){
-        conferenceRepository.save(conference);
+    public Conference addConference(Conference conference){
+        return conferenceRepository.save(conference);
     }
 
     public List<Conference> findAll() {
