@@ -25,6 +25,9 @@
 
       <button type="submit" class="form-button button-l margin-b" (click)="login(email.value, password.value)">Sign In</button>
 
+      <div *ngIf="authenticated == false">
+        <p class="red-alert">Wrong e-mail or password.</p>
+      </div>
       <a class="text-darkyellow" href="#"><small>Forgot your password?</small></a>
       <p class="text-darkyellow"><small>Do not have an account?</small></p>
       <a class="text-darkyellow" href="/register"><small>Sign Up</small></a>
@@ -32,6 +35,3 @@
   </div>
 </div>
 
-<div *ngIf="authenticated == false">
-  <h4 class="red-alert">Wrong e-mail or password.</h4>
-</div>
