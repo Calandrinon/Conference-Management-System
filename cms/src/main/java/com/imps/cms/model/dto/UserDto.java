@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +18,5 @@ public class UserDto implements Serializable {
     private String email;
     private String password;
     private Long sectionId;
+    private List<Long> proposalIds;
 }

@@ -5,6 +5,7 @@ export class UserDto {
   email: string;
   password: string;
   sectionId = -1;
+  proposalIds = [];
 
   constructor(email, fullName, password) {
     this.email = email;

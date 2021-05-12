@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {Observable} from "rxjs";
 import {AuthenticationService} from "../service/authentication.service";
+import {UserDto} from "../model/UserDto";
+import {NavigationBarComponent} from "../../navigation-bar/navigation-bar.component";
 
 @Component({
   selector: 'app-authentication',
@@ -15,22 +16,22 @@ export class AuthenticationComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   login(email: string, password: string): void {
     console.log("Here is where the login should start...");
-    let response = this.authenticationService.checkCredentials(email, password);
-    response.subscribe(result => {
-      console.log("AuthComponent: response from the server -> ", result);
-      if (result) {
-        // redirect to route /profile
-        this.authenticated = true;
-        this.router.navigate(["/profile"]);
-      } else {
-        // display error message
-        this.authenticated = false;
+    this.authenticationService.checkCredentials(email, password).subscribe(
+      (response: UserDto) => {
+        if(response !== null){
+          this.authenticated = true
+          console.log(JSON.stringify(response))
+          localStorage.setItem('current-user', JSON.stringify(response))
+          document.defaultView.location.reload()
+          this.router.navigate(['/profile']).then(p => {window.location.reload(); return true});
+        }
+        else this.authenticated = false
       }
-    });
+    )
   }
-
 }

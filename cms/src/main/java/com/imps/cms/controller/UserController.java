@@ -2,6 +2,7 @@ package com.imps.cms.controller;
 
 import com.imps.cms.model.User;
 import com.imps.cms.model.UserType;
+import com.imps.cms.model.converter.UserConverter;
 import com.imps.cms.model.dto.LoginDto;
 import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.UserRepository;
@@ -44,17 +45,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> loginUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<UserDto> loginUser(@RequestBody LoginDto loginDto) {
 
         User user = this.userRepository.findByEmail(loginDto.getEmail()).get(0);
-
-        try {
-            String hashed_password = sha256hex(user.getSalt() + loginDto.getPassword());
+        if(user.getPassword().equals(loginDto.getPassword())){
+            return new ResponseEntity<>(UserConverter.convertToDto(user), HttpStatus.OK);
         }
-        catch (NoSuchAlgorithmException e) {
-            return ResponseEntity.ok(false);
+        else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
-        return ResponseEntity.ok(user.getPassword().equals(loginDto.getPassword()));
     }
 
     @PostMapping("/registerUser")
