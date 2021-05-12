@@ -11,6 +11,7 @@ export class ListenerPageComponent implements OnInit {
   listenerName = "";
   conferenceName = "";
   reservationFee = "";
+  purchaseDone = "";
   localStorage;
 
   constructor() { }
@@ -24,7 +25,10 @@ export class ListenerPageComponent implements OnInit {
       this.conferenceName = localStorage.getItem('conference-name-selected')
     }
 
+  }
 
+  okei(event: Event): void {
+    this.purchaseDone = "Processing...";
   }
 
 }
