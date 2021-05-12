@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {Conference} from "./model/conference";
 import {ConferenceService} from "./service/conference.service";
 import {Deadline} from "./model/deadline";
+import {UserDto} from "../authentication/model/UserDto";
+import {UserRoleDto} from "./model/user-role-dto";
 
 @Component({
   selector: 'app-presentations',
@@ -12,6 +14,7 @@ export class PresentationsComponent implements OnInit {
   conferences: Conference[];
   deadlinesDictionary: {[id: number] : Deadline[]}= {}
   toggleDictionary: {[id: number] : boolean} = {}
+  roles: UserRoleDto[];
 
   constructor(private conferenceService: ConferenceService) { }
 
@@ -36,5 +39,19 @@ export class PresentationsComponent implements OnInit {
       this.deadlinesDictionary[id] = deadlines;
       this.toggleDictionary[id] = ! this.toggleDictionary[id];
     })
+  }
+
+  getUserRoles(conferenceId: number): UserRoleDto[] {
+    let userAsString: string = localStorage.getItem("current-user");
+    let user: UserDto = JSON.parse(userAsString);
+    console.log(user);
+
+    let userId = user.id;
+    let userRoles: UserRoleDto[];
+    this.conferenceService.getRolesForCurrentUserForConference(conferenceId, userId).subscribe(roles => {
+      userRoles = roles;
+    });
+
+    return userRoles;
   }
 }
