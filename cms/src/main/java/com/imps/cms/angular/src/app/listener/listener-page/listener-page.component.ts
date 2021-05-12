@@ -27,7 +27,7 @@ export class ListenerPageComponent implements OnInit {
 
   }
 
-  okei(event: Event): void {
+  processPurchase(event: Event): void {
     this.purchaseDone = "Processing...";
   }
 

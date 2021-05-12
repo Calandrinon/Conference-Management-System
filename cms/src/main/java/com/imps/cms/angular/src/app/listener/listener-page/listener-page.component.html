@@ -2,7 +2,7 @@
   <div style="padding-left: 5vw">
     <h3>Hello {{listenerName}} !</h3>
     <h4>Would you like to purchase a reservation for {{conferenceName}} ?</h4>
-    <button (click)="okei($event)" type="button">Purchase</button>
+    <button (click)="processPurchase($event)" type="button">Purchase</button>
     <div *ngIf="reservationFee != ''">
       <h5>Reservation fee: {{reservationFee}}</h5>
     </div>
