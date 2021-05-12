@@ -8,6 +8,7 @@ import {AuthenticationComponent} from "./authentication/login/authentication.com
 import {RegisterComponent} from "./authentication/register/register.component";
 import {UserPresentationsComponent} from "./user-presentations/user-presentations.component";
 import {AppComponent} from "./app.component";
+import {AdminPageComponent} from "./admin-page/admin-page.component";
 
 const routes: Routes = [
   {path: "home", component: HomeComponent},
@@ -17,7 +18,8 @@ const routes: Routes = [
   {path: "auth", component: AuthenticationComponent},
   {path: "register", component: RegisterComponent},
   {path: "profile", component: ProfileComponent},
-  {path: "user-presentations", component: UserPresentationsComponent}
+  {path: "user-presentations", component: UserPresentationsComponent},
+  {path: "admin-page", component: AdminPageComponent}
 ];
 
 @NgModule({

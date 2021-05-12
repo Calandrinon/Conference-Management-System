@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Conference} from "./model/conference";
 import {ConferenceService} from "./service/conference.service";
 import {Deadline} from "./model/deadline";
+import {UserDto} from "../authentication/model/UserDto";
 
 @Component({
   selector: 'app-presentations',

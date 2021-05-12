@@ -9,6 +9,7 @@
         <li [routerLinkActive]="['active']"><a routerLink="/contact">Contact</a></li>
         <li *ngIf="id === -1" [routerLinkActive]="['active']"><a routerLink="/auth">Login or register</a></li>
         <li *ngIf="id !== -1" [routerLinkActive]="['active']"><a routerLink="/profile">Profile</a></li>
+        <li *ngIf="id === 69420" [routerLinkActive]="['active']"><a routerLink="/admin-page">Admin</a></li>
         <li *ngIf="id !== -1" style="float: left"><a (click)="logout()">Log Out</a></li>
       </ul>
     </div>

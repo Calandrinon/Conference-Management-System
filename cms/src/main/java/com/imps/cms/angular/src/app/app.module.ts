@@ -15,6 +15,7 @@ import { RegisterComponent } from './authentication/register/register.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CookieService} from "ngx-cookie-service";
 import { UserPresentationsComponent } from './user-presentations/user-presentations.component';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { UserPresentationsComponent } from './user-presentations/user-presentati
     ContactComponent,
     ProfileComponent,
     RegisterComponent,
-    UserPresentationsComponent
+    UserPresentationsComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,

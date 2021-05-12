@@ -24,4 +24,6 @@ export class ConferenceService {
   getRolesForCurrentUserForConference(conferenceId: number, userId: number): Observable<UserRoleDto[]>{
     return this.httpClient.get<UserRoleDto[]>(this.url + "userRoles/" + conferenceId + "/" + userId);
   }
+
+
 }

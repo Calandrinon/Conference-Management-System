@@ -1,0 +1,83 @@
+<div style="display: flex; justify-content: center">
+  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addConference">Add Conference</button>
+</div>
+
+<div style="display: flex; justify-content: center">
+  <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#addDeadline">Add Deadline</button>
+</div>
+
+<div class="modal fade" id="addConference" tabindex="-1" role="dialog" aria-labelledby="addConferenceLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addConferenceLabel">Add a conference</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addConferenceForm="ngForm">
+          <div class="form-group">
+            <label for="title">
+              Title
+            </label>
+            <input id="title" ngModel name="title" class="form-control" placeholder="Title">
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" (click)="addConference(addConferenceForm)" data-dismiss="modal" class="btn btn-primary">Add Conference</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addDeadline" tabindex="-1" role="dialog" aria-labelledby="addDeadlineLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addDeadlineLabel">Add a deadline</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form #addDeadlineForm="ngForm">
+          <div class="form-group">
+            <label for="conferenceId">
+              Conference Id
+            </label>
+            <input id="conferenceId" ngModel name="conferenceId" class="form-control" placeholder="Conference Id">
+          </div>
+          <div class="form-group">
+            <label for="date">
+              Date
+            </label>
+            <input id="date" ngModel type="date" name="date" class="form-control" placeholder="Date">
+          </div>
+          <div class="form-group">
+            <label for="deadlineType">
+              Deadline Type
+            </label>
+            <select id="deadlineType" ngModel name="deadlineType" class="form-control">
+              <option>SUBMIT_PROPOSAL</option>
+              <option>BID</option>
+              <option>ASSIGN_PAPERS_TO_REVIEWERS</option>
+              <option>REVIEW</option>
+              <option>ACCEPT_PAPERS</option>
+              <option>IMPROVE_PAPERS</option>
+              <option>CREATE_SECTIONS</option>
+              <option>UPLOAD_PRESENTATION</option>
+              <option>REGISTER_LISTENER</option>
+            </select>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" (click)="addDeadline(addDeadlineForm)" data-dismiss="modal" class="btn btn-primary">Add Deadline</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
