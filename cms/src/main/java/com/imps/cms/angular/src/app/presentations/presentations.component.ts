@@ -19,6 +19,7 @@ export class PresentationsComponent implements OnInit {
   roles: UserRoleDto[];
   user: UserDto;
   currentConference: Conference;
+  conferenceToBeUpdated: Conference;
 
   constructor(private conferenceService: ConferenceService, private router: Router) { }
 
@@ -29,11 +30,14 @@ export class PresentationsComponent implements OnInit {
     }
     else this.user = null;
     this.getConferences();
+    console.log("Here are the current user's roles:");
+    console.log(this.rolesDictionary);
   }
 
   getConferences(): void {
     this.conferenceService.getConferences().subscribe(conferences => {
       console.log("The requested conferences: ", conferences);
+      conferences.sort((conference1: Conference, conference2: Conference) => conference1.id - conference2.id);
       this.conferences = conferences;
       for(let i = 0; i < this.conferences.length; i++){
         this.toggleDictionary[conferences[i].id] = false;
@@ -140,5 +144,20 @@ export class PresentationsComponent implements OnInit {
   goToAdminPage(conference: Conference) {
     sessionStorage.setItem("conference", JSON.stringify(conference))
     this.router.navigate(['/admin-page'])
+  }
+
+  setConferenceToBeUpdated(conference: Conference) {
+    this.conferenceToBeUpdated = conference;
+    console.log("Conference to be updated has been set.");
+  }
+
+  updateProposalSubmissionDeadline(conference: Conference, deadlineForm: NgForm) {
+    console.log("This is the conference to be updated: ", conference);
+    conference.submitProposal = deadlineForm.value.submitProposal;
+    console.log("This is the conference after it will be updated: ", conference);
+
+    this.conferenceService.updateConference(conference).subscribe(response => {
+      console.log("The proposal submission deadline has been updated: ", response);
+    })
   }
 }

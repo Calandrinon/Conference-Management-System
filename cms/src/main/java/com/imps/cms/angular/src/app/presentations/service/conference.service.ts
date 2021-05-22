@@ -40,4 +40,8 @@ export class ConferenceService {
   addConference(conference: Conference): Observable<Conference> {
     return this.httpClient.post<Conference>(this.url + "admin/add-conference", conference);
   }
+
+  updateConference(conference: Conference): Observable<Conference> {
+    return this.httpClient.post<Conference>(this.url + "chair/update-deadline", conference);
+  }
 }

@@ -1,7 +1,7 @@
 <ul class="list-group" id="myList" role="tablist" *ngFor="let conference of conferences" >
   <div id="conferenceDiv">
     <li>
-      <a class="list-group-item list-group-item-action darkColoredItem" (click)="setToggle(conference.id)" data-toggle="list" role="tab">Conference #{{conference.id}} {{conference.title}}</a>
+      <a id="conference-{{conference.id}}" class="list-group-item list-group-item-action darkColoredItem" (click)="setToggle(conference.id)" data-toggle="list" role="tab">Conference #{{conference.id}} {{conference.title}}</a>
       <div *ngIf="user !== null">
         <button *ngIf="rolesDictionary[conference.id]?.isAuthor"  class="btn btn-outline-primary" (click)="goToAuthorPage(conference)">Author</button>
         <button *ngIf="!rolesDictionary[conference.id]?.isAuthor" data-bs-toggle="modal" data-bs-target="#addAuthorModal" (click)="setConference(conference)" class="btn btn-outline-primary">Get Author Role</button>
@@ -18,7 +18,9 @@
   <div *ngIf="toggleDictionary[conference.id]">
     <ul class="list-group">
       <li>
-        <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}}</a>
+        <div>
+          <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}} <button *ngIf="rolesDictionary[conference.id]?.isChair" class="deadlineUpdateButton" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateProposalSubmissionDeadline" (click)="setConferenceToBeUpdated(conference)">Update proposal submission deadline</button></a>
+        </div>
         <a class="list-group-item">Bid Proposals: {{conference.bidProposals|date}}</a>
         <a class="list-group-item">Assign Papers To Reviewers: {{conference.assignPapersToReviewers|date}}</a>
         <a class="list-group-item">Review Papers: {{conference.reviewPapers|date}}</a>
@@ -183,6 +185,32 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" (click)="addConference(addConferenceForm)" data-bs-dismiss="modal" class="btn btn-primary">Add Conference</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="updateProposalSubmissionDeadline" tabindex="-1" role="dialog" aria-labelledby="updateConferenceLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updaonferenceLabel">Update a conference</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #deadline="ngForm">
+          <div class="form-group">
+            <label for="submitProposal">
+              Proposal submission deadline
+            </label>
+            <input id="ta" ngModel name="submitProposal" class="form-control" type="date">
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="updateProposalSubmissionDeadline(conferenceToBeUpdated, deadline)" data-bs-dismiss="modal" class="btn btn-primary">Update Conference</button>
         </div>
       </div>
     </div>

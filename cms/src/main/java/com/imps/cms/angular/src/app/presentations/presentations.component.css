@@ -16,3 +16,9 @@
 .conferenceDescription {
   color: black;
 }
+
+.deadlineUpdateButton {
+  display: flex;
+  float: right;
+  justify-content: center;
+}
