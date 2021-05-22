@@ -12,10 +12,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvitationDto implements Serializable {
-    private Long id;
+    private Long conferenceId;
     private Long senderId;
     private Long receiverId;
-    private String text;
-    private String token;
     private UserType userType;
+    private String status;
 }

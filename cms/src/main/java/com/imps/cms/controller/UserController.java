@@ -1,11 +1,15 @@
 package com.imps.cms.controller;
 
+import com.imps.cms.model.Conference;
 import com.imps.cms.model.User;
+import com.imps.cms.model.UserRole;
 import com.imps.cms.model.UserType;
 import com.imps.cms.model.converter.UserConverter;
 import com.imps.cms.model.dto.LoginDto;
 import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.UserRepository;
+import com.imps.cms.service.ConferenceService;
+import com.imps.cms.service.UserRoleService;
 import com.imps.cms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +34,10 @@ public class UserController {
     private final UserRepository userRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ConferenceService conferenceService;
+    @Autowired
+    private UserRoleService userRoleService;
 
     public String sha256hex(String input) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -81,7 +89,11 @@ public class UserController {
                 .build();
 
 
-        this.userRepository.save(user);
+        user = this.userRepository.save(user);
+        for(Conference conference: conferenceService.findAll()){
+            userRoleService.setEmptyUserRole(conference, user);
+        }
+
         return ResponseEntity.created(new URI("api/registerUser/" + user.getId())).body(user);
     }
 }

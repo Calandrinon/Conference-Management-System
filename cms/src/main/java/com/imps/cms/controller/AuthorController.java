@@ -1,17 +1,16 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.UserRoleConverter;
 import com.imps.cms.model.dto.PaperDto;
 import com.imps.cms.model.dto.ProposalDto;
 import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -32,15 +31,11 @@ public class AuthorController {
     @Autowired
     private PaperService paperService;
 
-    @PostMapping("/userRole")
-    public ResponseEntity<UserRole> addAuthor(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
-        UserRole userRole = UserRole.builder()
-                .user(userService.findById(userRoleDto.getUserId()))
-                .conference(conferenceService.findById(userRoleDto.getConferenceId()))
-                .build();
-
-        this.userRoleService.addUserRole(userRole);
-        return ResponseEntity.created(new URI("/api/userRole/" + userRole.getId())).body(userRole);
+    @GetMapping("/add-author/{conferenceId}/{userId}")
+    public ResponseEntity<UserRoleDto> addAuthor(@PathVariable Long conferenceId, @PathVariable Long userId) throws URISyntaxException {
+        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+        userRole.setIsAuthor(true);
+        return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
 
     @PostMapping("/paper")

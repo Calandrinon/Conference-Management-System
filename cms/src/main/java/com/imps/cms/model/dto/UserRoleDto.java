@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Dictionary;
 
 @Data
 @AllArgsConstructor
@@ -15,5 +16,8 @@ public class UserRoleDto implements Serializable {
     private Long id;
     private Long conferenceId;
     private Long userId;
-    private UserType userType;
+    private Boolean isChair;
+    private Boolean isAuthor;
+    private Boolean isPcMember;
+    private Boolean isListener;
 }
