@@ -11,7 +11,7 @@
         <button *ngIf="!rolesDictionary[conference.id]?.isPcMember" data-bs-toggle="modal" data-bs-target="#addPcMemberModal" (click)="setConference(conference)" class="btn btn-outline-success">Activate Pc Member Role</button>
         <button *ngIf="rolesDictionary[conference.id]?.isChair" class="btn btn-outline-warning" (click)="goToChairPage(conference)">Chair</button>
         <button *ngIf="!rolesDictionary[conference.id]?.isChair" data-bs-toggle="modal" data-bs-target="#addChairModal" (click)="setConference(conference)" class="btn btn-outline-warning">Activate Chair Role</button>
-        <button *ngIf="user?.id === 69420" class="btn btn-outline-danger" (click)="gotToAdminPage(conference)">Admin</button>
+        <button *ngIf="user?.id === 69420" class="btn btn-outline-danger" (click)="goToAdminPage(conference)">Admin</button>
       </div>
     </li>
   </div>

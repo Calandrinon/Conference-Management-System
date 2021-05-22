@@ -69,6 +69,40 @@ public class InvitationService {
     public Invitation getChairInvitations(Long conferenceId, Long userId) {
         Conference conference = conferenceRepository.findById(conferenceId).get();
         User receiver = userRepository.findById(userId).get();
-        return invitationRepository.findByConferenceAndReceiverAndUserType(conference, receiver, UserType.CHAIR).stream().filter(invitation -> invitation.getStatus().equals("PENDING")).collect(Collectors.toList()).get(0);
+        List<Invitation> invitations = invitationRepository.findByConferenceAndReceiverAndUserType(conference, receiver, UserType.CHAIR).stream().filter(invitation -> invitation.getStatus().equals("PENDING")).collect(Collectors.toList());
+        if(invitations.size() > 0)
+            return invitations.get(0);
+        return null;
+    }
+
+    public void cancelChairInvitation(Long conferenceId, Long receiverId) {
+        Conference conference = conferenceRepository.findById(conferenceId).get();
+        User receiver = userRepository.findById(receiverId).get();
+        for(Invitation invitation: invitationRepository.findByConferenceAndReceiverAndUserType(conference, receiver, UserType.CHAIR)){
+            invitation.setStatus("CANCELED");
+            invitationRepository.save(invitation);
+        }
+    }
+
+    public Invitation updateInvitation(Invitation invitation) {
+        return invitationRepository.save(invitation);
+    }
+
+    public Invitation getPcMemberInvitations(Long conferenceId, Long userId) {
+        Conference conference = conferenceRepository.findById(conferenceId).get();
+        User receiver = userRepository.findById(userId).get();
+        List<Invitation> invitations = invitationRepository.findByConferenceAndReceiverAndUserType(conference, receiver, UserType.PC_MEMBER).stream().filter(invitation -> invitation.getStatus().equals("PENDING")).collect(Collectors.toList());
+        if(invitations.size() > 0)
+            return invitations.get(0);
+        return null;
+    }
+
+    public void cancelPcMemberInvitation(Long conferenceId, Long receiverId) {
+        Conference conference = conferenceRepository.findById(conferenceId).get();
+        User receiver = userRepository.findById(receiverId).get();
+        for(Invitation invitation: invitationRepository.findByConferenceAndReceiverAndUserType(conference, receiver, UserType.PC_MEMBER)){
+            invitation.setStatus("CANCELED");
+            invitationRepository.save(invitation);
+        }
     }
 }

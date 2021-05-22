@@ -5,6 +5,7 @@ import {UserDto} from "../authentication/model/UserDto";
 import {UserRoleDto} from "../presentations/model/user-role-dto";
 import {Invitation} from "../presentations/model/invitation";
 import {UserType} from "../presentations/model/user-type";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-admin-page',
@@ -22,7 +23,7 @@ export class AdminPageComponent implements OnInit {
   ngOnInit(): void {
     this.conference = JSON.parse(sessionStorage.getItem('conference'))
     console.log(this.conference)
-    this.loggedUser = JSON.parse(localStorage.getItem('user'))
+    this.loggedUser = JSON.parse(localStorage.getItem('current-user'))
     this.getUsers();
   }
 
@@ -40,6 +41,10 @@ export class AdminPageComponent implements OnInit {
       (response: Invitation) => {
         console.log(response)
         this.invitations[userId] = response
+      },
+      (response: HttpErrorResponse) => {
+        console.log(response)
+        this.invitations[userId] = null
       }
     )
   }
@@ -51,6 +56,7 @@ export class AdminPageComponent implements OnInit {
         this.users = response;
         for(let user of this.users){
           this.getRolesForUser(user.id)
+          this.getInvitationsForUser(user.id)
         }
       }
     )
@@ -69,6 +75,15 @@ export class AdminPageComponent implements OnInit {
         console.log(response)
       }
     )
-    this.getRolesForUser(receiverId)
+    this.getUsers();
+  }
+
+  cancelInvitation(receiverId: number): void{
+    this.adminService.cancelChairInvitation(this.conference.id, receiverId).subscribe(
+      (response: void) => {
+        console.log(response)
+      }
+    )
+    this.getUsers();
   }
 }

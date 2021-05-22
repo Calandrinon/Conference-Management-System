@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="border-radius: 0;">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" routerLink="/home">Chair Page for Conference #{{conference.id}}</a>
+    </div>
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <li class="nav-item"><button class="btn btn-dark" (click)="showInvitePanel()">Invite chairs/pc members</button></li>
+      <li class="nav-item"><button class="btn btn-dark">Assign Proposals</button></li>
+      <li class="nav-item"><button class="btn btn-dark">Resolve Reviews</button></li>
+      <li class="nav-item"><button class="btn btn-dark">Create Sections</button></li>
+    </ul>
+  </div>
+</nav>
+
+<div *ngIf="invitePanelShow">
+  <ul class="list-group" role="tablist" *ngFor="let user of users">
+    <li class="list-group-item darkColoredItem" style="margin-top: 20px">
+      {{user.fullName}}: {{user.email}}
+      <ul class="list-group" role="tablist">
+        <li class="list-group-item">
+          <button *ngIf="!userRoles[user.id]?.isChair && chairInvitations[user.id] == null" (click)="inviteChair(user.id)"  class="btn btn-primary">Invite as chair</button>
+          <button *ngIf="chairInvitations[user.id]?.status == 'PENDING'" class="btn btn-success" [disabled]="true">Chair Invitation Sent</button>
+          <button *ngIf="chairInvitations[user.id]?.status == 'PENDING'" (click)="cancelChairInvitation(user.id)" class="btn btn-danger">Cancel Chair Invitation</button>
+          <button *ngIf="userRoles[user.id]?.isChair" class="btn btn-success" [disabled]="true">Is Already Chair</button>
+        </li>
+        <li class="list-group-item">
+          <button *ngIf="!userRoles[user.id]?.isPcMember && pcMemberInvitations[user.id] == null" (click)="invitePcMember(user.id)" class="btn btn-primary">Invite as pc member</button>
+          <button *ngIf="pcMemberInvitations[user.id]?.status == 'PENDING'" class="btn btn-success" [disabled]="true">Pc Member Invitation Sent</button>
+          <button *ngIf="pcMemberInvitations[user.id]?.status == 'PENDING'" (click)="cancelPcMemberInvitation(user.id)" class="btn btn-danger">Cancel Pc Member Invitation</button>
+          <button *ngIf="userRoles[user.id]?.isPcMember" class="btn btn-success" [disabled]="true">Is Already Pc Member</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>

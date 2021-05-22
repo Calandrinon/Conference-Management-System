@@ -41,7 +41,10 @@ public class AdminController {
 
     @GetMapping("/get-chair-invitations/{conferenceId}/{userId}")
     public ResponseEntity<InvitationDto> getChairInvitations(@PathVariable Long conferenceId, @PathVariable Long userId){
-        return new ResponseEntity<>(InvitationConverter.convertToDto(invitationService.getChairInvitations(conferenceId, userId)), HttpStatus.OK);
+        Invitation invitation = invitationService.getChairInvitations(conferenceId, userId);
+        if(invitation == null)
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
     }
 
     @PostMapping("/invite-chair")
@@ -59,5 +62,11 @@ public class AdminController {
         invitation = invitationService.addInvitation(invitation);
         //invitationService.sendInvitationEmail(invitation);
         return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cancel-invite-chair/{conferenceId}/{receiverId}")
+    public ResponseEntity<?> cancelChairInvite(@PathVariable Long conferenceId, @PathVariable Long receiverId){
+        invitationService.cancelChairInvitation(conferenceId, receiverId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

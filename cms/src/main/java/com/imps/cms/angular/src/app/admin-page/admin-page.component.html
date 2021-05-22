@@ -3,9 +3,9 @@
   <ul class="list-group" role="tablist" *ngFor="let user of users">
     <li class="list-group-item darkColoredItem" style="margin-top: 20px">
       {{user.fullName}}: {{user.email}}
-      <button *ngIf="!userRoles[user.id]?.isChair" (click)="inviteChair(user.id)" class="btn btn-primary">Invite as chair</button>
-      <button class="btn btn-success" [disabled]="true">Invitation Sent</button>
-      <button class="btn btn-danger">Cancel Invitation</button>
+      <button *ngIf="!userRoles[user.id]?.isChair && invitations[user.id] == null" (click)="inviteChair(user.id)" class="btn btn-primary">Invite as chair</button>
+      <button *ngIf="invitations[user.id]?.status == 'PENDING'" class="btn btn-success" [disabled]="true">Invitation Sent</button>
+      <button *ngIf="invitations[user.id]?.status == 'PENDING'" (click)="cancelInvitation(user.id)" class="btn btn-danger">Cancel Invitation</button>
       <button *ngIf="userRoles[user.id]?.isChair" class="btn btn-success" [disabled]="true">Is Already Chair</button>
     </li>
   </ul>
