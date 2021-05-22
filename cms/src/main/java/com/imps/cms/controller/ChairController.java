@@ -39,6 +39,8 @@ public class ChairController {
     private ReviewService reviewService;
     @Autowired
     private SectionService sectionService;
+    @Autowired
+    private MailService mailService;
 
     @GetMapping(value = "/add-chair/{conferenceId}/{userId}/{token}")
     public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
@@ -69,13 +71,13 @@ public class ChairController {
                 .sender(userService.findById(invitationDto.getSenderId()))
                 .conference(conferenceService.findById(invitationDto.getConferenceId()))
                 .userType(UserType.CHAIR)
-                .text("Wannabe a chair " + invitationDto.getConferenceId() + "?")
+                .text("Wannabe a chair?")
                 .token(RandomString.make(10))
                 .status(invitationDto.getStatus())
                 .build();
 
         invitation = invitationService.addInvitation(invitation);
-        //invitationService.sendInvitationEmail(invitation);
+        mailService.sendEmail("Wannabe a chair?", invitation.getText() + " for conference " + invitation.getConference().getTitle() + " \nToken: " + invitation.getToken(), invitation.getReceiver().getEmail());
         return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
     }
 
@@ -100,13 +102,13 @@ public class ChairController {
                 .sender(userService.findById(invitationDto.getSenderId()))
                 .conference(conferenceService.findById(invitationDto.getConferenceId()))
                 .userType(UserType.PC_MEMBER)
-                .text("Wannabe a Pc Member for conference " + invitationDto.getConferenceId() + "?")
+                .text("Wannabe a Pc Member")
                 .token(RandomString.make(10))
                 .status(invitationDto.getStatus())
                 .build();
 
         invitation = invitationService.addInvitation(invitation);
-        //invitationService.sendInvitationEmail(invitation);
+        mailService.sendEmail("Wannabe a Pc Member?", invitation.getText() + " for conference " + invitation.getConference().getTitle() + " \nToken: " + invitation.getToken(), invitation.getReceiver().getEmail());
         return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
     }
 

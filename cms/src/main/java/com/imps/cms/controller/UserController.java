@@ -127,7 +127,7 @@ public class UserController {
             userRoleService.setEmptyUserRole(conference, user);
         }
 
-        mailService.SendEmail("hello there", "get verified here", user.getEmail());
+        mailService.sendEmail("hello there", "get verified here", user.getEmail());
         return ResponseEntity.created(new URI("api/registerUser/" + user.getId())).body(user);
     }
 }

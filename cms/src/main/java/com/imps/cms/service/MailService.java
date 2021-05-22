@@ -15,7 +15,7 @@ public class MailService {
     private static final String username = "nimdaCMS69420@gmail.com";
     private static final String password = "wsbrurguryprwtmt";
 
-    public boolean SendEmail(String title, String body, String destination) {
+    public boolean sendEmail(String title, String body, String destination) {
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -34,7 +34,7 @@ public class MailService {
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(this.email));
+            message.setFrom(new InternetAddress(email));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(destination)

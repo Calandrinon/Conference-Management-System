@@ -11,7 +11,11 @@
 </nav>
 
 <div *ngIf="bidProposalShow">
-  Bid proposals
+  <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
+    <li class="list-group-item-dark">
+      {{proposal.id}}#
+    </li>
+  </ul>
 </div>
 
 <div *ngIf="reviewProposalShow">

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Conference} from "../presentations/model/conference";
 import {UserDto} from "../authentication/model/UserDto";
 import {PcMemberService} from "./service/pc-member.service";
+import {Proposal} from "../presentations/model/proposal";
 
 @Component({
   selector: 'app-pc-member-page',
@@ -13,6 +14,7 @@ export class PcMemberPageComponent implements OnInit {
   public loggedUser: UserDto
   public bidProposalShow: boolean = false
   public reviewProposalShow: boolean = false
+  public proposals: Proposal[]
   constructor(private pcMemberService: PcMemberService) { }
 
   ngOnInit(): void {
