@@ -25,6 +25,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
@@ -53,18 +54,38 @@ public class UserController {
         return hex_hash.toString();
     }
 
+    public String generateString(int length) {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int randomLimitedInt = leftLimit + (int)
+                    (random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        String generatedString = buffer.toString();
+
+        return generatedString;
+    }
+
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> loginUser(@RequestBody LoginDto loginDto) {
 
         User user = this.userRepository.findByEmail(loginDto.getEmail()).get(0);
-        if(user.getPassword().equals(loginDto.getPassword())){
-            return new ResponseEntity<>(UserConverter.convertToDto(user), HttpStatus.OK);
-        }
-        else {
+        try {
+            if(user.getPassword().equals(this.sha256hex(user.getSalt() + loginDto.getPassword()))){
+                return new ResponseEntity<>(UserConverter.convertToDto(user), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(null, HttpStatus.OK);
+            }
+        } catch (NoSuchAlgorithmException e) {
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
@@ -81,11 +102,20 @@ public class UserController {
         if ((long) users.size() != 0) {
             return ResponseEntity.of(Optional.empty());
         }
+
+        String hashed_password;
+        String salt = this.generateString(8);
+        try {
+            hashed_password = this.sha256hex(salt + userDto.getPassword());
+        } catch (NoSuchAlgorithmException e) {
+            return ResponseEntity.of(Optional.empty());
+        }
+
         User user = User.builder()
                 .fullName(userDto.getFullName())
-                .salt(userDto.getSalt())
+                .salt(salt)
                 .email(userDto.getEmail())
-                .password(userDto.getPassword())
+                .password(hashed_password)
                 .build();
 
 
