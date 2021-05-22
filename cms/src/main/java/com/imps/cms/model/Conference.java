@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.beans.ConstructorProperties;
 import java.util.Date;
 
 @Entity
@@ -14,13 +13,34 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Table(name = "Conference")
 public class Conference {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Title")
     private String title;
+
+    @Temporal(TemporalType.DATE)
+    private Date submitProposal;
+
+    @Temporal(TemporalType.DATE)
+    private Date bidProposals;
+
+    @Temporal(TemporalType.DATE)
+    private Date assignPapersToReviewers;
+
+    @Temporal(TemporalType.DATE)
+    private Date reviewPapers;
+
+    @Temporal(TemporalType.DATE)
+    private Date acceptPapers;
+
+    @Temporal(TemporalType.DATE)
+    private Date createSections;
+
+    @Temporal(TemporalType.DATE)
+    private Date assignPapersToSections;
+
+    @Temporal(TemporalType.DATE)
+    private Date listenerSectionRegistration;
 }

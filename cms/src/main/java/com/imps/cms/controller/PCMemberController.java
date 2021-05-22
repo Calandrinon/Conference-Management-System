@@ -1,12 +1,15 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.UserRoleConverter;
 import com.imps.cms.model.dto.BidDto;
 import com.imps.cms.model.dto.ProposalDto;
 import com.imps.cms.model.dto.ReviewDto;
+import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,21 +36,16 @@ public class PCMemberController {
     @Autowired
     private ReviewService reviewService;
 
-    @GetMapping(value = "/pc_member/{userId}/{conferenceId}/{token}")
-    public ResponseEntity<Boolean> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
-        List<Invitation> invitations = invitationService.findByReceiver(userId);
-        for(Invitation invitation: invitations){
+    @GetMapping(value = "/add-pc-member/{conferenceId}/{userId}/{token}")
+    public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
+        for(Invitation invitation: invitationService.findByReceiver(userId)){
             if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.PC_MEMBER){
-                UserRole userRole = UserRole.builder()
-                        .user(userService.findById(userId))
-                        .userType(UserType.PC_MEMBER)
-                        .conference(conferenceService.findById(conferenceId))
-                        .build();
-                userRoleService.addUserRole(userRole);
-                return ResponseEntity.ok(Boolean.TRUE);
+                UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+                userRole.setIsPcMember(true);
+                return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
             }
         }
-        return ResponseEntity.ok(Boolean.FALSE);
+        return new ResponseEntity<>(new UserRoleDto(), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/bids/placeBid")

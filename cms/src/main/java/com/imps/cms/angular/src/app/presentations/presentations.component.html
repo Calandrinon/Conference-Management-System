@@ -1,11 +1,190 @@
 <ul class="list-group" id="myList" role="tablist" *ngFor="let conference of conferences" >
   <div id="conferenceDiv">
-    <li><a class="list-group-item list-group-item-action darkColoredItem" data-toggle="list" role="tab" (click)="getDeadlinesForConference(conference.id)">Conference #{{conference.id}}</a></li>
-    <li><a class="list-group-item list-group-item-action conferenceDescription" data-toggle="list" role="tab">{{conference.title}}</a></li>
-      <div *ngIf="toggleDictionary[conference.id]">
-        <div *ngFor="let deadline of deadlinesDictionary[conference.id]">
-          <li><a class="list-group-item list-group-item-action" data-toggle="list" role="tab">{{deadline.deadlineType}}: {{deadline.date|date}}</a></li>
-        </div>
+    <li>
+      <a class="list-group-item list-group-item-action darkColoredItem" (click)="setToggle(conference.id)" data-toggle="list" role="tab">Conference #{{conference.id}} {{conference.title}}</a>
+      <div *ngIf="user !== null">
+        <button *ngIf="rolesDictionary[conference.id]?.isAuthor"  class="btn btn-outline-primary" (click)="goToAuthorPage(conference)">Author</button>
+        <button *ngIf="!rolesDictionary[conference.id]?.isAuthor" data-bs-toggle="modal" data-bs-target="#addAuthorModal" (click)="setConference(conference)" class="btn btn-outline-primary">Get Author Role</button>
+        <button *ngIf="rolesDictionary[conference.id]?.isListener" class="btn btn-outline-secondary" (click)="goToListenerPage(conference)">Listener</button>
+        <button *ngIf="!rolesDictionary[conference.id]?.isListener" data-bs-toggle="modal" data-bs-target="#addListenerModal" (click)="setConference(conference)" class="btn btn-outline-secondary">Get Listener Role</button>
+        <button *ngIf="rolesDictionary[conference.id]?.isPcMember" class="btn btn-outline-success" (click)="goToPcMemberPage(conference)">Pc Member</button>
+        <button *ngIf="!rolesDictionary[conference.id]?.isPcMember" data-bs-toggle="modal" data-bs-target="#addPcMemberModal" (click)="setConference(conference)" class="btn btn-outline-success">Activate Pc Member Role</button>
+        <button *ngIf="rolesDictionary[conference.id]?.isChair" class="btn btn-outline-warning" (click)="goToChairPage(conference)">Chair</button>
+        <button *ngIf="!rolesDictionary[conference.id]?.isChair" data-bs-toggle="modal" data-bs-target="#addChairModal" (click)="setConference(conference)" class="btn btn-outline-warning">Activate Chair Role</button>
+        <button *ngIf="user?.id === 69420" class="btn btn-outline-danger" (click)="gotToAdminPage(conference)">Admin</button>
       </div>
+    </li>
+  </div>
+  <div *ngIf="toggleDictionary[conference.id]">
+    <ul class="list-group">
+      <li>
+        <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}}</a>
+        <a class="list-group-item">Bid Proposals: {{conference.bidProposals|date}}</a>
+        <a class="list-group-item">Assign Papers To Reviewers: {{conference.assignPapersToReviewers|date}}</a>
+        <a class="list-group-item">Review Papers: {{conference.reviewPapers|date}}</a>
+        <a class="list-group-item">Accept Papers: {{conference.acceptPapers|date}}</a>
+        <a class="list-group-item">Create Sections: {{conference.createSections|date}}</a>
+        <a class="list-group-item">Assign Papers To Sections: {{conference.assignPapersToSections|date}}</a>
+        <a class="list-group-item">Listener Section Registration: {{conference.listenerSectionRegistration|date}}</a>
+      </li>
+    </ul>
   </div>
 </ul>
+<div *ngIf="user?.id === 69420" style="display: flex; justify-content: center">
+  <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addConference">Add Conference</button>
+</div>
+
+<div class="modal fade" id="addAuthorModal" tabindex="-1" role="dialog" aria-labelledby="addAuthorModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addAuthorModalLabel">Get Author Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to give yourself the Author role in Conference {{currentConference?.title}}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" (click)="addAuthorRole(currentConference.id)"  data-bs-dismiss="modal" class="btn btn-danger">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addListenerModal" tabindex="-1" role="dialog" aria-labelledby="addListenerModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addListenerModalLabel">Get Listener Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to give yourself the Listener role in Conference {{currentConference?.title}}
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" (click)="addListenerRole(currentConference.id)"  data-bs-dismiss="modal" class="btn btn-danger">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addPcMemberModal" tabindex="-1" role="dialog" aria-labelledby="addPcMemberModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addPcMemberModalLabel">Activate Pc Member Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #pcMemberForm="ngForm">
+          <div class="form-group">
+            <label for="token">Activation token</label>
+            <input ngModel name="token" id="token" class="form-control" placeholder="Activation Token">
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="addPcMemberRole(currentConference.id, pcMemberForm)"  data-bs-dismiss="modal" class="btn btn-danger">Get Role</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addChairModal" tabindex="-1" role="dialog" aria-labelledby="addChairModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addChairModalLabel">Activate Chair Role</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #chairForm="ngForm">
+          <div class="form-group">
+            <label for="token2">Activation token</label>
+            <input ngModel name="token" id="token2" class="form-control" placeholder="Activation Token">
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="addChairRole(currentConference.id, chairForm)"  data-bs-dismiss="modal" class="btn btn-danger">Get Role</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addConference" tabindex="-1" role="dialog" aria-labelledby="addConferenceLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addConferenceLabel">Add a conference</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #addConferenceForm="ngForm">
+          <div class="form-group">
+            <label for="title">
+              Title
+            </label>
+            <input id="title" ngModel name="title" class="form-control" placeholder="Title">
+          </div>
+          <div class="form-group">
+            <label for="submitProposal">
+              Submit Proposal
+            </label>
+            <input id="submitProposal" ngModel name="submitProposal" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="bidProposals">
+              Bid Proposals
+            </label>
+            <input id="bidProposals" ngModel name="bidProposals" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="assignPapersToReviewers">
+              Assign Papers To Reviewers
+            </label>
+            <input id="assignPapersToReviewers" ngModel name="assignPapersToReviewers" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="reviewPapers">
+              Review Papers
+            </label>
+            <input id="reviewPapers" ngModel name="reviewPapers" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="acceptPapers">
+              Accept Papers
+            </label>
+            <input id="acceptPapers" ngModel name="acceptPapers" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="createSections">
+              Create Sections
+            </label>
+            <input id="createSections" ngModel name="createSections" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="assignPapersToSections">
+              Assign Papers To Sections
+            </label>
+            <input id="assignPapersToSections" ngModel name="assignPapersToSections" class="form-control" type="date">
+          </div>
+          <div class="form-group">
+            <label for="listenerSectionRegistration">
+              Listener Section Registration
+            </label>
+            <input id="listenerSectionRegistration" ngModel name="listenerSectionRegistration" class="form-control" type="date">
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" (click)="addConference(addConferenceForm)" data-bs-dismiss="modal" class="btn btn-primary">Add Conference</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

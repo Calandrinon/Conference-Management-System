@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Conference} from "../../presentations/model/conference";
 import {Observable} from "rxjs";
-import {Deadline} from "../../presentations/model/deadline";
+import {UserDto} from "../../authentication/model/UserDto";
+import {UserRoleDto} from "../../presentations/model/user-role-dto";
+import {Invitation} from "../../presentations/model/invitation";
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +12,19 @@ export class AdminService {
   private url = "http://localhost:8080/api/";
   constructor(private httpClient: HttpClient) { }
 
-  addConference(conference: Conference): Observable<Conference> {
-    return this.httpClient.post<Conference>(this.url + "admin/add-conference", conference);
+  getUsers(): Observable<UserDto[]> {
+    return this.httpClient.get<UserDto[]>(this.url + "users/all")
   }
 
-  addDeadline(deadline: Deadline): Observable<Deadline> {
-    return this.httpClient.post<Deadline>(this.url + "admin/add-deadline", deadline);
+  getRolesForUser(conferenceId: number, userId: number): Observable<UserRoleDto>{
+    return this.httpClient.get<UserRoleDto>(this.url + "user-roles/" + conferenceId + "/" + userId);
+  }
+
+  getInvitationsForUser(conferenceId: number, userId: number): Observable<Invitation>{
+    return this.httpClient.get<Invitation>(this.url + "/admin/get-chair-invitations/" + conferenceId + "/" + userId);
+  }
+
+  sendChairInvitation(invitation: Invitation): Observable<Invitation> {
+    return this.httpClient.post<Invitation>(this.url + "/admin/invite-chair", invitation);
   }
 }

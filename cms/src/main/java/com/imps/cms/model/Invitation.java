@@ -24,6 +24,12 @@ public class Invitation {
     private User receiver;
 
     @ManyToOne
+    @JoinColumn(name = "conference_id")
+    private Conference conference;
+
+    private String status;
+
+    @ManyToOne
     @JoinColumn(name = "SenderID")
     private User sender;
 

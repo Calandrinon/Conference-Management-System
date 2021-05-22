@@ -32,4 +32,19 @@ public class UserRoleService {
         User user = userRepository.findById(userId).get();
         return userRoleRepository.findByConferenceAndUser(conference, user);
     }
+
+    public UserRole updateUserRole(UserRole userRole) {
+        return  userRoleRepository.save(userRole);
+    }
+
+    public void setEmptyUserRole(Conference conference, User user){
+        UserRole userRole =  new UserRole();
+        userRole.setUser(user);
+        userRole.setConference(conference);
+        userRole.setIsChair(false);
+        userRole.setIsListener(false);
+        userRole.setIsPcMember(false);
+        userRole.setIsAuthor(false);
+        userRoleRepository.save(userRole);
+    }
 }

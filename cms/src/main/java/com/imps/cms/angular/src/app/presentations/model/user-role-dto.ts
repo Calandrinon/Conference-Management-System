@@ -1,8 +1,9 @@
-import {UserType} from "./user-type";
-
 export interface UserRoleDto{
   id: number
   conferenceId: number
   userId: number
-  userType: UserType
+  isChair: boolean
+  isAuthor: boolean
+  isPcMember: boolean
+  isListener: boolean
 }

@@ -2,10 +2,12 @@ package com.imps.cms.controller;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.UserRoleConverter;
 import com.imps.cms.model.dto.*;
 import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +44,6 @@ public class ChairController {
         Invitation invitation = Invitation.builder()
                 .receiver(userService.findById(invitationDto.getReceiverId()))
                 .sender(userService.findById(invitationDto.getSenderId()))
-                .text(invitationDto.getText())
-                .token(invitationDto.getToken())
                 .userType(invitationDto.getUserType())
                 .build();
 
@@ -52,21 +52,16 @@ public class ChairController {
         return ResponseEntity.created(new URI("api/invitation/" + invitation.getId())).body(invitation);
     }
 
-    @GetMapping(value = "/chair/{userId}/{conferenceId}/{token}")
-    public ResponseEntity<Boolean> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
-        List<Invitation> invitations = invitationService.findByReceiver(userId);
-        for(Invitation invitation: invitations){
+    @GetMapping(value = "/add-chair/{conferenceId}/{userId}/{token}")
+    public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
+        for(Invitation invitation: invitationService.findByReceiver(userId)){
             if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.CHAIR){
-                UserRole userRole = UserRole.builder()
-                        .user(userService.findById(userId))
-                        .userType(UserType.CHAIR)
-                        .conference(conferenceService.findById(conferenceId))
-                        .build();
-                userRoleService.addUserRole(userRole);
-                return ResponseEntity.ok(Boolean.TRUE);
+                UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+                userRole.setIsChair(true);
+                return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
             }
         }
-        return ResponseEntity.ok(Boolean.FALSE);
+        return new ResponseEntity<>(new UserRoleDto(), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/proposal/assign/{userId}")
