@@ -1,17 +1,19 @@
 package com.imps.cms.service;
 
 
+import org.springframework.stereotype.Service;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 
+@Service
 public class MailService {
 
-    private static final String email = "";
-    private static final String username = "";
-    private static final String password = "";
+    private static final String email = "nimdaCMS69420@gmail.com";
+    private static final String username = "nimdaCMS69420@gmail.com";
+    private static final String password = "wsbrurguryprwtmt";
 
     public boolean SendEmail(String title, String body, String destination) {
 
