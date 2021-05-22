@@ -2,10 +2,12 @@ package com.imps.cms.controller;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.InvitationConverter;
 import com.imps.cms.model.converter.UserRoleConverter;
 import com.imps.cms.model.dto.*;
 import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/chair")
 public class ChairController {
     @Autowired
     private InvitationService invitationService;
@@ -38,30 +40,80 @@ public class ChairController {
     @Autowired
     private SectionService sectionService;
 
-
-    @PostMapping("/invitation/inviteChair")
-    public ResponseEntity<Invitation> inviteChairsOrPCMembers(@Valid @RequestBody InvitationDto invitationDto) throws URISyntaxException {
-        Invitation invitation = Invitation.builder()
-                .receiver(userService.findById(invitationDto.getReceiverId()))
-                .sender(userService.findById(invitationDto.getSenderId()))
-                .userType(invitationDto.getUserType())
-                .build();
-
-        invitationService.addInvitation(invitation);
-        invitationService.sendInvitationEmail(invitation);
-        return ResponseEntity.created(new URI("api/invitation/" + invitation.getId())).body(invitation);
-    }
-
     @GetMapping(value = "/add-chair/{conferenceId}/{userId}/{token}")
     public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
         for(Invitation invitation: invitationService.findByReceiver(userId)){
-            if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.CHAIR){
+            if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.CHAIR && invitation.getStatus().equals("PENDING")){
                 UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
                 userRole.setIsChair(true);
+                invitation.setStatus("ACCEPTED");
+                invitationService.updateInvitation(invitation);
                 return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(new UserRoleDto(), HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/get-chair-invitations/{conferenceId}/{userId}")
+    public ResponseEntity<InvitationDto> getChairInvitations(@PathVariable Long conferenceId, @PathVariable Long userId){
+        Invitation invitation = invitationService.getChairInvitations(conferenceId, userId);
+        if(invitation == null)
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
+    }
+
+    @PostMapping("/invite-chair")
+    public ResponseEntity<InvitationDto> inviteChair(@Valid @RequestBody InvitationDto invitationDto) throws URISyntaxException {
+        Invitation invitation = Invitation.builder()
+                .receiver(userService.findById(invitationDto.getReceiverId()))
+                .sender(userService.findById(invitationDto.getSenderId()))
+                .conference(conferenceService.findById(invitationDto.getConferenceId()))
+                .userType(UserType.CHAIR)
+                .text("Wannabe a chair " + invitationDto.getConferenceId() + "?")
+                .token(RandomString.make(10))
+                .status(invitationDto.getStatus())
+                .build();
+
+        invitation = invitationService.addInvitation(invitation);
+        //invitationService.sendInvitationEmail(invitation);
+        return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cancel-invite-chair/{conferenceId}/{receiverId}")
+    public ResponseEntity<?> cancelChairInvite(@PathVariable Long conferenceId, @PathVariable Long receiverId){
+        invitationService.cancelChairInvitation(conferenceId, receiverId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/get-pc-member-invitations/{conferenceId}/{userId}")
+    public ResponseEntity<InvitationDto> getPcMemberInvitations(@PathVariable Long conferenceId, @PathVariable Long userId){
+        Invitation invitation = invitationService.getPcMemberInvitations(conferenceId, userId);
+        if(invitation == null)
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
+    }
+
+    @PostMapping("/invite-pc-member")
+    public ResponseEntity<InvitationDto> invitePcMember(@Valid @RequestBody InvitationDto invitationDto) throws URISyntaxException {
+        Invitation invitation = Invitation.builder()
+                .receiver(userService.findById(invitationDto.getReceiverId()))
+                .sender(userService.findById(invitationDto.getSenderId()))
+                .conference(conferenceService.findById(invitationDto.getConferenceId()))
+                .userType(UserType.PC_MEMBER)
+                .text("Wannabe a Pc Member for conference " + invitationDto.getConferenceId() + "?")
+                .token(RandomString.make(10))
+                .status(invitationDto.getStatus())
+                .build();
+
+        invitation = invitationService.addInvitation(invitation);
+        //invitationService.sendInvitationEmail(invitation);
+        return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cancel-invite-pc-member/{conferenceId}/{receiverId}")
+    public ResponseEntity<?> cancelPcMemberInvite(@PathVariable Long conferenceId, @PathVariable Long receiverId){
+        invitationService.cancelPcMemberInvitation(conferenceId, receiverId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/proposal/assign/{userId}")

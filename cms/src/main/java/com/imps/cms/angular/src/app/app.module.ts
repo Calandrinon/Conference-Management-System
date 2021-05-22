@@ -16,6 +16,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CookieService} from "ngx-cookie-service";
 import { UserPresentationsComponent } from './user-presentations/user-presentations.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { ChairPageComponent } from './chair-page/chair-page.component';
+import { PcMemberPageComponent } from './pc-member-page/pc-member-page.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     ProfileComponent,
     RegisterComponent,
     UserPresentationsComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    ChairPageComponent,
+    PcMemberPageComponent
   ],
   imports: [
     BrowserModule,

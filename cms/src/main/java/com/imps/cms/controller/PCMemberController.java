@@ -39,9 +39,11 @@ public class PCMemberController {
     @GetMapping(value = "/add-pc-member/{conferenceId}/{userId}/{token}")
     public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
         for(Invitation invitation: invitationService.findByReceiver(userId)){
-            if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.PC_MEMBER){
+            if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.PC_MEMBER && invitation.getStatus().equals("PENDING")){
                 UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
                 userRole.setIsPcMember(true);
+                invitation.setStatus("ACCEPTED");
+                invitationService.updateInvitation(invitation);
                 return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
             }
         }

@@ -116,12 +116,12 @@ export class PresentationsComponent implements OnInit {
 
   goToPcMemberPage(conference: Conference) {
     sessionStorage.setItem("conference", JSON.stringify(conference))
-    this.router.navigate(['/pc-member'])
+    this.router.navigate(['/pc-member-page'])
   }
 
   goToChairPage(conference: Conference) {
     sessionStorage.setItem("conference", JSON.stringify(conference))
-    this.router.navigate(['/chair'])
+    this.router.navigate(['/chair-page'])
   }
 
   setToggle(conferenceId: number) {
@@ -137,7 +137,7 @@ export class PresentationsComponent implements OnInit {
     this.getConferences();
   }
 
-  gotToAdminPage(conference: Conference) {
+  goToAdminPage(conference: Conference) {
     sessionStorage.setItem("conference", JSON.stringify(conference))
     this.router.navigate(['/admin-page'])
   }

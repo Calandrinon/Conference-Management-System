@@ -9,6 +9,8 @@ import {RegisterComponent} from "./authentication/register/register.component";
 import {UserPresentationsComponent} from "./user-presentations/user-presentations.component";
 import {AppComponent} from "./app.component";
 import {AdminPageComponent} from "./admin-page/admin-page.component";
+import {ChairPageComponent} from "./chair-page/chair-page.component";
+import {PcMemberPageComponent} from "./pc-member-page/pc-member-page.component";
 
 const routes: Routes = [
   {path: "home", component: HomeComponent},
@@ -19,7 +21,9 @@ const routes: Routes = [
   {path: "register", component: RegisterComponent},
   {path: "profile", component: ProfileComponent},
   {path: "user-presentations", component: UserPresentationsComponent},
-  {path: "admin-page", component: AdminPageComponent}
+  {path: "admin-page", component: AdminPageComponent},
+  {path: "chair-page", component: ChairPageComponent},
+  {path: "pc-member-page", component: PcMemberPageComponent}
 ];
 
 @NgModule({

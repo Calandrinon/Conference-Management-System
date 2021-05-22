@@ -27,4 +27,8 @@ export class AdminService {
   sendChairInvitation(invitation: Invitation): Observable<Invitation> {
     return this.httpClient.post<Invitation>(this.url + "/admin/invite-chair", invitation);
   }
+
+  cancelChairInvitation(conferenceId: number, receiverId: number): Observable<void> {
+    return this.httpClient.delete<void>(this.url + "/admin/cancel-invite-chair/" + conferenceId + "/" + receiverId);
+  }
 }
