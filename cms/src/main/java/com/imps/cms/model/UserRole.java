@@ -13,22 +13,24 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "UserRole")
 public class UserRole {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "UserID")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "ConferenceID")
+    @JoinColumn(name = "conference_id")
     private Conference conference;
 
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+    private Boolean isChair;
 
+    private Boolean isAuthor;
+
+    private Boolean isPcMember;
+
+    private Boolean isListener;
 }

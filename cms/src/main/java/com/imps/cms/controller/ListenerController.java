@@ -1,6 +1,7 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
+import com.imps.cms.model.converter.UserRoleConverter;
 import com.imps.cms.model.dto.SectionDto;
 import com.imps.cms.model.dto.UserRoleDto;
 import com.imps.cms.repository.ConferenceRepository;
@@ -12,6 +13,7 @@ import com.imps.cms.service.SectionService;
 import com.imps.cms.service.UserRoleService;
 import com.imps.cms.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,16 +33,11 @@ public class ListenerController {
     @Autowired
     private SectionService sectionService;
 
-    @PostMapping("/addListener")
-    public ResponseEntity<UserRole> addListener(@Valid @RequestBody UserRoleDto userRoleDto) throws URISyntaxException {
-        UserRole userRole = UserRole.builder()
-                .user(userService.findById(userRoleDto.getUserId()))
-                .conference(conferenceService.findById(userRoleDto.getConferenceId()))
-                .userType(UserType.LISTENER)
-                .build();
-
-        userRoleService.addUserRole(userRole);
-        return ResponseEntity.created(new URI("/api/addListener/" + userRole.getId())).body(userRole);
+    @GetMapping("/add-listener/{conferenceId}/{userId}")
+    public ResponseEntity<UserRoleDto> addListener(@PathVariable Long conferenceId, @PathVariable Long userId) throws URISyntaxException {
+        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+        userRole.setIsListener(true);
+        return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
 
     @PutMapping("/selectSection/{userId}")
