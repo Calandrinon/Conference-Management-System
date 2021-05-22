@@ -23,4 +23,8 @@ public class ConferenceService {
     public List<Conference> findAll() {
         return conferenceRepository.findAll();
     }
+
+    public Conference updateConference(Conference conference){
+        return conferenceRepository.save(conference);
+    }
 }

@@ -199,4 +199,23 @@ public class ChairController {
         paperService.updatePaper(paper);
         return ResponseEntity.ok(Boolean.TRUE);
     }
+
+
+    @PostMapping("/update-deadline")
+    public ResponseEntity<Conference> updateDeadline(@RequestBody ConferenceDto conferenceDto){
+        Conference conference = Conference.builder()
+                .id(conferenceDto.getId())
+                .title(conferenceDto.getTitle())
+                .submitProposal(conferenceDto.getSubmitProposal())
+                .bidProposals(conferenceDto.getBidProposals())
+                .assignPapersToReviewers(conferenceDto.getAssignPapersToReviewers())
+                .reviewPapers(conferenceDto.getReviewPapers())
+                .acceptPapers(conferenceDto.getAcceptPapers())
+                .createSections(conferenceDto.getCreateSections())
+                .assignPapersToSections(conferenceDto.getAssignPapersToSections())
+                .listenerSectionRegistration(conferenceDto.getListenerSectionRegistration())
+                .build();
+        conferenceService.updateConference(conference);
+        return ResponseEntity.ok(conference);
+    }
 }
