@@ -1,1 +1,9 @@
-<p> Logged in as user {{id}}</p>
+<div style="padding: 3vw; background-color: #dddfe3; height: 100%; position: fixed; width: 100%">
+  <p> Logged in as user <b>{{userData.email}}</b></p>
+  <form>
+    <label for="changePasswordField" style="font-size: 1.5vw; font-weight: bold;">Change password</label><br>
+    <label for="changePasswordField">Input new password</label>
+    <input type="password" class="form-control" id="changePasswordField" style="width: 20vw" #newPassword>
+    <button class="btn btn-light" (click)="changePassword(newPassword)">Change password</button>
+  </form>
+</div>
