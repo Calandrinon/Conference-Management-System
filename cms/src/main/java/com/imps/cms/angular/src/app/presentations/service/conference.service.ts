@@ -30,7 +30,7 @@ export class ConferenceService {
   }
 
   addPcMemberRole(conferenceId: number, userId: number, token: any): Observable<UserRoleDto>{
-    return this.httpClient.get<UserRoleDto>(this.url + "add-pc-member/" + conferenceId + "/" + userId + "/" + token)
+    return this.httpClient.get<UserRoleDto>(this.url + "/pc-member/add-pc-member/" + conferenceId + "/" + userId + "/" + token)
   }
 
   addChairRole(conferenceId: number, userId: number, token: any): Observable<UserRoleDto>{

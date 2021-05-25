@@ -42,4 +42,8 @@ public class Paper {
     @JoinColumn(name = "SectionID")
     private Section section;
 
+    @ManyToOne
+    @JoinColumn(name = "conference_id")
+    private Conference conference;
+
 }

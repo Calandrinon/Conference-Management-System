@@ -5,8 +5,8 @@
     </div>
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item"><button class="btn btn-dark" (click)="showInvitePanel()">Invite chairs/pc members</button></li>
-      <li class="nav-item"><button class="btn btn-dark">Assign Proposals</button></li>
-      <li class="nav-item"><button class="btn btn-dark">Resolve Reviews</button></li>
+      <li class="nav-item"><button class="btn btn-dark" (click)="showAssignProposalsPanel()">Assign Proposals</button></li>
+      <li class="nav-item"><button class="btn btn-dark" (click)="showResolveReviewsPanel()">Resolve Reviews</button></li>
       <li class="nav-item"><button class="btn btn-dark">Create Sections</button></li>
     </ul>
   </div>
@@ -32,4 +32,144 @@
       </ul>
     </li>
   </ul>
+</div>
+
+<div *ngIf="assignProposalsShow">
+  <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
+    <li class="list-group-item darkColoredItem" style="margin-top: 20px">
+      #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  ACCEPT
+                  <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let user of acceptedUsers[proposal.id]">
+                      {{user.fullName}}: {{user.email}}
+                      <button *ngIf="!reviewExists(user, reviews[proposal.id])" class="btn btn-dark" (click)="setCurrentProposalAndUser(proposal, user)" data-bs-target="#assignProposalModal" data-bs-toggle="modal">Assign Proposal</button>
+                      <button *ngIf="reviewExists(user, reviews[proposal.id])" class="btn btn-dark" [disabled]="true">Proposal Already Assigned</button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm">
+                  REJECT
+                  <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let user of rejectedUsers[proposal.id]">
+                      {{user.fullName}}: {{user.email}}
+                      <button *ngIf="!reviewExists(user, reviews[proposal.id])" class="btn btn-dark" (click)="setCurrentProposalAndUser(proposal, user)" data-bs-target="#assignProposalModal" data-bs-toggle="modal">Assign Proposal</button>
+                      <button *ngIf="reviewExists(user, reviews[proposal.id])" class="btn btn-dark" [disabled]="true">Proposal Already Assigned</button>
+                    </li>
+                  </ul>
+                </div>
+                <div class="col-sm">
+                  UGH
+                  <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let user of ughUsers[proposal.id]">
+                      {{user.fullName}}: {{user.email}}
+                      <button *ngIf="!reviewExists(user, reviews[proposal.id])" class="btn btn-dark" (click)="setCurrentProposalAndUser(proposal, user)" data-bs-target="#assignProposalModal" data-bs-toggle="modal">Assign Proposal</button>
+                      <button *ngIf="reviewExists(user, reviews[proposal.id])" class="btn btn-dark" [disabled]="true">Proposal Already Assigned</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="assignProposalModal" tabindex="-1" role="dialog" aria-labelledby="assignProposalModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assignProposalModalLabel">Assign Proposal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label>Assign proposal {{currentProposal?.id}} to user {{currentUser?.fullName}}?</label>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            <button type="button" (click)="assignProposal(currentProposal, currentUser)" data-bs-dismiss="modal" class="btn btn-danger">Yes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="resolveReviewsShow">
+  <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
+    <li *ngIf="pendingForChair[proposal.id]?.length > 0" class="list-group-item darkColoredItem" style="margin-top: 20px">
+      #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
+      <ul class="list-group" *ngFor="let review of pendingForChair[proposal.id]">
+        <li class="list-group-item">
+          Score: {{review.score}} ----
+          Reviewer: {{review.userId}} ----
+          Notes: {{review.notes}}
+        </li>
+      </ul>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <button *ngIf="pendingForChair[proposal.id]?.length >= 3" (click)="autoReview(proposal)" class="btn btn-dark">Auto-Review</button>
+          <button *ngIf="pendingForChair[proposal.id]?.length < 3" class="btn btn-dark" (click)="setCurrentProposal(proposal)" data-bs-target="#manualReviewModal" data-bs-toggle="modal">Manual Review</button>
+          <button hidden="hidden" class="btn btn-dark" id="manual-review-button" (click)="setCurrentProposal(proposal)" data-bs-target="#manualReviewModal" data-bs-toggle="modal">Manual Review</button>
+          <button class="btn btn-dark" id="contradictory-button" hidden="hidden" (click)="setCurrentProposal(proposal)" data-bs-target="#contradictoryModal" data-bs-toggle="modal">Contradictory</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="manualReviewModal" tabindex="-1" role="dialog" aria-labelledby="manualReviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="manualReviewModalLabel">Manually Review Proposal {{currentProposal?.id}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #reviewProposal="ngForm">
+            <div class="form-group">
+              <label for="status">Accept/Reject proposal</label>
+              <select ngModel name="status" id="status" class="form-control">
+                <option value="ACCEPTED">Accept</option>
+                <option value="REJECTED">Reject</option>
+              </select>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" (click)="manualReview(reviewProposal)" data-bs-dismiss="modal" class="btn btn-danger">Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="contradictoryModal" tabindex="-1" role="dialog" aria-labelledby="contradictoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contradictoryModalLabel">Contradictory Proposal {{currentProposal?.id}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #contradictoryForm="ngForm">
+            <div class="form-group">
+              <label for="manner">Proposal reviews are contradictory, choose what you want to do:</label>
+              <select ngModel name="manner" id="manner" class="form-control">
+                <option value="MANUAL">Manual review</option>
+                <option value="CHAIR_DISCUSSION">Let the reviewers discuss, then decide based on their comments</option>
+                <option value="ASSIGN_NEW_CHAIRS">Assign new reviewers</option>
+              </select>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" (click)="contradictoryReview(contradictoryForm)" data-bs-dismiss="modal" class="btn btn-danger">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

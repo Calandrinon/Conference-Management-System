@@ -1,11 +1,8 @@
 package com.imps.cms.controller;
 
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.imps.cms.model.*;
-import com.imps.cms.model.converter.InvitationConverter;
-import com.imps.cms.model.converter.UserRoleConverter;
+import com.imps.cms.model.converter.*;
 import com.imps.cms.model.dto.*;
-import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -118,31 +114,81 @@ public class ChairController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/proposal/assign/{userId}")
-    public ResponseEntity<Boolean> assignProposal(@RequestBody ProposalDto proposalDto, @PathVariable Long userId){
-        Proposal proposal = Proposal.builder()
-                .paper(paperService.findById(proposalDto.getPaperId()))
-                .status(proposalDto.getStatus())
-                .build();
-        User user = userService.findById(userId);
-        List<Proposal> proposals = user.getProposals();
-        proposals.add(proposal);
-        user.setProposals(proposals);
-        userService.updateUser(user);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @GetMapping("/get-proposals/{conferenceId}")
+    public ResponseEntity<List<ProposalDto>> getProposals(@PathVariable Long conferenceId){
+        return new ResponseEntity<>(proposalService.getForConference(conferenceId).stream().map(ProposalConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @PostMapping("/review/review/{reviewStatus}")
-    public ResponseEntity<Boolean> reviewReviews(@RequestBody ReviewDto reviewDto, @PathVariable ReviewStatus reviewStatus){
-        Review review = Review.builder()
-                .reviewStatus(reviewStatus)
-                .notes(reviewDto.getNotes())
-                .proposal(proposalService.findById(reviewDto.getProposalId()))
-                .score(reviewDto.getScore())
-                .user(userService.findById(reviewDto.getUserId()))
-                .build();
-        reviewService.updateReview(review);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @GetMapping("/get-paper/{paperId}")
+    public ResponseEntity<PaperDto> getPaper(@PathVariable Long paperId){
+        return new ResponseEntity<>(PaperConverter.convertToDto(paperService.findById(paperId)), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-accept-users/{proposalId}")
+    public ResponseEntity<List<UserDto>> getAcceptUsers(@PathVariable Long proposalId){
+        List<User> users = userService.getAcceptUsers(proposalId);
+        return new ResponseEntity<>(users.stream().map(UserConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-reject-users/{proposalId}")
+    public ResponseEntity<List<UserDto>> getRejectUsers(@PathVariable Long proposalId){
+        List<User> users = userService.getRejectUsers(proposalId);
+        return new ResponseEntity<>(users.stream().map(UserConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-ugh-users/{proposalId}")
+    public ResponseEntity<List<UserDto>> getUghUsers(@PathVariable Long proposalId){
+        List<User> users = userService.getUghUsers(proposalId);
+        return new ResponseEntity<>(users.stream().map(UserConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("/assign-proposal/{proposalId}/{userId}")
+    public ResponseEntity<ReviewDto> assignProposal(@PathVariable Long proposalId, @PathVariable Long userId){
+        Review review = reviewService.addReview(proposalId, userId);
+        return new ResponseEntity<>(ReviewConverter.convertToDto(review), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-reviews/{proposalId}")
+    public ResponseEntity<List<ReviewDto>> getReviews(@PathVariable Long proposalId){
+        List<Review> reviews = null;
+        try{
+            reviews = reviewService.findByProposal(proposalId);
+            return new ResponseEntity<>(reviews.stream().map(ReviewConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @PostMapping("/manual-review")
+    public ResponseEntity<ProposalDto> manualReview(@Valid @RequestBody ProposalDto proposalDto){
+        Proposal proposal = new Proposal();
+        proposal.setStatus(proposalDto.getStatus());
+        proposal.setId(proposalDto.getId());
+        proposal.setPaper(paperService.findById(proposalDto.getPaperId()));
+
+        proposal = proposalService.updateProposal(proposal);
+        reviewService.resolveReviews(proposal);
+
+        return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
+    }
+
+    @PostMapping("/auto-review")
+    public ResponseEntity<ProposalDto> autoReview(@Valid @RequestBody ProposalDto proposalDto){
+        Proposal proposal = new Proposal();
+        proposal.setStatus(proposalDto.getStatus());
+        proposal.setId(proposalDto.getId());
+        proposal.setPaper(paperService.findById(proposalDto.getPaperId()));
+
+        proposal = proposalService.reviewProposal(proposal);
+
+        if(!proposal.getStatus().equals("CONTRADICTORY")){
+            reviewService.resolveReviews(proposal);
+            mailService.sendEmail("Your paper was " + proposal.getStatus().toLowerCase(),
+                    "Your paper " + proposal.getPaper().getTitle() + " was" + proposal.getStatus().toLowerCase(),
+                    proposal.getPaper().getAuthor().getEmail());
+        }
+        return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
     }
 
     @PostMapping("/proposal/acceptOrReject")
@@ -152,14 +198,14 @@ public class ChairController {
                 .paper(paperService.findById(proposalDto.getPaperId()))
                 .status(proposalDto.getStatus())
                 .build();
-        List<Long> scores = reviewService.findByProposal(proposal).stream()
-                .filter(p -> p.getReviewStatus() == ReviewStatus.ACCEPTED)
+        List<Long> scores = reviewService.findByProposal(proposal.getId()).stream()
+                .filter(p -> p.getReviewStatus() == ReviewStatus.RESOLVED)
                 .map(Review::getScore)
                 .collect(Collectors.toList());
         Double scoreStandardDeviation = ReviewService.standardDeviation(scores);
         if(scoreStandardDeviation >= 3){
-            List<Review> reviews = reviewService.findByProposal(proposal);
-            reviews.forEach(p -> {p.setReviewStatus(ReviewStatus.REJECTED); reviewService.updateReview(p);});
+            List<Review> reviews = reviewService.findByProposal(proposal.getId());
+            reviews.forEach(p -> {p.setReviewStatus(ReviewStatus.RESOLVED); reviewService.updateReview(p);});
             return ResponseEntity.ok(Boolean.FALSE);
         }
         else{
@@ -191,7 +237,7 @@ public class ChairController {
     public ResponseEntity<Boolean> assignPaperToSection(@RequestBody PaperDto paperDto, @PathVariable Long sectionId){
         Paper paper = Paper.builder()
                 .section(sectionService.findById(sectionId))
-                .author(userService.findById(paperDto.getUserId()))
+                .author(userService.findById(paperDto.getAuthorId()))
                 .filename(paperDto.getFileName())
                 .title(paperDto.getTitle())
                 .subject(paperDto.getSubject())
