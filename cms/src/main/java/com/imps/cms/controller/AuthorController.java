@@ -2,19 +2,20 @@ package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
 import com.imps.cms.model.converter.UserRoleConverter;
-import com.imps.cms.model.dto.PaperDto;
 import com.imps.cms.model.dto.ProposalDto;
 import com.imps.cms.model.dto.UserRoleDto;
-import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 
 @RestController
@@ -30,6 +31,8 @@ public class AuthorController {
     private ProposalService proposalService;
     @Autowired
     private PaperService paperService;
+    @Autowired
+    private SectionService sectionService;
 
     @GetMapping("/add-author/{conferenceId}/{userId}")
     public ResponseEntity<UserRoleDto> addAuthor(@PathVariable Long conferenceId, @PathVariable Long userId) throws URISyntaxException {
@@ -38,19 +41,27 @@ public class AuthorController {
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
 
-    @PostMapping("/paper")
-    public ResponseEntity<Paper> addPaper(@Valid @RequestBody PaperDto paperDto) throws URISyntaxException {
-        Paper paper = Paper.builder()
-                .title(paperDto.getTitle())
-                .subject(paperDto.getSubject())
-                .keywords(paperDto.getKeywords())
-                .topics(paperDto.getTopics())
-                .author(userService.findById(paperDto.getAuthorId()))
-                .filename(paperDto.getFileName())
-                .build();
+    @PostMapping("/file/{title}/{subject}/{keywords}/{topics}/{userId}/{sectionId}")
+    public ResponseEntity<Long> addPaper(
+            @Valid @RequestBody MultipartFile file
+            , @PathVariable String title
+            , @PathVariable String subject
+            , @PathVariable String keywords
+            , @PathVariable String topics
+            , @PathVariable Long userId
+            , @PathVariable Long sectionId) throws IOException {
 
-        paperService.addPaper(paper);
-        return ResponseEntity.created(new URI("/api/paper/" + paper.getID())).body(paper);
+        return ResponseEntity.ok(
+            paperService.addFile(
+            file
+            , title
+            , subject
+            , keywords
+            , topics
+            , userService.findById(userId)
+            , sectionService.findById(sectionId)
+            )
+        );
     }
 
     @PostMapping("/proposal")

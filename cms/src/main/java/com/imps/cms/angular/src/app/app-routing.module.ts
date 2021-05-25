@@ -11,6 +11,7 @@ import {AppComponent} from "./app.component";
 import {AdminPageComponent} from "./admin-page/admin-page.component";
 import {ChairPageComponent} from "./chair-page/chair-page.component";
 import {PcMemberPageComponent} from "./pc-member-page/pc-member-page.component";
+import {AuthorPageComponent} from "./author-page/author-page.component";
 
 const routes: Routes = [
   {path: "home", component: HomeComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: "user-presentations", component: UserPresentationsComponent},
   {path: "admin-page", component: AdminPageComponent},
   {path: "chair-page", component: ChairPageComponent},
-  {path: "pc-member-page", component: PcMemberPageComponent}
+  {path: "pc-member-page", component: PcMemberPageComponent},
+  {path: "author-page", component: AuthorPageComponent}
 ];
 
 @NgModule({

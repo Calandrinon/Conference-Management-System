@@ -8,7 +8,7 @@ public class ProposalConverter {
         ProposalDto proposalDto = new ProposalDto();
         proposalDto.setId(proposal.getId());
         proposalDto.setStatus(proposal.getStatus());
-        proposalDto.setPaperId(proposal.getPaper().getID());
+        proposalDto.setPaperId(proposal.getPaper().getId());
         return proposalDto;
     }
 }

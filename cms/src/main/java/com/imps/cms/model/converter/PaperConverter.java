@@ -7,7 +7,7 @@ public class PaperConverter {
     public static PaperDto convertToDto(Paper paper){
         PaperDto paperDto = new PaperDto();
         paperDto.setFileName(paper.getFilename());
-        paperDto.setId(paper.getID());
+        paperDto.setId(paper.getId());
         paperDto.setKeywords(paper.getKeywords());
         paperDto.setSubject(paper.getSubject());
         paperDto.setTitle(paper.getTitle());

@@ -110,7 +110,7 @@ export class PresentationsComponent implements OnInit {
 
   goToAuthorPage(conference: Conference) {
     sessionStorage.setItem("conference", JSON.stringify(conference))
-    this.router.navigate(['/author'])
+    this.router.navigate(['/author-page'])
   }
 
   goToListenerPage(conference: Conference) {

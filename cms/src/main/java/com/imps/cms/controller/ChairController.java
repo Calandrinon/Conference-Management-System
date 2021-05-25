@@ -7,13 +7,16 @@ import com.imps.cms.service.*;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -233,17 +236,96 @@ public class ChairController {
         return ResponseEntity.created(new URI("/api/section/" + section.getId())).body(section);
     }
 
-    @PostMapping("/paper/{sectionId}")
-    public ResponseEntity<Boolean> assignPaperToSection(@RequestBody PaperDto paperDto, @PathVariable Long sectionId){
+    @RequestMapping("/files/{id}")
+    public ResponseEntity<byte[]> getFiles(@PathVariable Long id) {
+        return new ResponseEntity<>(
+                this.paperService.findById(id).getData()
+                , HttpStatus.OK
+        );
+    }
+
+    private final Function<Paper, PaperServerToWebDto> paperBuilder =
+            paper -> PaperServerToWebDto
+                    .builder()
+                    .id(paper.getId())
+                    .keywords(paper.getKeywords())
+                    .subject(paper.getSubject())
+                    .title(paper.getTitle())
+                    .sectionId(null)
+                    .userId(paper.getAuthor().getId())
+                    .topics(paper.getTopics())
+                    .status(this.proposalService.getProposalByPaper(paper).getStatus())
+                    .proposalId(this.proposalService.getProposalByPaper(paper).getId())
+                    .build();
+
+    private final Function<Review, ReviewDto> reviewBuilder =
+            review -> ReviewDto
+                    .builder()
+                    .id(review.getId())
+                    .reviewStatus(review.getReviewStatus())
+                    .notes(review.getNotes())
+                    .score(review.getScore())
+                    .proposalId(review.getProposal().getId())
+                    .userId(review.getUser().getId())
+                    .build();
+
+    @RequestMapping("/webPapers/{userId}")
+    public ResponseEntity<List<PaperServerToWebDto>> getPapers(@PathVariable Long userId){
+        List<PaperServerToWebDto> e =
+                this.paperService.findAll()
+                .stream()
+                .filter(paper -> paper.getAuthor().getId().equals(userId))
+                .map(paperBuilder)
+                .collect(Collectors.toList());
+        System.out.println(e);
+        return new ResponseEntity<>(
+                this.paperService.findAll()
+                        .stream()
+                        .filter(paper -> paper.getAuthor().getId().equals(userId))
+                        .map(paperBuilder)
+                        .collect(Collectors.toList())
+                , HttpStatus.OK);
+    }
+
+
+    @RequestMapping("/sections")
+    public ResponseEntity<List<SectionDto>> getConferences() {
+        return new ResponseEntity<>(
+                sectionService.findAll()
+                        .stream()
+                        .map(section -> SectionDto.builder()
+                                .id(section.getId())
+                                .name(section.getName())
+                                .conferenceId(section.getConference().getId())
+                                .supervisorId(section.getSupervisor().getId())
+                                .build())
+                        .collect(Collectors.toList())
+                , HttpStatus.OK);
+    }
+
+    @GetMapping("/reviewsForProposal/{proposalId}")
+    public ResponseEntity<List<ReviewDto>> getReviewForProposal(@PathVariable Long proposalId){
+        return ResponseEntity.ok(
+            reviewService.findByProposal(proposalId)
+                    .stream()
+                    .map(reviewBuilder)
+                    .collect(Collectors.toList())
+        );
+    }
+
+    @PostMapping("/update-paper")
+    public ResponseEntity<Boolean> updatePaper(@RequestBody PaperDto paperDto) throws IOException {
         Paper paper = Paper.builder()
-                .section(sectionService.findById(sectionId))
-                .author(userService.findById(paperDto.getAuthorId()))
-                .filename(paperDto.getFileName())
                 .title(paperDto.getTitle())
-                .subject(paperDto.getSubject())
-                .keywords(paperDto.getKeywords())
+                .section(this.sectionService.findById(paperDto.getId()))
+                .author(this.userService.findById(paperDto.getId()))
+                .data(paperDto.getData().getBytes())
                 .topics(paperDto.getTopics())
+                .keywords(paperDto.getKeywords())
+                .subject(paperDto.getSubject())
+                .filename(paperDto.getData().getOriginalFilename())
                 .build();
+        paper.setId(paperDto.getId());
         paperService.updatePaper(paper);
         return ResponseEntity.ok(Boolean.TRUE);
     }

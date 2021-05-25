@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -13,14 +14,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Data
 @Builder
-@Table(name = "Paper")
 public class Paper {
     @Id
     @Column(name = "ID")
-    private Long ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "Title")
     private String title;
+
+    @Column(name = "Filename")
+    private String filename;
 
     @Column(name = "Subject")
     private String subject;
@@ -35,8 +39,8 @@ public class Paper {
     @JoinColumn(name = "AuthorID")
     private User author;
 
-    @Column(name = "FileName")
-    private String filename;
+    @Column(name = "Data")
+    private byte[] data;
 
     @ManyToOne
     @JoinColumn(name = "SectionID")
