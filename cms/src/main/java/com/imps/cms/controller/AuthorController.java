@@ -45,7 +45,7 @@ public class AuthorController {
                 .subject(paperDto.getSubject())
                 .keywords(paperDto.getKeywords())
                 .topics(paperDto.getTopics())
-                .author(userService.findById(paperDto.getUserId()))
+                .author(userService.findById(paperDto.getAuthorId()))
                 .filename(paperDto.getFileName())
                 .build();
 

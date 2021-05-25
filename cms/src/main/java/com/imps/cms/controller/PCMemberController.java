@@ -1,11 +1,8 @@
 package com.imps.cms.controller;
 
 import com.imps.cms.model.*;
-import com.imps.cms.model.converter.UserRoleConverter;
-import com.imps.cms.model.dto.BidDto;
-import com.imps.cms.model.dto.ProposalDto;
-import com.imps.cms.model.dto.ReviewDto;
-import com.imps.cms.model.dto.UserRoleDto;
+import com.imps.cms.model.converter.*;
+import com.imps.cms.model.dto.*;
 import com.imps.cms.repository.*;
 import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +14,10 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/pc-member")
 public class PCMemberController {
     @Autowired
     private InvitationService invitationService;
@@ -31,6 +29,8 @@ public class PCMemberController {
     private UserRoleService userRoleService;
     @Autowired
     private ProposalService proposalService;
+    @Autowired
+    private PaperService paperService;
     @Autowired
     private BidService bidService;
     @Autowired
@@ -50,27 +50,68 @@ public class PCMemberController {
         return new ResponseEntity<>(new UserRoleDto(), HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping("/bids/placeBid")
-    public ResponseEntity<Boolean> placeBid(@RequestBody BidDto bidDto){
-        Bid bid = Bid.builder()
-                .user(userService.findById(bidDto.getUserId()))
-                .proposal(proposalService.findById(bidDto.getProposalId()))
-                .bidStatus(BidStatus.WAITING)
-                .build();
-        bidService.addBid(bid);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @GetMapping("/get-proposals/{conferenceId}")
+    public ResponseEntity<List<ProposalDto>> getProposals(@PathVariable Long conferenceId){
+
+        return new ResponseEntity<>(proposalService.getForConference(conferenceId).stream().map(ProposalConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @PostMapping("/review/add")
-    public ResponseEntity<Boolean> addReview(@RequestBody ReviewDto reviewDto){
-        Review review = Review.builder()
-                .user(userService.findById(reviewDto.getUserId()))
-                .score(reviewDto.getScore())
-                .notes(reviewDto.getNotes())
-                .proposal(proposalService.findById(reviewDto.getProposalId()))
-                .reviewStatus(ReviewStatus.PENDING)
-                .build();
-        reviewService.addReview(review);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @GetMapping("/get-paper/{paperId}")
+    public ResponseEntity<PaperDto> getPaper(@PathVariable Long paperId){
+        return new ResponseEntity<>(PaperConverter.convertToDto(paperService.findById(paperId)), HttpStatus.OK);
+    }
+
+    @PostMapping("/place-bid")
+    public ResponseEntity<BidDto> placeBid(@Valid @RequestBody BidDto bidDto){
+        Bid bid = new Bid();
+        bid.setProposal(proposalService.findById(bidDto.getProposalId()));
+        bid.setUser(userService.findById(bidDto.getUserId()));
+        bid.setBidStatus(bidDto.getBidStatus());
+        return new ResponseEntity<>(BidConverter.convertToDto(bidService.addBid(bid)), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-bid/{proposalId}/{userId}")
+    public ResponseEntity<BidDto> getBid(@PathVariable Long proposalId, @PathVariable Long userId){
+        Bid bid = null;
+        try {
+            bid = bidService.getBidByProposalAndUser(proposalId, userId);
+            return new ResponseEntity<>(BidConverter.convertToDto(bid), HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("get-reviews-for-user/{userId}/{conferenceId}")
+    public ResponseEntity<List<ReviewDto>> getReviewsForUser(@PathVariable Long userId, @PathVariable Long conferenceId){
+        List<Review> reviews = reviewService.getForUser(userId, conferenceId);
+        return new ResponseEntity<>(reviews.stream().map(ReviewConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("get-proposal-for-review/{reviewId}")
+    public ResponseEntity<ProposalDto> getProposalForReview(@PathVariable Long reviewId){
+        Proposal proposal = reviewService.findById(reviewId).getProposal();
+        return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
+    }
+
+    @PutMapping("review-proposal")
+    public ResponseEntity<ReviewDto> reviewProposal(@Valid @RequestBody ReviewDto reviewDto){
+        Review review = new Review();
+        review.setId(reviewDto.getId());
+        review.setUser(userService.findById(reviewDto.getUserId()));
+        review.setProposal(proposalService.findById(reviewDto.getProposalId()));
+        review.setNotes(reviewDto.getNotes());
+        review.setScore(reviewDto.getScore());
+        review.setReviewStatus(ReviewStatus.PENDING_FOR_CHAIR);
+
+        review = reviewService.updateReview(review);
+
+        return new ResponseEntity<>(ReviewConverter.convertToDto(review), HttpStatus.OK);
+    }
+
+    @GetMapping("get-submitted-review/{reviewId}")
+    public ResponseEntity<Boolean> getSubmittedReview(@PathVariable Long reviewId){
+        Review review = reviewService.findById(reviewId);
+        return new ResponseEntity<>(review.getReviewStatus() != ReviewStatus.PENDING_FOR_USER, HttpStatus.OK);
     }
 }

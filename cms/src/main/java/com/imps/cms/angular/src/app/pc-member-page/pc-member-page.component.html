@@ -11,9 +11,103 @@
 </nav>
 
 <div *ngIf="bidProposalShow">
-  Bid proposals
+  <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
+    <li class="list-group-item darkColoredItem" style="margin-top: 20px">
+      #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
+      <ul class="list-group" role="tablist">
+        <li class="list-group-item">
+          Subject: {{papers[proposal?.paperId]?.subject}}
+        </li>
+        <li class="list-group-item">
+          Keywords: {{papers[proposal?.paperId]?.keywords}}
+        </li>
+        <li class="list-group-item">
+          Topics: {{papers[proposal?.paperId]?.topics}}
+        </li>
+        <li class="list-group-item">
+          <button *ngIf="bids[proposal.id] == null" class="btn btn-dark" (click)="setCurrentProposal(proposal)" data-bs-target="#bidProposalModal" data-bs-toggle="modal">Bid Proposal</button>
+          <button *ngIf="bids[proposal.id] != null" class="btn btn-dark" [disabled]="true">Already Placed a Bid</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="bidProposalModal" tabindex="-1" role="dialog" aria-labelledby="bidProposalModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bidProposalModalLabel">Bid for proposal {{currentProposal?.id}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #placeBidForm="ngForm">
+            <div class="form-group">
+              <label for="status">Do you want to review this proposal?</label>
+              <select ngModel name="status" id="status" class="form-control">
+                <option value="ACCEPT">Yes</option>
+                <option value="REJECT">No</option>
+                <option value="UGH">Ugh...</option>
+              </select>
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" (click)="placeBid(placeBidForm)" data-bs-dismiss="modal" class="btn btn-danger">Place Bid</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
+
+
 <div *ngIf="reviewProposalShow">
-  Review Proposals
+  <ul class="list-group" role="tablist" *ngFor="let review of reviews">
+    <li class="list-group-item darkColoredItem" style="margin-top: 20px">
+      #{{papers[proposalsToReview[review.id]?.paperId]?.id}} - {{papers[proposalsToReview[review.id]?.paperId]?.title}}
+      <ul class="list-group" role="tablist">
+        <li class="list-group-item">
+          Subject: {{papers[proposalsToReview[review.id]?.paperId]?.subject}}
+        </li>
+        <li class="list-group-item">
+          Keywords: {{papers[proposalsToReview[review.id]?.paperId]?.keywords}}
+        </li>
+        <li class="list-group-item">
+          Topics: {{papers[proposalsToReview[review.id]?.paperId]?.topics}}
+        </li>
+        <li class="list-group-item">
+          <button *ngIf="!reviewSubmitted[review.id]" class="btn btn-dark" (click)="setCurrentReviewAndProposal(review, proposalsToReview[review.id])" data-bs-target="#reviewModal" data-bs-toggle="modal">Review</button>
+          <button *ngIf="reviewSubmitted[review.id]" class="btn btn-dark" [disabled]="true">Already Reviewed</button>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+  <div class="modal fade" id="reviewModal" tabindex="-1" role="dialog" aria-labelledby="reviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="reviewModalLabel">Review proposal #{{currentProposal?.id}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #reviewForm="ngForm">
+            <div class="form-group">
+              <label for="score">Score</label>
+              <input id="score" class="form-control" ngModel name="score" type="number" placeholder="Score...">
+            </div>
+            <div class="form-group">
+              <label for="notes">Notes</label>
+              <input id="notes" class="form-control" ngModel name="notes" placeholder="Notes...">
+            </div>
+          </form>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" (click)="reviewProposal(reviewForm)" data-bs-dismiss="modal" class="btn btn-danger">Submit Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

@@ -28,6 +28,8 @@ public class AdminController {
     private UserRoleService userRoleService;
     @Autowired
     private InvitationService invitationService;
+    @Autowired
+    private MailService mailService;
 
     @PostMapping("/add-conference")
     public ResponseEntity<Conference> addConference(@Valid @RequestBody Conference conference) {
@@ -60,7 +62,7 @@ public class AdminController {
                 .build();
 
         invitation = invitationService.addInvitation(invitation);
-        //invitationService.sendInvitationEmail(invitation);
+        mailService.sendEmail("Wannabe a chair?", invitation.getText() + " for conference " + invitation.getConference().getTitle() + " \nToken: " + invitation.getToken(), invitation.getReceiver().getEmail());
         return new ResponseEntity<>(InvitationConverter.convertToDto(invitation), HttpStatus.OK);
     }
 

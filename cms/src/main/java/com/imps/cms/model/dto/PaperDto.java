@@ -17,7 +17,7 @@ public class PaperDto implements Serializable {
     private String subject;
     private String keywords;
     private String topics;
-    private Long userId;
+    private Long authorId;
     private String fileName;
     private Long sectionId;
 }
