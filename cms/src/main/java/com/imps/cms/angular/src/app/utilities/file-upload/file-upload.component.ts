@@ -54,7 +54,7 @@ export class FileUploadComponent implements OnInit {
       , sectionId: 1
       , subject: form.value.subject
       , topics: form.value.topics
-      , conferenceId: JSON.parse(sessionStorage.getItem('conference')).conferenceId
+      , conferenceId: this.conference.id
     }).subscribe(result => {
       this.fileIdEvent.emit(result);
       form.resetForm();});

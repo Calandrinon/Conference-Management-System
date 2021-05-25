@@ -28,6 +28,8 @@ export class FileService {
         + paper.authorId
         + "/"
         + paper.sectionId
+        + "/"
+        + paper.conferenceId
       , paper.data);
   }
 
