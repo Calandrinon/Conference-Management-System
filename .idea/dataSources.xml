@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="d3t960ouh9h7cj@ec2-54-228-99-58.eu-west-1.compute.amazonaws.com" uuid="2e6dd37b-b719-439a-abfc-2a616b36b3ab">
+    <data-source source="LOCAL" name="CMS@167.71.39.112" uuid="e4684c0a-a5ac-4678-8fc6-23169b057d7e">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://ec2-54-228-99-58.eu-west-1.compute.amazonaws.com:5432/d3t960ouh9h7cj</jdbc-url>
+      <jdbc-url>jdbc:postgresql://167.71.39.112:7483/CMS</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

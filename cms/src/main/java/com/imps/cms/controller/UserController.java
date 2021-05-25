@@ -41,7 +41,7 @@ public class UserController {
     @Autowired
     private ActivationTokenService activationTokenService;
 
-    public String sha256hex(String input) throws NoSuchAlgorithmException {
+    public static String sha256hex(String input) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         byte[] raw_hash = messageDigest.digest(input.getBytes(StandardCharsets.UTF_8));
 
@@ -74,13 +74,27 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping("/updateAccount/{userEmail}/{newPassword}")
+    public ResponseEntity<UserDto> updateAccount(@PathVariable String userEmail, @PathVariable String newPassword) {
+
+        try
+        {
+            User user = this.userRepository.findByEmail(userEmail).get(0);
+            user.setPassword(UserController.sha256hex(user.getSalt() + newPassword));
+            this.userService.updateUser(user);
+        } catch (Exception e)
+        {
+            System.out.println(e);
+        }
+        return new ResponseEntity<>(null, HttpStatus.OK);
+    }
 
     @PostMapping("/login")
     public ResponseEntity<UserDto> loginUser(@RequestBody LoginDto loginDto) {
 
         User user = this.userRepository.findByEmail(loginDto.getEmail()).get(0);
         try {
-            if(user.getPassword().equals(this.sha256hex(user.getSalt() + loginDto.getPassword()))){
+            if(user.getPassword().equals(sha256hex(user.getSalt() + loginDto.getPassword()))){
                 return new ResponseEntity<>(UserConverter.convertToDto(user), HttpStatus.OK);
             }
             else {
@@ -107,7 +121,7 @@ public class UserController {
         String hashed_password;
         String salt = this.generateString(8);
         try {
-            hashed_password = this.sha256hex(salt + userDto.getPassword());
+            hashed_password = sha256hex(salt + userDto.getPassword());
         } catch (NoSuchAlgorithmException e) {
             return ResponseEntity.of(Optional.empty());
         }

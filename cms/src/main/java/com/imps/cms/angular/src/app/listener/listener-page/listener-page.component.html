@@ -1,0 +1,12 @@
+<div *ngIf="localStorage.getItem('current-user').length > 0; else notLoggedIn">
+  <div style="padding-left: 5vw">
+    <h3>Hello {{listenerName}} !</h3>
+    <h4>Would you like to purchase a reservation for {{conference.title}} ?</h4>
+    <button (click)="checkout(20, boughtToken)" type="button" [disabled]="this.disabledState">Purchase</button>
+    <div *ngIf="reservationFee != ''">
+      <h5>Reservation fee: {{reservationFee}}</h5>
+    </div>
+    <h6>Purchase Token: {{localStorage.getItem(boughtToken)}}</h6>
+  </div>
+</div>
+<ng-template #notLoggedIn><h1 style="padding-left: 5vw">ERROR: You are not logged in!</h1></ng-template>

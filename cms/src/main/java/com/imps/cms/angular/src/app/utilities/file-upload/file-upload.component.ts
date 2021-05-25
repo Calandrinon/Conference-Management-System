@@ -3,6 +3,8 @@ import {FileService} from "../shared/file-service";
 import {NgForm} from "@angular/forms";
 import {Section} from "../../model/section-model";
 import {SectionService} from "../../other-services/section-service";
+import {UserDto} from "../../authentication/model/UserDto";
+import {Conference} from "../../presentations/model/conference";
 
 
 @Component({
@@ -15,11 +17,15 @@ export class FileUploadComponent implements OnInit {
   fileToUpload : File = null;
   sections: Section[] = [];
   selected: Section = null;
+  user: UserDto;
+  conference: Conference
   @Output() fileIdEvent : EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private fileService : FileService, private sectionService : SectionService) { }
 
   ngOnInit(): void {
+    this.user = JSON.parse(localStorage.getItem("current-user"));
+    this.conference = JSON.parse(sessionStorage.getItem('conference'));
     this.sectionService.getSections().subscribe(result => {
       console.log(result);
       console.log(" = result");

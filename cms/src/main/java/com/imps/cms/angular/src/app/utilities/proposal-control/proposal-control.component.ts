@@ -6,6 +6,7 @@ import {ReviewService} from "../shared/review-service";
 import {Paper} from "../shared/file-model";
 import {ProposalService} from "../shared/proposal-service";
 import {UserDto} from "../../authentication/model/UserDto";
+import {Conference} from "../../presentations/model/conference";
 
 @Component({
   selector: 'app-proposal-control',
@@ -22,6 +23,7 @@ export class ProposalControlComponent implements OnInit {
   showUpload : boolean = false;
   submitted: boolean = false;
   user: UserDto;
+  conference: Conference
 
   buttonMessages = {
     0:"Add Proposal"
@@ -37,11 +39,9 @@ export class ProposalControlComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let user = localStorage.getItem("current-user");
-    if(user !== 'none'){
-      this.user = JSON.parse(user);
-    }
-    else this.user = null;
+
+    this.user = JSON.parse(localStorage.getItem("current-user"));
+    this.conference = JSON.parse(sessionStorage.getItem('conference'));
     // todo add the userid from the session
     this.fileService.getPaperWebFormat(this.user.id)
       .subscribe(

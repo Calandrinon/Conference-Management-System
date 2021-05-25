@@ -16,6 +16,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CookieService} from "ngx-cookie-service";
 import { UserPresentationsComponent } from './user-presentations/user-presentations.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+
 import { ChairPageComponent } from './chair-page/chair-page.component';
 import { PcMemberPageComponent } from './pc-member-page/pc-member-page.component';
 
@@ -23,7 +24,7 @@ import { FileUploadComponent } from './utilities/file-upload/file-upload.compone
 import { FileViewComponent } from './utilities/file-view/file-view.component';
 import { ProposalControlComponent } from './utilities/proposal-control/proposal-control.component';
 import { AuthorPageComponent } from './author-page/author-page.component';
-
+import { ListenerPageComponent } from './listener/listener-page/listener-page.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,10 @@ import { AuthorPageComponent } from './author-page/author-page.component';
     FileUploadComponent,
     FileViewComponent,
     ProposalControlComponent,
-    AuthorPageComponent
+    AuthorPageComponent,
+    ListenerPageComponent,
+    UserPresentationsComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,
