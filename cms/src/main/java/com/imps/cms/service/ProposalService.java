@@ -76,9 +76,6 @@ public class ProposalService {
     }
 
     public Proposal getProposalByPaper(Paper paper) {
-        Proposal prop = this.proposalRepository.findProposalByPaper(paper);
-        System.out.println("get proposal by paper : " + prop);
-        System.out.println("the paper is : " + paper);
-        return prop;
+        return this.proposalRepository.findProposalByPaper(paper);
     }
 }

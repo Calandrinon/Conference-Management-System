@@ -41,7 +41,7 @@ public class AuthorController {
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
 
-    @PostMapping("/file/{title}/{subject}/{keywords}/{topics}/{userId}/{sectionId}")
+    @PostMapping("/file/{title}/{subject}/{keywords}/{topics}/{userId}/{sectionId}/{conferenceId}")
     public ResponseEntity<Long> addPaper(
             @Valid @RequestBody MultipartFile file
             , @PathVariable String title
@@ -49,17 +49,19 @@ public class AuthorController {
             , @PathVariable String keywords
             , @PathVariable String topics
             , @PathVariable Long userId
-            , @PathVariable Long sectionId) throws IOException {
+            , @PathVariable Long sectionId
+            , @PathVariable Long conferenceId) throws IOException {
 
         return ResponseEntity.ok(
             paperService.addFile(
-            file
-            , title
-            , subject
-            , keywords
-            , topics
-            , userService.findById(userId)
-            , sectionService.findById(sectionId)
+                    file
+                    , title
+                    , subject
+                    , keywords
+                    , topics
+                    , userService.findById(userId)
+                    , sectionService.findById(sectionId)
+                    , conferenceService.findById(conferenceId)
             )
         );
     }

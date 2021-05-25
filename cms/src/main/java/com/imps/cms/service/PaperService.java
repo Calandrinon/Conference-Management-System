@@ -1,5 +1,6 @@
 package com.imps.cms.service;
 
+import com.imps.cms.model.Conference;
 import com.imps.cms.model.Paper;
 import com.imps.cms.model.Section;
 import com.imps.cms.model.User;
@@ -30,7 +31,7 @@ public class PaperService {
         return this.paperRepository.findAll();
     }
 
-    public Long addFile(MultipartFile file, String title, String subject, String keywords, String topics, User author, Section section) throws IOException{
+    public Long addFile(MultipartFile file, String title, String subject, String keywords, String topics, User author, Section section, Conference conference) throws IOException{
         Paper paper = Paper.builder()
                 .title(title)
                 .filename(file.getOriginalFilename())
@@ -40,6 +41,7 @@ public class PaperService {
                 .topics(topics)
                 .author(author)
                 .section(section)
+                .conference(conference)
                 .build();
 
         return paperRepository.save(paper).getId();

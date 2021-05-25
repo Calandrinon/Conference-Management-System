@@ -23,6 +23,6 @@ public class PaperDto implements Serializable {
     private Long authorId;
     private String fileName;
     private MultipartFile data;
-
     private Long sectionId;
+    private Long conferenceId;
 }
