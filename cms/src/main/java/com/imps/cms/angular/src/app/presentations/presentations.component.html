@@ -203,49 +203,49 @@
       <div class="modal-body">
         <form #deadline="ngForm">
           <div class="form-group">
-            <label for="submitProposal">
+            <label for="submitProposalU">
               Proposal submission deadline
             </label>
-            <input id="ta" name="submitProposal" class="form-control" type="date">
+            <input id="submitProposalU" [ngModel]="conferenceToBeUpdated?.submitProposal|date:'yyyy-MM-dd'" name="submitProposal" class="form-control" type="date">
 
-            <label for="bidProposals">
+            <label for="bidProposalsU">
               Proposal bidding deadline
             </label>
-            <input  ngModel name="bidProposals" class="form-control" type="date">
-            <label for="assignPapersToReviewers">
+            <input id="bidProposalsU" [ngModel]="conferenceToBeUpdated?.bidProposals|date:'yyyy-MM-dd'" name="bidProposals" class="form-control" type="date">
+            <label for="assignPapersToReviewersU">
               Deadline for assigning papers to reviewers
             </label>
-            <input  ngModel name="assignPapersToReviewers" class="form-control" type="date">
+            <input id="assignPapersToReviewersU"  [ngModel]="conferenceToBeUpdated?.assignPapersToReviewers|date:'yyyy-MM-dd'" name="assignPapersToReviewers" class="form-control" type="date">
 
             <label for="reviewPapers">
               Paper reviewal deadline
             </label>
-            <input  ngModel name="reviewPapers" class="form-control" type="date">
+            <input  [ngModel]="conferenceToBeUpdated?.reviewPapers|date:'yyyy-MM-dd'" name="reviewPapers" class="form-control" type="date">
 
             <label for="acceptPapers">
               Deadline for accepting papers
             </label>
-            <input  ngModel name="acceptPapers" class="form-control" type="date">
+            <input  [ngModel]="conferenceToBeUpdated?.acceptPapers|date:'yyyy-MM-dd'" name="acceptPapers" class="form-control" type="date">
 
             <label for="createSections">
               Deadline for creating sections
             </label>
-            <input  ngModel name="createSections" class="form-control" type="date">
+            <input  [ngModel]="conferenceToBeUpdated?.createSections|date:'yyyy-MM-dd'" name="createSections" class="form-control" type="date">
 
             <label for="assignPapersToSections">
               Deadline for assigning papers to sections
             </label>
-            <input  ngModel name="assignPapersToSections" class="form-control" type="date">
+            <input  [ngModel]="conferenceToBeUpdated?.assignPapersToSections|date:'yyyy-MM-dd'" name="assignPapersToSections" class="form-control" type="date">
 
             <label for="listenerSectionRegistration">
               Deadline for the listener section registration
             </label>
-            <input  ngModel name="listenerSectionRegistration" class="form-control" type="date">
+            <input  [ngModel]="conferenceToBeUpdated?.listenerSectionRegistration|date:'yyyy-MM-dd'" name="listenerSectionRegistration" class="form-control" type="date">
           </div>
         </form>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" (click)="updateConference(conferenceToBeUpdated, deadline)" data-bs-dismiss="modal" class="btn btn-primary">Update Conference</button>
+          <button type="button" (click)="updateConference(deadline)" data-bs-dismiss="modal" class="btn btn-primary">Update Conference</button>
         </div>
       </div>
     </div>
