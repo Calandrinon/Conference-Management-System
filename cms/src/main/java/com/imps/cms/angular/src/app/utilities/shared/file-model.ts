@@ -6,4 +6,5 @@ export class Paper {
   authorId : number;
   sectionId : number;
   data : FormData;
+  conferenceId : number;
 }

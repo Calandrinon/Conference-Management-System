@@ -3,7 +3,6 @@ import {FileService} from "../shared/file-service";
 import {PaperWeb} from "../shared/paper-web-model";
 import {Review} from "../shared/review-model";
 import {ReviewService} from "../shared/review-service";
-import {Paper} from "../shared/file-model";
 import {ProposalService} from "../shared/proposal-service";
 import {UserDto} from "../../authentication/model/UserDto";
 import {Conference} from "../../presentations/model/conference";
@@ -15,11 +14,9 @@ import {Conference} from "../../presentations/model/conference";
 })
 export class ProposalControlComponent implements OnInit {
 
-  insertingIntoFile : boolean = false;
-  selectedFileId = null;
+
   paperWebList : PaperWeb[] = []
   reviewList : Review[] = [];
-  selected : PaperWeb = null;
   showUpload : boolean = false;
   submitted: boolean = false;
   user: UserDto;
@@ -29,7 +26,6 @@ export class ProposalControlComponent implements OnInit {
     0:"Add Proposal"
     , 1:"Cancel"
   }
-  buttonState : number = 0;
 
 
   constructor(
@@ -39,7 +35,6 @@ export class ProposalControlComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
     this.user = JSON.parse(localStorage.getItem("current-user"));
     this.conference = JSON.parse(sessionStorage.getItem('conference'));
     // todo add the userid from the session
@@ -53,7 +48,6 @@ export class ProposalControlComponent implements OnInit {
   }
 
   showReviews(paper : PaperWeb) {
-    this.selected = paper;
     this.reviewService.getReviewsForProposal(paper.proposalId)
       .subscribe(
         result =>
@@ -66,12 +60,15 @@ export class ProposalControlComponent implements OnInit {
   uploadComplete($event: number) {
     document.getElementById('exampleModal').click();
     this.showUpload = false;
-    this.buttonState = 0;
     this.submitted = true;
     this.proposalService.postProposal({
       id : null
       , paperId : $event
       , status : "PENDING"
+      , commentsAllowed : false
+      , comments : null
+    }).subscribe(() => {
+      this.ngOnInit();
     });
   }
 
