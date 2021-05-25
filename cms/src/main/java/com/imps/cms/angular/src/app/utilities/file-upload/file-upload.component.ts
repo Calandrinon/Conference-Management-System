@@ -50,7 +50,7 @@ export class FileUploadComponent implements OnInit {
       data: formData
       , title: form.value.title
       , keywords: form.value.keywords
-      , authorId: 3// JSON.parse(localStorage.getItem('current-user')).id
+      , authorId: JSON.parse(localStorage.getItem('current-user')).id
       , sectionId: 1
       , subject: form.value.subject
       , topics: form.value.topics
