@@ -36,7 +36,7 @@ public class AuthorController {
 
     @GetMapping("/add-author/{conferenceId}/{userId}")
     public ResponseEntity<UserRoleDto> addAuthor(@PathVariable Long conferenceId, @PathVariable Long userId) throws URISyntaxException {
-        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId);
         userRole.setIsAuthor(true);
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }

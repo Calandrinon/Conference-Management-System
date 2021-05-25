@@ -11,5 +11,5 @@ import java.util.List;
 
 @RepositoryRestResource(excerptProjection = UserRoleDtoInterface.class)
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-    List<UserRole> findByConferenceAndUser(Conference conference, User user);
+    UserRole findByConferenceAndUser(Conference conference, User user);
 }

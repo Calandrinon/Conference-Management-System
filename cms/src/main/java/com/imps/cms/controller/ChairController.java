@@ -45,7 +45,7 @@ public class ChairController {
     public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
         for(Invitation invitation: invitationService.findByReceiver(userId)){
             if(invitation.getToken().equals(token) && invitation.getUserType() == UserType.CHAIR && invitation.getStatus().equals("PENDING")){
-                UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+                UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId);
                 userRole.setIsChair(true);
                 invitation.setStatus("ACCEPTED");
                 invitationService.updateInvitation(invitation);

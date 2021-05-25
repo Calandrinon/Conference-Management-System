@@ -28,7 +28,7 @@ public class PermissionService {
 
 
     public boolean isAccountActivated(Long userID) {
-        User user = userRepository.findById(userID).get();
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
         return user.isActivated();
     }
 
@@ -37,33 +37,33 @@ public class PermissionService {
     }
 
     public boolean isAccountListener(Long conferenceID, Long userID) {
-        Conference conference = conferenceRepository.findById(conferenceID).get();
-        User user = userRepository.findById(userID).get();
-        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user).get(0);
+        Conference conference = conferenceRepository.findById(conferenceID).orElseThrow(() -> new RuntimeException("no conference with this id!\n"));
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
+        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user);
 
         return userRole.getIsListener();
     }
 
     public boolean isAccountAuthor(Long conferenceID, Long userID) {
-        Conference conference = conferenceRepository.findById(conferenceID).get();
-        User user = userRepository.findById(userID).get();
-        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user).get(0);
+        Conference conference = conferenceRepository.findById(conferenceID).orElseThrow(() -> new RuntimeException("no conference with this id!\n"));
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
+        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user);
 
         return userRole.getIsAuthor();
     }
 
     public boolean isAccountPCMember(Long conferenceID, Long userID) {
-        Conference conference = conferenceRepository.findById(conferenceID).get();
-        User user = userRepository.findById(userID).get();
-        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user).get(0);
+        Conference conference = conferenceRepository.findById(conferenceID).orElseThrow(() -> new RuntimeException("no conference with this id!\n"));
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
+        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user);
 
         return userRole.getIsPcMember();
     }
 
     public boolean isAccountChair(Long conferenceID, Long userID) {
-        Conference conference = conferenceRepository.findById(conferenceID).get();
-        User user = userRepository.findById(userID).get();
-        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user).get(0);
+        Conference conference = conferenceRepository.findById(conferenceID).orElseThrow(() -> new RuntimeException("no conference with this id!\n"));
+        User user = userRepository.findById(userID).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
+        UserRole userRole = userRoleRepository.findByConferenceAndUser(conference, user);
 
         return userRole.getIsChair();
     }

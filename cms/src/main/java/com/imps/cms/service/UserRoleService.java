@@ -27,9 +27,9 @@ public class UserRoleService {
         userRoleRepository.save(userRole);
     }
 
-    public List<UserRole> findByConferenceIdAndUserId(Long conferenceId, Long userId) {
-        Conference conference = conferenceRepository.findById(conferenceId).get();
-        User user = userRepository.findById(userId).get();
+    public UserRole findByConferenceIdAndUserId(Long conferenceId, Long userId) {
+        Conference conference = conferenceRepository.findById(conferenceId).orElseThrow(() -> new RuntimeException("no conference with this id!\n"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("no user with this id!\n"));
         return userRoleRepository.findByConferenceAndUser(conference, user);
     }
 

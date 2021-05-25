@@ -30,6 +30,6 @@ public class ConferenceController {
 
     @RequestMapping("/user-roles/{conferenceId}/{userId}")
     public ResponseEntity<UserRoleDto> getRolesForUserPerConference(@PathVariable Long conferenceId, @PathVariable Long userId){
-        return new ResponseEntity<>(userRoleService.findByConferenceIdAndUserId(conferenceId, userId).stream().map(UserRoleConverter::convertToDto).collect(Collectors.toList()).get(0), HttpStatus.OK);
+        return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.findByConferenceIdAndUserId(conferenceId, userId)), HttpStatus.OK);
     }
 }

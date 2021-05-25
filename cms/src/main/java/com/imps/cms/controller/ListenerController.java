@@ -35,7 +35,7 @@ public class ListenerController {
 
     @GetMapping("/add-listener/{conferenceId}/{userId}")
     public ResponseEntity<UserRoleDto> addListener(@PathVariable Long conferenceId, @PathVariable Long userId) throws URISyntaxException {
-        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId).get(0);
+        UserRole userRole = userRoleService.findByConferenceIdAndUserId(conferenceId, userId);
         userRole.setIsListener(true);
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
