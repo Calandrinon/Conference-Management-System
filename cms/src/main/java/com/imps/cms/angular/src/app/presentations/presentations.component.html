@@ -19,8 +19,9 @@
     <ul class="list-group">
       <li>
         <div>
-          <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}} <button *ngIf="rolesDictionary[conference.id]?.isChair" class="deadlineUpdateButton" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateProposalSubmissionDeadline" (click)="setConferenceToBeUpdated(conference)">Update proposal submission deadline</button></a>
+          <button *ngIf="rolesDictionary[conference.id]?.isChair" class="deadlineUpdateButton" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateConference" (click)="setConferenceToBeUpdated(conference)">Update conference</button>
         </div>
+        <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}} </a>
         <a class="list-group-item">Bid Proposals: {{conference.bidProposals|date}}</a>
         <a class="list-group-item">Assign Papers To Reviewers: {{conference.assignPapersToReviewers|date}}</a>
         <a class="list-group-item">Review Papers: {{conference.reviewPapers|date}}</a>
@@ -192,7 +193,7 @@
 </div>
 
 
-<div class="modal fade" id="updateProposalSubmissionDeadline" tabindex="-1" role="dialog" aria-labelledby="updateConferenceLabel" aria-hidden="true">
+<div class="modal fade" id="updateConference" tabindex="-1" role="dialog" aria-labelledby="updateConferenceLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -205,12 +206,46 @@
             <label for="submitProposal">
               Proposal submission deadline
             </label>
-            <input id="ta" ngModel name="submitProposal" class="form-control" type="date">
+            <input id="ta" name="submitProposal" class="form-control" type="date">
+
+            <label for="bidProposals">
+              Proposal bidding deadline
+            </label>
+            <input  ngModel name="bidProposals" class="form-control" type="date">
+            <label for="assignPapersToReviewers">
+              Deadline for assigning papers to reviewers
+            </label>
+            <input  ngModel name="assignPapersToReviewers" class="form-control" type="date">
+
+            <label for="reviewPapers">
+              Paper reviewal deadline
+            </label>
+            <input  ngModel name="reviewPapers" class="form-control" type="date">
+
+            <label for="acceptPapers">
+              Deadline for accepting papers
+            </label>
+            <input  ngModel name="acceptPapers" class="form-control" type="date">
+
+            <label for="createSections">
+              Deadline for creating sections
+            </label>
+            <input  ngModel name="createSections" class="form-control" type="date">
+
+            <label for="assignPapersToSections">
+              Deadline for assigning papers to sections
+            </label>
+            <input  ngModel name="assignPapersToSections" class="form-control" type="date">
+
+            <label for="listenerSectionRegistration">
+              Deadline for the listener section registration
+            </label>
+            <input  ngModel name="listenerSectionRegistration" class="form-control" type="date">
           </div>
         </form>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" (click)="updateProposalSubmissionDeadline(conferenceToBeUpdated, deadline)" data-bs-dismiss="modal" class="btn btn-primary">Update Conference</button>
+          <button type="button" (click)="updateConference(conferenceToBeUpdated, deadline)" data-bs-dismiss="modal" class="btn btn-primary">Update Conference</button>
         </div>
       </div>
     </div>

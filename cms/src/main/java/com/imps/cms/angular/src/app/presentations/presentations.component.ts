@@ -151,9 +151,17 @@ export class PresentationsComponent implements OnInit {
     console.log("Conference to be updated has been set.");
   }
 
-  updateProposalSubmissionDeadline(conference: Conference, deadlineForm: NgForm) {
+  updateConference(conference: Conference, deadlineForm: NgForm) {
     console.log("This is the conference to be updated: ", conference);
     conference.submitProposal = deadlineForm.value.submitProposal;
+    conference.bidProposals = deadlineForm.value.bidProposals;
+    conference.assignPapersToReviewers = deadlineForm.value.assignPapersToReviewers;
+    conference.reviewPapers = deadlineForm.value.reviewPapers;
+    conference.acceptPapers = deadlineForm.value.acceptPapers;
+    conference.createSections = deadlineForm.value.createSections;
+    conference.assignPapersToSections = deadlineForm.value.assignPapersToSections;
+    conference.listenerSectionRegistration = deadlineForm.value.listenerSectionRegistration;
+
     console.log("This is the conference after it will be updated: ", conference);
 
     this.conferenceService.updateConference(conference).subscribe(response => {
