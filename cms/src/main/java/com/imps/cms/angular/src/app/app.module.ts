@@ -16,6 +16,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {CookieService} from "ngx-cookie-service";
 import { UserPresentationsComponent } from './user-presentations/user-presentations.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { FileUploadComponent } from './utilities/file-upload/file-upload.component';
+import { FileViewComponent } from './utilities/file-view/file-view.component';
+import { ProposalControlComponent } from './utilities/proposal-control/proposal-control.component';
 
 @NgModule({
   declarations: [
@@ -28,14 +31,17 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     ProfileComponent,
     RegisterComponent,
     UserPresentationsComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    FileUploadComponent,
+    FileViewComponent,
+    ProposalControlComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [AuthenticationService, CookieService],
   bootstrap: [AppComponent]

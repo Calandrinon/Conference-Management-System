@@ -1,9 +1,13 @@
 package com.imps.cms.service;
 
+import com.imps.cms.model.Paper;
 import com.imps.cms.model.Proposal;
+import com.imps.cms.model.User;
 import com.imps.cms.repository.ProposalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProposalService {
@@ -16,6 +20,13 @@ public class ProposalService {
 
     public void addProposal(Proposal proposal){
         proposalRepository.save(proposal);
+    }
+
+    public Proposal getProposalByPaper(Paper paper) {
+        Proposal prop = this.proposalRepository.findProposalByPaper(paper);
+        System.out.println("get proposal by paper : " + prop);
+        System.out.println("the paper is : " + paper);
+        return prop;
     }
 
     public void updateProposal(Proposal proposal){

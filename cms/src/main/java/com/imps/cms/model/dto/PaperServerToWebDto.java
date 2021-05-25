@@ -1,12 +1,9 @@
 package com.imps.cms.model.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-
 
 import java.io.Serializable;
 
@@ -14,13 +11,14 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaperDto implements Serializable {
+public class PaperServerToWebDto implements Serializable {
     private Long id;
     private String title;
     private String subject;
-    private String keywords;
     private String topics;
+    private String keywords;
     private Long userId;
-    private MultipartFile data;
     private Long sectionId;
+    private String status;
+    private Long proposalId;
 }

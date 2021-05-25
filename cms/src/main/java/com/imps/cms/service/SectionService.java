@@ -5,6 +5,8 @@ import com.imps.cms.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class SectionService {
     @Autowired
@@ -19,4 +21,7 @@ public class SectionService {
     }
 
 
+    public List<Section> findAll() {
+        return this.sectionRepository.findAll();
+    }
 }
