@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Data
@@ -26,4 +28,8 @@ public class Proposal {
     @Column(name = "Status")
     private String status;
 
+    private Boolean commentsAllowed;
+
+    @OneToMany(mappedBy = "proposal")
+    private List<Comment> comments;
 }
