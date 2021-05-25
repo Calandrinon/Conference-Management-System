@@ -33,6 +33,9 @@ public class User {
     @Column(name = "Password")
     private String password;
 
+    @Column(name = "Activated")
+    private boolean activated;
+
     @ManyToOne
     @JoinColumn(name = "SectionID")
     private Section section;

@@ -1,22 +1,18 @@
 package com.imps.cms.controller;
 
-import com.imps.cms.model.Conference;
-import com.imps.cms.model.User;
-import com.imps.cms.model.UserRole;
-import com.imps.cms.model.UserType;
+import com.imps.cms.model.*;
 import com.imps.cms.model.converter.UserConverter;
 import com.imps.cms.model.dto.LoginDto;
 import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.UserRepository;
-import com.imps.cms.service.ConferenceService;
-import com.imps.cms.service.MailService;
-import com.imps.cms.service.UserRoleService;
-import com.imps.cms.service.UserService;
+import com.imps.cms.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.net.URI;
@@ -42,6 +38,8 @@ public class UserController {
     private UserRoleService userRoleService;
     @Autowired
     private MailService mailService;
+    @Autowired
+    private ActivationTokenService activationTokenService;
 
     public String sha256hex(String input) throws NoSuchAlgorithmException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
@@ -119,15 +117,23 @@ public class UserController {
                 .salt(salt)
                 .email(userDto.getEmail())
                 .password(hashed_password)
+                .activated(false)
                 .build();
 
+
+        String token = this.generateString(30);
+        ActivationToken activationToken = ActivationToken.builder()
+                .token(token)
+                .status("NOT_ACTIVATED")
+                .receiver(user)
+                .build();
 
         user = this.userRepository.save(user);
         for(Conference conference: conferenceService.findAll()){
             userRoleService.setEmptyUserRole(conference, user);
         }
 
-        mailService.sendEmail("hello there", "get verified here", user.getEmail());
+        mailService.sendEmail("hello there", "Get verified here: http://localhost:8080/api/permissions/" + token + "/" + user.getId(), user.getEmail());
         return ResponseEntity.created(new URI("api/registerUser/" + user.getId())).body(user);
     }
 }

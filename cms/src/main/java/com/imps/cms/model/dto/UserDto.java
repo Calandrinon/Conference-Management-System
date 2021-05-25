@@ -19,4 +19,5 @@ public class UserDto implements Serializable {
     private String password;
     private Long sectionId;
     private List<Long> proposalIds;
+    private boolean activated;
 }
