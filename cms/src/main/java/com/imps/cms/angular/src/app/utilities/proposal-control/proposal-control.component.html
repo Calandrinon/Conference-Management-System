@@ -1,0 +1,57 @@
+<table class="table table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Subject</th>
+      <th scope="col">Topics</th>
+      <th scope="col">Keywords</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let paper of paperWebList">
+      <th scope="row">{{paper.title}}</th>
+      <td>{{paper.subject}}</td>
+      <td>{{paper.topics}}</td>
+      <td>{{paper.keywords}}</td>
+      <td>{{paper.status}}</td>
+    </tr>
+  </tbody>
+
+  <ol>
+    <li *ngFor="let rev of reviewList">{{rev.notes}}</li>
+  </ol>
+</table>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  {{buttonMessages[0]}}
+</button>
+
+<!-- Modal -->
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div *ngIf="submitted; then submitted else notsubmitted"></div>
+        <ng-template #submitted>
+          <h5 class="modal-title">
+            Enter the Details of Your Paper
+          </h5>
+        </ng-template>
+        <ng-template #notsubmitted>
+          <h5 class="modal-title">
+            Your File Has Been Submitted
+          </h5>
+        </ng-template>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-file-upload (fileIdEvent)="uploadComplete($event)"></app-file-upload>
+      </div>
+    </div>
+  </div>
+</div>
+
+
