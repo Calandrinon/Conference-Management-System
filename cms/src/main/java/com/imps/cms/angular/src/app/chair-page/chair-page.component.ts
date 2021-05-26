@@ -47,9 +47,17 @@ export class ChairPageComponent implements OnInit {
   public paperForSection: {[id: number]: Paper} = {}
   public supervisorForSection: {[id: number]: UserDto} = {}
   public acceptedPapers: Paper[]
+
+  public today: Date;
   constructor(private chairService: ChairService) { }
 
+  checkIfDeadlinePassed(deadline: Date): boolean {
+    return this.today > deadline;
+
+  }
+
   ngOnInit(): void {
+    this.today = new Date()
     this.conference = JSON.parse(sessionStorage.getItem('conference'))
     console.log(this.conference)
     this.loggedUser = JSON.parse(localStorage.getItem('current-user'))

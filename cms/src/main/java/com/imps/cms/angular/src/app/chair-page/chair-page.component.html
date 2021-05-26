@@ -34,7 +34,13 @@
   </ul>
 </div>
 
-<div *ngIf="assignProposalsShow">
+<div *ngIf="assignProposalsShow && checkIfDeadlinePassed(conference.assignPapersToReviewers)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Assign Proposals has passed
+  </button>
+</div>
+
+<div *ngIf="assignProposalsShow && !checkIfDeadlinePassed(conference.assignPapersToReviewers)">
   <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
     <li class="list-group-item darkColoredItem" style="margin-top: 20px">
       #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
@@ -98,7 +104,13 @@
   </div>
 </div>
 
-<div *ngIf="resolveReviewsShow">
+<div *ngIf="resolveReviewsShow && checkIfDeadlinePassed(conference.acceptPapers)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Accept Proposals has passed
+  </button>
+</div>
+
+<div *ngIf="resolveReviewsShow && !checkIfDeadlinePassed(conference.acceptPapers)">
   <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
     <li *ngIf="pendingForChair[proposal.id]?.length > 0" class="list-group-item darkColoredItem" style="margin-top: 20px">
       #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
@@ -184,7 +196,13 @@
   </div>
 </div>
 
-<div *ngIf="createSectionsShow">
+<div *ngIf="createSectionsShow && checkIfDeadlinePassed(conference.createSections)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Create Section has passed
+  </button>
+</div>
+
+<div *ngIf="createSectionsShow && !checkIfDeadlinePassed(conference.createSections)">
   <ul class="list-group" role="tablist" *ngFor="let section of sections">
     <li class="list-group-item darkColoredItem">
       Section: {{section.name}}
