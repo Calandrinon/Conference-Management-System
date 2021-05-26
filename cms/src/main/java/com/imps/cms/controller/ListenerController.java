@@ -39,13 +39,4 @@ public class ListenerController {
         userRole.setIsListener(true);
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
-
-    @PutMapping("/selectSection/{userId}")
-    public ResponseEntity<User> selectSection(@PathVariable Long userId, @Valid @RequestBody SectionDto sectionDto){
-        User listener = userService.findById(userId);
-        Section section = sectionService.findById(sectionDto.getId());
-        listener.setSection(section);
-        userService.updateUser(listener);
-        return ResponseEntity.ok().body(listener);
-    }
 }

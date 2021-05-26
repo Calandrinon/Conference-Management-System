@@ -28,6 +28,10 @@ public class UserRole {
 
     private Boolean isChair;
 
+    @ManyToOne
+    @JoinColumn(name = "section_id")
+    private Section section;
+
     private Boolean isAuthor;
 
     private Boolean isPcMember;
