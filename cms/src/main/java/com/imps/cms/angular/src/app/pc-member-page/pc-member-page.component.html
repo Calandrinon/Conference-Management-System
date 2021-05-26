@@ -10,7 +10,13 @@
   </div>
 </nav>
 
-<div *ngIf="bidProposalShow">
+<div *ngIf="bidProposalShow && checkIfDeadlinePassed(conference.bidProposals)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Bid Proposals has passed
+  </button>
+</div>
+
+<div *ngIf="bidProposalShow && !checkIfDeadlinePassed(conference.bidProposals)">
   <ul class="list-group" role="tablist" *ngFor="let proposal of proposals">
     <li class="list-group-item darkColoredItem" style="margin-top: 20px">
       #{{papers[proposal?.paperId]?.id}} - {{papers[proposal?.paperId]?.title}}
@@ -60,9 +66,13 @@
   </div>
 </div>
 
+<div *ngIf="reviewProposalShow && checkIfDeadlinePassed(conference.reviewPapers)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Review Proposals has passed
+  </button>
+</div>
 
-
-<div *ngIf="reviewProposalShow">
+<div *ngIf="reviewProposalShow && !checkIfDeadlinePassed(conference.reviewPapers)" >
   <ul class="list-group" role="tablist" *ngFor="let review of reviews">
     <li class="list-group-item darkColoredItem" style="margin-top: 20px">
       #{{papers[proposalsToReview[review.id]?.paperId]?.id}} - {{papers[proposalsToReview[review.id]?.paperId]?.title}}

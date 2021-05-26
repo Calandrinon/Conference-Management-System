@@ -8,6 +8,7 @@ import {NgForm} from "@angular/forms";
 import {Bid} from "../presentations/model/bid";
 import {Review} from "../presentations/model/review";
 import {Comment} from "../presentations/model/comment";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-pc-member-page',
@@ -19,6 +20,8 @@ export class PcMemberPageComponent implements OnInit {
   public loggedUser: UserDto
   public bidProposalShow: boolean = false
   public reviewProposalShow: boolean = false
+
+  public today: Date;
 
   public proposals: Proposal[]
   public currentProposal: Proposal
@@ -34,11 +37,17 @@ export class PcMemberPageComponent implements OnInit {
   constructor(private pcMemberService: PcMemberService) { }
 
   ngOnInit(): void {
+    this.today = new Date();
     this.conference = JSON.parse(sessionStorage.getItem('conference'))
     console.log(this.conference)
     this.loggedUser = JSON.parse(localStorage.getItem('current-user'))
     this.getProposals();
     this.getReviews();
+  }
+
+  checkIfDeadlinePassed(deadline: Date): boolean {
+    return this.today > deadline;
+
   }
 
   getSubmittedReviewsForProposal(proposal: Proposal): void{
