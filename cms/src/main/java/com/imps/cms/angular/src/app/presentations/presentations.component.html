@@ -18,9 +18,6 @@
   <div *ngIf="toggleDictionary[conference.id]">
     <ul class="list-group">
       <li>
-        <div>
-          <button *ngIf="rolesDictionary[conference.id]?.isChair" class="deadlineUpdateButton" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateConference" (click)="setConferenceToBeUpdated(conference)">Update conference</button>
-        </div>
         <a class="list-group-item">Submit Proposals: {{conference.submitProposal|date}} </a>
         <a class="list-group-item">Bid Proposals: {{conference.bidProposals|date}}</a>
         <a class="list-group-item">Assign Papers To Reviewers: {{conference.assignPapersToReviewers|date}}</a>
@@ -31,7 +28,11 @@
         <a class="list-group-item">Listener Section Registration: {{conference.listenerSectionRegistration|date}}</a>
       </li>
     </ul>
+    <div style="display: flex; justify-content: center">
+      <button *ngIf="rolesDictionary[conference.id]?.isChair" type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#updateConference" (click)="setConferenceToBeUpdated(conference)">Update conference</button>
+    </div>
   </div>
+
 </ul>
 <div *ngIf="user?.id === 69420" style="display: flex; justify-content: center">
   <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addConference">Add Conference</button>

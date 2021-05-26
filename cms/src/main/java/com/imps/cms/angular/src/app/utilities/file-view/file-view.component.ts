@@ -18,6 +18,7 @@ export class FileViewComponent implements OnInit {
 
 
   ngOnInit(): void {
+    console.log(this.fileId)
     this.fileService.getFileContent(this.fileId)                        // pune fileId in loc de 2-ul hardcodat
       .subscribe(result => {                                      // result : Blob
         new Response(result).text().then(txt => this.text = txt); // then : Promise a -> (a -> b)

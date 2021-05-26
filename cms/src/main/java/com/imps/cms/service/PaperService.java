@@ -36,7 +36,7 @@ public class PaperService {
         return this.paperRepository.findAll();
     }
 
-    public Long addFile(MultipartFile file, String title, String subject, String keywords, String topics, User author, Section section, Conference conference) throws IOException{
+    public Long addFile(MultipartFile file, String title, String subject, String keywords, String topics, User author, Conference conference) throws IOException{
         Paper paper = Paper.builder()
                 .title(title)
                 .filename(file.getOriginalFilename())
@@ -50,7 +50,7 @@ public class PaperService {
         return paperRepository.save(paper).getId();
     }
 
-    public Long updatePaper(MultipartFile file, String title, String subject, String keywords, String topics, User author, Section section, Conference conference, Long paperId) throws IOException {
+    public Long updatePaper(MultipartFile file, String title, String subject, String keywords, String topics, User author, Conference conference, Long paperId) throws IOException {
         Paper paper = Paper.builder()
                 .title(title)
                 .filename(file.getOriginalFilename())
@@ -59,7 +59,7 @@ public class PaperService {
                 .keywords(keywords)
                 .topics(topics)
                 .author(author)
-                .section(section)
+                .section(paperRepository.findById(paperId).orElseThrow(() -> new RuntimeException("no sections with this id")).getSection())
                 .conference(conference)
                 .build();
         paper.setId(paperId);
