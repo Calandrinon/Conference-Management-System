@@ -39,15 +39,26 @@ export class ListenerPageComponent implements OnInit {
 
   }
 
+  getRandomString(length) {
+    var randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = '';
+    for ( var i = 0; i < length; i++ ) {
+      result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+    }
+    return result;
+  }
+
   checkout(amount, tokenVar) {
+    let ranval = this.getRandomString(10);
+
     if (localStorage.getItem(this.boughtToken) == undefined) {
       const strikeCheckout = (<any>window).StripeCheckout.configure({
         key: 'pk_test_51Its4nFpSLECQuccxcYMRLsTDkybRx7vl2KfTfSbvl3updph1o1NeU3X12cJTD8Dgwg0f6O1DjC7mmd7dq8jO3yp00bBnBu754',
         locale: 'auto',
         token: function (stripeToken: any) {
           console.log(stripeToken);
-          localStorage.setItem(tokenVar, stripeToken.id)
-          alert('Stripe token generated!\n' + stripeToken.id + "\n Use this code when attending the conference.");
+          localStorage.setItem(tokenVar, ranval + stripeToken.id)
+          alert('Stripe token generated!\n' + ranval + stripeToken.id + "\n Use this code when attending the conference.");
         }
       });
 
