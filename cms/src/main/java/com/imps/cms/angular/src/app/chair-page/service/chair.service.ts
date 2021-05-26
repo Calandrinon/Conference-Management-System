@@ -7,7 +7,6 @@ import {Invitation} from "../../presentations/model/invitation";
 import {Proposal} from "../../presentations/model/proposal";
 import {Paper} from "../../presentations/model/paper";
 import {Review} from "../../presentations/model/review";
-import * as url from "url";
 
 @Injectable({
   providedIn: 'root'
@@ -82,5 +81,13 @@ export class ChairService {
 
   autoReview(proposal: Proposal): Observable<Proposal> {
     return this.httpClient.post<Proposal>(this.url + "/chair/auto-review", proposal)
+  }
+
+  setCommentsAllowed(proposalId: number): Observable<Proposal> {
+    return this.httpClient.get<Proposal>(this.url + "/chair/set-comments-allowed/" + proposalId)
+  }
+
+  assignNewPcMembers(proposalId: number): Observable<Proposal> {
+    return this.httpClient.get<Proposal>(this.url + "/chair/assign-new-pc-members/" + proposalId)
   }
 }

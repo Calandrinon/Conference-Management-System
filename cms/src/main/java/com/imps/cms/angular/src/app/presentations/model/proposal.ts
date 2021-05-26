@@ -1,3 +1,5 @@
+import {Comment} from "./comment";
+
 export interface Proposal{
   id: number
   paperId: number

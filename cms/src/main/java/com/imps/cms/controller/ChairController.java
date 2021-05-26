@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -169,9 +170,21 @@ public class ChairController {
         proposal.setStatus(proposalDto.getStatus());
         proposal.setId(proposalDto.getId());
         proposal.setPaper(paperService.findById(proposalDto.getPaperId()));
+        proposal.setCommentsAllowed(proposal.getCommentsAllowed());
 
         proposal = proposalService.updateProposal(proposal);
         reviewService.resolveReviews(proposal);
+
+        String subject = "Your paper was " + proposal.getStatus().toLowerCase();
+        String body = "Your paper " + proposal.getPaper().getTitle() + " was " + proposal.getStatus().toLowerCase();
+        List<String> reviews = reviewService.findResolvedByProposal(proposal.getId()).stream()
+                .map(review -> review.getUser().getFullName() + ": " + review.getScore() + "\n" + review.getNotes())
+                .collect(Collectors.toList());
+        StringBuilder stringBuilder = new StringBuilder(1000);
+        reviews.forEach(s -> stringBuilder.append(s).append("\n"));
+        body = body + "\nReviews:\n" + stringBuilder.toString();
+
+        mailService.sendEmail(subject, body, proposal.getPaper().getAuthor().getEmail());
 
         return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
     }
@@ -187,43 +200,49 @@ public class ChairController {
 
         if(!proposal.getStatus().equals("CONTRADICTORY")){
             reviewService.resolveReviews(proposal);
-            mailService.sendEmail("Your paper was " + proposal.getStatus().toLowerCase(),
-                    "Your paper " + proposal.getPaper().getTitle() + " was" + proposal.getStatus().toLowerCase(),
-                    proposal.getPaper().getAuthor().getEmail());
+            String subject = "Your paper was " + proposal.getStatus().toLowerCase();
+            String body = "Your paper " + proposal.getPaper().getTitle() + " was " + proposal.getStatus().toLowerCase();
+            List<String> reviews = reviewService.findResolvedByProposal(proposal.getId()).stream()
+                    .map(review -> review.getUser().getFullName() + ": " + review.getScore() + "\n" + review.getNotes())
+                    .collect(Collectors.toList());
+            StringBuilder stringBuilder = new StringBuilder(1000);
+            reviews.forEach(s -> stringBuilder.append(s).append("\n"));
+            body = body + "\nReviews:\n" + stringBuilder.toString();
+
+            if(proposal.getComments() != null){
+                List<String> comments = proposal.getComments().stream()
+                        .map(comment -> comment.getUser().getFullName() + ": " + comment.getContent())
+                        .collect(Collectors.toList());
+                body = body + "\nComments:\n" + comments.stream().reduce((a, b) -> a + "\n" + b);
+            }
+
+            mailService.sendEmail(subject, body, proposal.getPaper().getAuthor().getEmail());
         }
         return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
     }
 
-    @PostMapping("/proposal/acceptOrReject")
-    public ResponseEntity<Boolean> acceptOrRejectProposal(@RequestBody ProposalDto proposalDto)
-    {
-        Proposal proposal = Proposal.builder()
-                .paper(paperService.findById(proposalDto.getPaperId()))
-                .status(proposalDto.getStatus())
-                .build();
-        List<Long> scores = reviewService.findByProposal(proposal.getId()).stream()
-                .filter(p -> p.getReviewStatus() == ReviewStatus.RESOLVED)
-                .map(Review::getScore)
-                .collect(Collectors.toList());
-        Double scoreStandardDeviation = ReviewService.standardDeviation(scores);
-        if(scoreStandardDeviation >= 3){
-            List<Review> reviews = reviewService.findByProposal(proposal.getId());
-            reviews.forEach(p -> {p.setReviewStatus(ReviewStatus.RESOLVED); reviewService.updateReview(p);});
-            return ResponseEntity.ok(Boolean.FALSE);
-        }
-        else{
-            double meanScore = ReviewService.mean(scores);
-            if(meanScore >= 5) {
-                proposal.setStatus("ACCEPTED");
-                proposalService.updateProposal(proposal);
-                return ResponseEntity.ok(Boolean.TRUE);
-            }else {
-                proposal.setStatus("REJECTED");
-                proposalService.updateProposal(proposal);
-                return ResponseEntity.ok(Boolean.FALSE);
-            }
-        }
+    @GetMapping("/set-comments-allowed/{proposalId}")
+    public ResponseEntity<ProposalDto> setCommentsAllowed(@PathVariable Long proposalId){
+        Proposal proposal = proposalService.findById(proposalId);
+        proposal.setCommentsAllowed(true);
+        proposal = proposalService.updateProposal(proposal);
+        return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
     }
+
+    @GetMapping("/assign-new-pc-members/{proposalId}")
+    public ResponseEntity<ProposalDto> assignNewPcMembers(@PathVariable Long proposalId){
+        Proposal proposal = proposalService.findById(proposalId);
+        proposal.setStatus("RE_REVIEWING");
+        reviewService.resolveReviews(proposal);
+        List<User> pcMembers = userService.getPcMembers(proposal.getPaper().getConference());
+        Collections.shuffle(pcMembers);
+        reviewService.addReview(proposal.getId(), pcMembers.get(0).getId());
+        reviewService.addReview(proposal.getId(), pcMembers.get(1).getId());
+        reviewService.addReview(proposal.getId(), pcMembers.get(2).getId());
+        proposal = proposalService.updateProposal(proposal);
+        return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
+    }
+
 
     @PostMapping("/section")
     public ResponseEntity<Section> addSection(@Valid @RequestBody SectionDto sectionDto) throws URISyntaxException {

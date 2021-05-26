@@ -10,6 +10,7 @@ public class CommentConverter {
         commentDto.setProposalId(comment.getProposal().getId());
         commentDto.setUserName(comment.getUser().getFullName());
         commentDto.setContent(comment.getContent());
+        commentDto.setUserId(comment.getUser().getId());
         return commentDto;
     }
 }

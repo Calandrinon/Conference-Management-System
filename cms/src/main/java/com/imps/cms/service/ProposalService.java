@@ -1,15 +1,10 @@
 package com.imps.cms.service;
 
 
-import com.imps.cms.model.Conference;
-import com.imps.cms.model.Proposal;
-import com.imps.cms.model.Review;
-import com.imps.cms.model.ReviewStatus;
+import com.imps.cms.model.*;
 import com.imps.cms.repository.ConferenceRepository;
 
-import com.imps.cms.model.Paper;
 import com.imps.cms.model.Proposal;
-import com.imps.cms.model.User;
 
 import com.imps.cms.repository.ProposalRepository;
 import com.imps.cms.repository.ReviewRepository;
@@ -51,7 +46,7 @@ public class ProposalService {
         Conference conference = conferenceRepository.findById(conferenceId).orElseThrow(() -> new RuntimeException("No conference with this id"));
         return proposalRepository.findAll().stream()
                 .filter(proposal -> proposal.getPaper().getConference().equals(conference))
-                .filter(proposal -> proposal.getStatus().equals("PENDING") || proposal.getStatus().equals("CONTRADICTORY"))
+                .filter(proposal -> proposal.getStatus().equals("PENDING") || proposal.getStatus().equals("CONTRADICTORY") || proposal.getStatus().equals("RE_REVIEWING"))
                 .collect(Collectors.toList());
     }
 
@@ -67,6 +62,10 @@ public class ProposalService {
         }
         else if (Collections.min(scores) >= 5){
             proposal.setStatus("ACCEPTED");
+            return proposalRepository.save(proposal);
+        }
+        else if (proposal.getStatus().equals("RE_REVIEWING")){
+            proposal.setStatus("REJECTED");
             return proposalRepository.save(proposal);
         }
         else {

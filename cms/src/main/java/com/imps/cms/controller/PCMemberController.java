@@ -35,6 +35,8 @@ public class PCMemberController {
     private BidService bidService;
     @Autowired
     private ReviewService reviewService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping(value = "/add-pc-member/{conferenceId}/{userId}/{token}")
     public ResponseEntity<UserRoleDto> activateAccount(@PathVariable Long userId, @PathVariable Long conferenceId, @PathVariable String token){
@@ -113,5 +115,24 @@ public class PCMemberController {
     public ResponseEntity<Boolean> getSubmittedReview(@PathVariable Long reviewId){
         Review review = reviewService.findById(reviewId);
         return new ResponseEntity<>(review.getReviewStatus() != ReviewStatus.PENDING_FOR_USER, HttpStatus.OK);
+    }
+
+    @GetMapping("get-submitted-reviews/{proposalId}")
+    public ResponseEntity<List<ReviewDto>> getSubmittedReviews(@PathVariable Long proposalId){
+        List<Review> reviews = reviewService.findByProposal(proposalId).stream()
+                .filter(review -> !review.getReviewStatus().equals(ReviewStatus.PENDING_FOR_USER))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(reviews.stream().map(ReviewConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @PostMapping("/post-comment")
+    public ResponseEntity<CommentDto> postComment(@Valid @RequestBody CommentDto commentDto){
+        Comment comment = new Comment();
+        comment.setContent(commentDto.getContent());
+        comment.setUser(userService.findById(commentDto.getUserId()));
+        comment.setProposal(proposalService.findById(commentDto.getProposalId()));
+        comment = commentService.addComment(comment);
+
+        return new ResponseEntity<>(CommentConverter.convertToDto(comment), HttpStatus.OK);
     }
 }

@@ -12,4 +12,5 @@ public class CommentDto {
     private Long proposalId;
     private String userName;
     private String content;
+    private Long userId;
 }

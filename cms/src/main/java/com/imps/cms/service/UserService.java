@@ -1,13 +1,11 @@
 package com.imps.cms.service;
 
-import com.imps.cms.model.Bid;
-import com.imps.cms.model.BidStatus;
-import com.imps.cms.model.Proposal;
-import com.imps.cms.model.User;
+import com.imps.cms.model.*;
 import com.imps.cms.model.dto.UserDto;
 import com.imps.cms.repository.BidRepository;
 import com.imps.cms.repository.ProposalRepository;
 import com.imps.cms.repository.UserRepository;
+import com.imps.cms.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +22,9 @@ public class UserService {
 
     @Autowired
     private BidRepository bidRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     public User findById(Long id){
         return userRepository.findById(id).orElseThrow(() -> new RuntimeException("No user with this id"));
@@ -58,6 +59,12 @@ public class UserService {
         List<Bid> bids = bidRepository.findByProposalAndBidStatus(proposal, BidStatus.UGH);
         return bids.stream()
                 .map(Bid::getUser)
+                .collect(Collectors.toList());
+    }
+
+    public List<User> getPcMembers(Conference conference) {
+        return userRepository.findAll().stream()
+                .filter(user -> userRoleRepository.findByConferenceAndUser(conference, user).getIsPcMember())
                 .collect(Collectors.toList());
     }
 }

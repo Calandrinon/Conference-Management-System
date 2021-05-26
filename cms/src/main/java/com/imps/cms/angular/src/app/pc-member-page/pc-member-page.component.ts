@@ -7,6 +7,7 @@ import {Paper} from "../presentations/model/paper";
 import {NgForm} from "@angular/forms";
 import {Bid} from "../presentations/model/bid";
 import {Review} from "../presentations/model/review";
+import {Comment} from "../presentations/model/comment";
 
 @Component({
   selector: 'app-pc-member-page',
@@ -28,6 +29,7 @@ export class PcMemberPageComponent implements OnInit {
   public proposalsToReview: {[id: number]: Proposal} = {}
   public currentReview: Review
   public reviewSubmitted: {[id: number]: boolean} = {}
+  public submittedReviewsForProposal: {[id: number]: Review[]} = {}
 
   constructor(private pcMemberService: PcMemberService) { }
 
@@ -37,6 +39,15 @@ export class PcMemberPageComponent implements OnInit {
     this.loggedUser = JSON.parse(localStorage.getItem('current-user'))
     this.getProposals();
     this.getReviews();
+  }
+
+  getSubmittedReviewsForProposal(proposal: Proposal): void{
+    this.pcMemberService.getSubmittedReviewsForProposal(proposal.id).subscribe(
+      (response:Review[]) => {
+        console.log(response)
+        this.submittedReviewsForProposal[proposal.id] = response;
+      }
+    )
   }
 
   getProposals(): void{
@@ -103,6 +114,7 @@ export class PcMemberPageComponent implements OnInit {
   private getReviews(): void{
     this.pcMemberService.getReviewsForUser(this.loggedUser.id, this.conference.id).subscribe(
       (response: Review[]) => {
+        console.log("REVIEWS:")
         console.log(response)
         this.reviews = response;
         for(let i = 0; i < this.reviews.length; i++){
@@ -116,8 +128,10 @@ export class PcMemberPageComponent implements OnInit {
   private getProposalForReview(review: Review) {
     this.pcMemberService.getProposalForReview(review.id).subscribe(
       (response: Proposal) => {
-        console.log(response)
         this.proposalsToReview[review.id] = response
+        console.log("Proposal for review")
+        console.log(this.proposalsToReview)
+        this.getSubmittedReviewsForProposal(response);
       }
     )
   }
@@ -145,6 +159,24 @@ export class PcMemberPageComponent implements OnInit {
       (response: boolean) => {
         console.log(response)
         this.reviewSubmitted[review.id] = response
+      }
+    )
+  }
+
+  comment(addComment: NgForm, proposal: Proposal) {
+    let comment: Comment = {
+      id: 0,
+      ...addComment.value,
+      proposalId: proposal.id,
+      userId: this.loggedUser.id,
+      userName: this.loggedUser.fullName
+    }
+    console.log(comment)
+
+    this.pcMemberService.postComment(comment).subscribe(
+      (response: Comment) => {
+        console.log(response)
+        this.getReviews()
       }
     )
   }

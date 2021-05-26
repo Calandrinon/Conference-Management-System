@@ -44,6 +44,11 @@ public class ReviewService {
         return reviewRepository.findByProposalAndReviewStatusNot(proposal, ReviewStatus.RESOLVED);
     }
 
+    public List<Review> findResolvedByProposal(Long proposalId){
+        Proposal proposal = proposalRepository.findById(proposalId).orElseThrow(() -> new RuntimeException("No proposal with this id"));
+        return reviewRepository.findByProposalAndReviewStatus(proposal, ReviewStatus.RESOLVED);
+    }
+
     public static Double mean(List<Long> scores){
         return scores.stream().mapToLong(Long::longValue).average().orElse(Double.NaN);
     }

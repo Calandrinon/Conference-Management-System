@@ -111,12 +111,22 @@
       </ul>
       <ul class="list-group">
         <li class="list-group-item">
-          <button *ngIf="pendingForChair[proposal.id]?.length >= 3" (click)="autoReview(proposal)" class="btn btn-dark">Auto-Review</button>
+          <button *ngIf="pendingForChair[proposal.id]?.length >= 3 && !proposal.commentsAllowed" (click)="autoReview(proposal)" class="btn btn-dark">Auto-Review</button>
           <button *ngIf="pendingForChair[proposal.id]?.length < 3" class="btn btn-dark" (click)="setCurrentProposal(proposal)" data-bs-target="#manualReviewModal" data-bs-toggle="modal">Manual Review</button>
           <button hidden="hidden" class="btn btn-dark" id="manual-review-button" (click)="setCurrentProposal(proposal)" data-bs-target="#manualReviewModal" data-bs-toggle="modal">Manual Review</button>
           <button class="btn btn-dark" id="contradictory-button" hidden="hidden" (click)="setCurrentProposal(proposal)" data-bs-target="#contradictoryModal" data-bs-toggle="modal">Contradictory</button>
+          <button *ngIf="proposal.commentsAllowed" [disabled]="proposal.comments.length <= 0" class="btn btn-dark" (click)="setCurrentProposal(proposal)" data-bs-target="#manualReviewModal" data-bs-toggle="modal">Review Based on comments</button>
         </li>
       </ul>
+
+      <div *ngIf="proposal?.commentsAllowed">
+        <div class="list-group-item">All comments: </div>
+        <ul class="list-group" role="tablist" *ngFor="let comment of proposal?.comments">
+          <li class="list-group-item" style="margin-left: 20px">
+            {{comment.content}} --- User: {{comment.userName}}
+          </li>
+        </ul>
+      </div>
     </li>
   </ul>
 
@@ -159,8 +169,8 @@
               <label for="manner">Proposal reviews are contradictory, choose what you want to do:</label>
               <select ngModel name="manner" id="manner" class="form-control">
                 <option value="MANUAL">Manual review</option>
-                <option value="CHAIR_DISCUSSION">Let the reviewers discuss, then decide based on their comments</option>
-                <option value="ASSIGN_NEW_CHAIRS">Assign new reviewers</option>
+                <option value="PC_MEMBERS_DISCUSSION">Let the reviewers discuss, then decide based on their comments</option>
+                <option value="ASSIGN_NEW_PC_MEMBERS">Assign new reviewers</option>
               </select>
             </div>
           </form>

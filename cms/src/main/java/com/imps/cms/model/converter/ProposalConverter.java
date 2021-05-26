@@ -12,7 +12,9 @@ public class ProposalConverter {
         proposalDto.setStatus(proposal.getStatus());
         proposalDto.setPaperId(proposal.getPaper().getId());
         proposalDto.setCommentsAllowed(proposal.getCommentsAllowed());
-        proposalDto.setComments(proposal.getComments().stream().map(CommentConverter::convertToDto).collect(Collectors.toList()));
+        if(proposal.getComments() != null)
+            proposalDto.setComments(proposal.getComments().stream().map(CommentConverter::convertToDto).collect(Collectors.toList()));
+        else proposalDto.setComments(null);
         return proposalDto;
     }
 }

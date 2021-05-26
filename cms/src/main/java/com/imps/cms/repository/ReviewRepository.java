@@ -14,4 +14,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByProposalAndReviewStatusNot(Proposal proposal, ReviewStatus reviewStatus);
 
     List<Review> findByUser(User user);
+
+    List<Review> findByProposalAndReviewStatus(Proposal proposal, ReviewStatus resolved);
 }

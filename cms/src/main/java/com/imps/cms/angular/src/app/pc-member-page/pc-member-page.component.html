@@ -81,6 +81,27 @@
           <button *ngIf="reviewSubmitted[review.id]" class="btn btn-dark" [disabled]="true">Already Reviewed</button>
         </li>
       </ul>
+      <div *ngIf="reviewSubmitted[review.id]">
+        <div class="list-group-item">All reviews: </div>
+        <ul class="list-group" role="tablist" *ngFor="let review of submittedReviewsForProposal[proposalsToReview[review.id]?.id]">
+          <li class="list-group-item" style="margin-left: 20px">
+            Score: {{review.score}} --- User: {{review.userId}}<br>
+            {{review.notes}}
+          </li>
+        </ul>
+      </div>
+      <div *ngIf="proposalsToReview[review.id]?.commentsAllowed">
+        <div class="list-group-item">All comments: </div>
+        <ul class="list-group" role="tablist" *ngFor="let comment of proposalsToReview[review.id]?.comments">
+          <li class="list-group-item" style="margin-left: 20px">
+            {{comment.content}} --- User: {{comment.userName}}
+          </li>
+        </ul>
+        <form style="margin-left: 20px" #addComment="ngForm" (ngSubmit)="comment(addComment, proposalsToReview[review.id])">
+          <input name="content" class="form-control" ngModel placeholder="Comment here...">
+          <button type="submit" class="button btn-dark">Comment</button>
+        </form>
+      </div>
     </li>
   </ul>
 

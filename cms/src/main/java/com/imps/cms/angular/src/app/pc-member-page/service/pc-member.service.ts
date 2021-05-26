@@ -5,6 +5,7 @@ import {Proposal} from "../../presentations/model/proposal";
 import {Paper} from "../../presentations/model/paper";
 import {Bid} from "../../presentations/model/bid";
 import {Review} from "../../presentations/model/review";
+import {Comment} from "../../presentations/model/comment";
 
 @Injectable({
   providedIn: 'root'
@@ -43,5 +44,13 @@ export class PcMemberService {
 
   getSubmittedReview(reviewId: number): Observable<boolean> {
     return this.httpClient.get<boolean>(this.url + "pc-member/get-submitted-review/" + reviewId)
+  }
+
+  getSubmittedReviewsForProposal(proposalId: number): Observable<Review[]> {
+    return this.httpClient.get<Review[]>(this.url + "pc-member/get-submitted-reviews/" + proposalId)
+  }
+
+  postComment(comment: Comment): Observable<Comment> {
+    return this.httpClient.post<Comment>(this.url + "pc-member/post-comment", comment)
   }
 }

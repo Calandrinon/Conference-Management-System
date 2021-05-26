@@ -268,6 +268,7 @@ export class ChairPageComponent implements OnInit {
   }
 
   autoReview(proposal: Proposal) {
+    this.currentProposal = proposal;
     this.chairService.autoReview(proposal).subscribe(
       (response: Proposal) => {
         console.log(response);
@@ -281,6 +282,22 @@ export class ChairPageComponent implements OnInit {
     switch (contradictoryForm.value.manner){
       case "MANUAL":
         document.getElementById("manual-review-button").click()
+        break
+      case "PC_MEMBERS_DISCUSSION":
+        this.chairService.setCommentsAllowed(this.currentProposal.id).subscribe(
+          (response: Proposal) => {
+            console.log(response)
+            this.getProposals();
+          }
+        )
+        break
+      case "ASSIGN_NEW_PC_MEMBERS":
+        this.chairService.assignNewPcMembers(this.currentProposal.id).subscribe(
+          (response:Proposal) => {
+            console.log(response)
+            this.getProposals()
+          }
+        )
     }
   }
 }
