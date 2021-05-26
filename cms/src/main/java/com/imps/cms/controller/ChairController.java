@@ -5,11 +5,13 @@ import com.imps.cms.model.converter.*;
 import com.imps.cms.model.dto.*;
 import com.imps.cms.service.*;
 import net.bytebuddy.utility.RandomString;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -277,7 +279,6 @@ public class ChairController {
                 .filter(paper -> paper.getAuthor().getId().equals(userId))
                 .map(paperBuilder)
                 .collect(Collectors.toList());
-        System.out.println(e);
         return new ResponseEntity<>(
                 this.paperService.findAll()
                         .stream()
@@ -313,21 +314,30 @@ public class ChairController {
         );
     }
 
-    @PostMapping("/update-paper")
-    public ResponseEntity<Boolean> updatePaper(@RequestBody PaperDto paperDto) throws IOException {
-        Paper paper = Paper.builder()
-                .title(paperDto.getTitle())
-                .section(this.sectionService.findById(paperDto.getId()))
-                .author(this.userService.findById(paperDto.getId()))
-                .data(paperDto.getData().getBytes())
-                .topics(paperDto.getTopics())
-                .keywords(paperDto.getKeywords())
-                .subject(paperDto.getSubject())
-                .filename(paperDto.getData().getOriginalFilename())
-                .build();
-        paper.setId(paperDto.getId());
-        paperService.updatePaper(paper);
-        return ResponseEntity.ok(Boolean.TRUE);
+    @PostMapping("/update-paper/{title}/{subject}/{keywords}/{topics}/{userId}/{sectionId}/{conferenceId}/{paperId}")
+    public ResponseEntity<Long> updatePaper(
+            @Valid @RequestBody MultipartFile file
+            , @PathVariable String title
+            , @PathVariable String subject
+            , @PathVariable String keywords
+            , @PathVariable String topics
+            , @PathVariable Long userId
+            , @PathVariable Long sectionId
+            , @PathVariable Long conferenceId
+            , @PathVariable Long paperId) throws IOException {
+        return ResponseEntity.ok(
+                this.paperService.updatePaper(
+                        file
+                        , title
+                        , subject
+                        , keywords
+                        , topics
+                        , userService.findById(userId)
+                        , sectionService.findById(sectionId)
+                        , conferenceService.findById(conferenceId)
+                        , paperId
+                )
+        );
     }
 
 

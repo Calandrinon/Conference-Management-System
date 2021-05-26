@@ -21,11 +21,14 @@ export class ProposalControlComponent implements OnInit {
   submitted: boolean = false;
   user: UserDto;
   conference: Conference
+  selectedPaper: PaperWeb = null;
+  idToReturn : number = null;
 
   buttonMessages = {
     0:"Add Proposal"
     , 1:"Cancel"
   }
+  show: boolean = true;
 
 
   constructor(
@@ -61,15 +64,27 @@ export class ProposalControlComponent implements OnInit {
     document.getElementById('exampleModal').click();
     this.showUpload = false;
     this.submitted = true;
-    this.proposalService.postProposal({
-      id : null
-      , paperId : $event
-      , status : "PENDING"
-      , commentsAllowed : false
-      , comments : null
-    }).subscribe(() => {
-      this.ngOnInit();
-    });
+    if ($event != null) {
+      this.proposalService.postProposal({
+        id : null
+        , paperId : $event
+        , status : "PENDING"
+        , commentsAllowed : false
+        , comments : null
+      }).subscribe(() => {
+        this.ngOnInit();
+      });
+    }else{
+      this.ngOnInit()
+    }
+    this.idToReturn = null;
   }
 
+  select(paper) {
+    if (this.selectedPaper == paper){
+      this.selectedPaper = null;
+    }else{
+      this.selectedPaper = paper;
+    }
+  }
 }

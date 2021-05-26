@@ -1,10 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FileService} from "../shared/file-service";
 import {NgForm} from "@angular/forms";
 import {Section} from "../../model/section-model";
 import {SectionService} from "../../other-services/section-service";
 import {UserDto} from "../../authentication/model/UserDto";
 import {Conference} from "../../presentations/model/conference";
+import {Paper} from "../shared/file-model";
 
 
 @Component({
@@ -20,6 +21,7 @@ export class FileUploadComponent implements OnInit {
   user: UserDto;
   conference: Conference
   @Output() fileIdEvent : EventEmitter<number> = new EventEmitter<number>();
+  @Input() idOfPaper : number = null;
 
   constructor(private fileService : FileService, private sectionService : SectionService) { }
 
@@ -46,7 +48,7 @@ export class FileUploadComponent implements OnInit {
     console.log((this.fileToUpload as File));
     console.log("********************************************************");
 
-    this.fileService.postFile({
+    let paper : Paper = {
       data: formData
       , title: form.value.title
       , keywords: form.value.keywords
@@ -55,9 +57,19 @@ export class FileUploadComponent implements OnInit {
       , subject: form.value.subject
       , topics: form.value.topics
       , conferenceId: this.conference.id
-    }).subscribe(result => {
-      this.fileIdEvent.emit(result);
-      form.resetForm();});
+    }
+
+    if(this.idOfPaper == null) {
+      this.fileService.postFile(paper).subscribe(result => {
+        this.fileIdEvent.emit(result);
+        form.resetForm();
+      });
+    }else{
+      this.fileService.updateFile(paper, this.idOfPaper).subscribe(result => {
+        this.fileIdEvent.emit(null);
+        form.resetForm();
+      });
+    }
   }
 
 

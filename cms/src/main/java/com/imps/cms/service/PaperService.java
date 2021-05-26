@@ -4,6 +4,8 @@ import com.imps.cms.model.Conference;
 import com.imps.cms.model.Paper;
 import com.imps.cms.model.Section;
 import com.imps.cms.model.User;
+import com.imps.cms.model.dto.PaperDto;
+import com.imps.cms.model.dto.PaperServerToWebDto;
 import com.imps.cms.repository.PaperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 
 @Service
 public class PaperService {
@@ -43,7 +46,22 @@ public class PaperService {
                 .section(section)
                 .conference(conference)
                 .build();
+        return paperRepository.save(paper).getId();
+    }
 
+    public Long updatePaper(MultipartFile file, String title, String subject, String keywords, String topics, User author, Section section, Conference conference, Long paperId) throws IOException {
+        Paper paper = Paper.builder()
+                .title(title)
+                .filename(file.getOriginalFilename())
+                .data(file.getBytes())
+                .subject(subject)
+                .keywords(keywords)
+                .topics(topics)
+                .author(author)
+                .section(section)
+                .conference(conference)
+                .build();
+        paper.setId(paperId);
         return paperRepository.save(paper).getId();
     }
 }
