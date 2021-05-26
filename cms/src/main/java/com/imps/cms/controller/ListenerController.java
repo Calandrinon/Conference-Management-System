@@ -39,4 +39,13 @@ public class ListenerController {
         userRole.setIsListener(true);
         return new ResponseEntity<>(UserRoleConverter.convertToDto(userRoleService.updateUserRole(userRole)), HttpStatus.OK);
     }
+
+    @GetMapping("/choose-section/{sectionId}/{userId}")
+    public ResponseEntity<UserRoleDto> chooseSection(@PathVariable Long sectionId, @PathVariable Long userId){
+        Section section = sectionService.findById(sectionId);
+        UserRole userRole = userRoleService.findByConferenceIdAndUserId(userId, section.getConference().getId());
+        userRole.setSection(section);
+        userRoleService.updateUserRole(userRole);
+        return new ResponseEntity<>(UserRoleConverter.convertToDto(userRole), HttpStatus.OK);
+    }
 }
