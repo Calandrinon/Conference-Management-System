@@ -13,7 +13,9 @@ public class PaperConverter {
         paperDto.setTitle(paper.getTitle());
         paperDto.setTopics(paper.getTopics());
         paperDto.setAuthorId(paper.getAuthor().getId());
-        paperDto.setSectionId(0L);
+        if(paper.getSection() != null)
+            paperDto.setSectionId(paper.getSection().getId());
+        else paperDto.setSectionId(0L);
         return paperDto;
     }
 }

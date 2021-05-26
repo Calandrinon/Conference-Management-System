@@ -1,12 +1,10 @@
 package com.imps.cms.service;
 
-import com.imps.cms.model.Conference;
-import com.imps.cms.model.Paper;
-import com.imps.cms.model.Section;
-import com.imps.cms.model.User;
+import com.imps.cms.model.*;
 import com.imps.cms.model.dto.PaperDto;
 import com.imps.cms.model.dto.PaperServerToWebDto;
 import com.imps.cms.repository.PaperRepository;
+import com.imps.cms.repository.ProposalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -16,11 +14,15 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PaperService {
     @Autowired
     public PaperRepository paperRepository;
+
+    @Autowired
+    public ProposalRepository proposalRepository;
 
     public Paper findById(Long id){
         return paperRepository.findById(id).orElseThrow(() -> new RuntimeException("no paper with this id"));
@@ -43,7 +45,6 @@ public class PaperService {
                 .keywords(keywords)
                 .topics(topics)
                 .author(author)
-                .section(section)
                 .conference(conference)
                 .build();
         return paperRepository.save(paper).getId();
@@ -63,5 +64,20 @@ public class PaperService {
                 .build();
         paper.setId(paperId);
         return paperRepository.save(paper).getId();
+    }
+
+    public List<Paper> getAcceptedNotAssigned(Conference conference) {
+        return paperRepository.findByConference(conference).stream()
+                .filter(paper -> proposalRepository.findByPaper(paper).stream().anyMatch(proposal -> proposal.getStatus().equals("ACCEPTED")))
+                .filter(paper -> paper.getSection() == null)
+                .collect(Collectors.toList());
+    }
+
+    public Paper findBySection(Section section) {
+        return paperRepository.findBySection(section);
+    }
+
+    public Paper updateSection(Paper paper) {
+        return paperRepository.save(paper);
     }
 }

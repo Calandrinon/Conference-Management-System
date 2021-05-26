@@ -1,5 +1,6 @@
 package com.imps.cms.service;
 
+import com.imps.cms.model.Conference;
 import com.imps.cms.model.Section;
 import com.imps.cms.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,16 @@ public class SectionService {
         return sectionRepository.findById(id).orElseThrow(() -> new RuntimeException("No section with this id"));
     }
 
-    public void addSection(Section section){
-        sectionRepository.save(section);
+    public Section addSection(Section section){
+        return sectionRepository.save(section);
     }
 
 
     public List<Section> findAll() {
         return this.sectionRepository.findAll();
+    }
+
+    public List<Section> getForConference(Conference conference) {
+        return sectionRepository.findByConference(conference);
     }
 }

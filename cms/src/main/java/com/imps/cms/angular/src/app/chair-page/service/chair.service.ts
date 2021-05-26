@@ -7,6 +7,7 @@ import {Invitation} from "../../presentations/model/invitation";
 import {Proposal} from "../../presentations/model/proposal";
 import {Paper} from "../../presentations/model/paper";
 import {Review} from "../../presentations/model/review";
+import {Section} from "../../model/section-model";
 
 @Injectable({
   providedIn: 'root'
@@ -89,5 +90,33 @@ export class ChairService {
 
   assignNewPcMembers(proposalId: number): Observable<Proposal> {
     return this.httpClient.get<Proposal>(this.url + "/chair/assign-new-pc-members/" + proposalId)
+  }
+
+  getSections(conferenceId: number): Observable<Section[]> {
+    return this.httpClient.get<Section[]>(this.url + "/chair/get-sections/" + conferenceId);
+  }
+
+  getPaperForSection(sectionId: number): Observable<Paper> {
+    return this.httpClient.get<Paper>(this.url + "/chair/get-paper-for-section/" + sectionId)
+  }
+
+  getChairs(conferenceId: number): Observable<UserDto[]> {
+    return this.httpClient.get<UserDto[]>(this.url + "/chair/get-chairs/" + conferenceId);
+  }
+
+  getAcceptedAndNotAssignedPapers(conferenceId: number): Observable<Paper[]> {
+    return this.httpClient.get<Paper[]>(this.url + "/chair/get-accepted-not-assigned-papers/" + conferenceId)
+  }
+
+  getSupervisorForSection(sectionId: number): Observable<UserDto> {
+    return this.httpClient.get<UserDto>(this.url + "/chair/get-supervisor-for-section/" + sectionId)
+  }
+
+  addSection(section: Section): Observable<Section> {
+    return this.httpClient.post<Section>(this.url + "/chair/add-section", section)
+  }
+
+  updatePaper(paperId: number, sectionId: number): Observable<Paper> {
+    return this.httpClient.get<Paper>(this.url + "/chair/set-section-for-paper/" + paperId + "/" + sectionId)
   }
 }

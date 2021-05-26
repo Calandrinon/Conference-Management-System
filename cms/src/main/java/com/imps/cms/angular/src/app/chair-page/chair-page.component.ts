@@ -11,6 +11,7 @@ import {Paper} from "../presentations/model/paper";
 import {Review} from "../presentations/model/review";
 import {ReviewStatus} from "../presentations/model/reviewStatus";
 import {NgForm} from "@angular/forms";
+import {Section} from "../model/section-model";
 
 @Component({
   selector: 'app-chair-page',
@@ -39,6 +40,13 @@ export class ChairPageComponent implements OnInit {
   public invitePanelShow: boolean = false
   public assignProposalsShow: boolean = false
   public resolveReviewsShow: boolean = false
+  public createSectionsShow: boolean = false
+
+  public sections: Section[]
+  public chairs: UserDto[]
+  public paperForSection: {[id: number]: Paper} = {}
+  public supervisorForSection: {[id: number]: UserDto} = {}
+  public acceptedPapers: Paper[]
   constructor(private chairService: ChairService) { }
 
   ngOnInit(): void {
@@ -47,24 +55,37 @@ export class ChairPageComponent implements OnInit {
     this.loggedUser = JSON.parse(localStorage.getItem('current-user'))
     this.getUsers();
     this.getProposals()
+    this.getSections()
+    this.getChairs()
+    this.getAcceptedPapers()
   }
 
   showInvitePanel() {
     this.resolveReviewsShow = false
     this.assignProposalsShow = false
+    this.createSectionsShow = false
     this.invitePanelShow = !this.invitePanelShow
   }
 
   showAssignProposalsPanel() {
     this.resolveReviewsShow = false
     this.invitePanelShow = false
+    this.createSectionsShow = false
     this.assignProposalsShow = !this.assignProposalsShow
   }
 
   showResolveReviewsPanel() {
     this.invitePanelShow = false
     this.assignProposalsShow = false
+    this.createSectionsShow = false
     this.resolveReviewsShow = !this.resolveReviewsShow
+  }
+
+  showCreateSectionPanel() {
+    this.invitePanelShow = false
+    this.assignProposalsShow = false
+    this.resolveReviewsShow = false
+    this.createSectionsShow = !this.createSectionsShow
   }
 
   private getUsers() {
@@ -299,5 +320,75 @@ export class ChairPageComponent implements OnInit {
           }
         )
     }
+  }
+
+
+  private getSections() {
+    this.chairService.getSections(this.conference.id).subscribe(
+      (response: Section[]) => {
+        console.log(response)
+        this.sections = response
+        for(let i = 0; i < this.sections.length; i++) {
+          this.getPaperForSection(this.sections[i])
+          this.getSupervisorForSection(this.sections[i])
+        }
+      }
+    )
+  }
+
+  private getPaperForSection(section: Section) {
+    this.chairService.getPaperForSection(section.id).subscribe(
+      (response: Paper) => {
+        console.log(response)
+        this.paperForSection[section.id] = response
+      }
+    )
+  }
+
+  private getChairs() {
+    this.chairService.getChairs(this.conference.id).subscribe(
+      (response: UserDto[]) => {
+        this.chairs = response;
+      }
+    )
+  }
+
+  private getAcceptedPapers() {
+    this.chairService.getAcceptedAndNotAssignedPapers(this.conference.id).subscribe(
+      (response:Paper[]) => {
+        this.acceptedPapers = response;
+      }
+    )
+  }
+
+  private getSupervisorForSection(section: Section) {
+    this.chairService.getSupervisorForSection(section.id).subscribe(
+      (response: UserDto) => {
+        console.log(response)
+        this.supervisorForSection[section.id] = response
+      }
+    )
+  }
+
+  addSection(createSection: NgForm) {
+    let section: Section = {
+      id: 0,
+      name: createSection.value.name,
+      supervisorId: createSection.value.supervisorId,
+      conferenceId: this.conference.id
+    }
+    console.log(section)
+    this.chairService.addSection(section).subscribe(
+      (response: Section) => {
+        console.log(response)
+        this.chairService.updatePaper(createSection.value.paper, response.id).subscribe(
+          (response: Paper) => {
+            console.log(response)
+            this.getSections()
+            this.getAcceptedPapers()
+          }
+        )
+      }
+    )
   }
 }

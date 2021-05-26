@@ -67,4 +67,10 @@ public class UserService {
                 .filter(user -> userRoleRepository.findByConferenceAndUser(conference, user).getIsPcMember())
                 .collect(Collectors.toList());
     }
+
+    public List<User> getChairs(Conference conference) {
+        return userRepository.findAll().stream()
+                .filter(user -> userRoleRepository.findByConferenceAndUser(conference, user).getIsChair())
+                .collect(Collectors.toList());
+    }
 }

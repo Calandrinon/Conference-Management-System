@@ -245,9 +245,62 @@ public class ChairController {
         return new ResponseEntity<>(ProposalConverter.convertToDto(proposal), HttpStatus.OK);
     }
 
+    @GetMapping("get-chairs/{conferenceId}")
+    public ResponseEntity<List<UserDto>> getChairs(@PathVariable Long conferenceId){
+        Conference conference = conferenceService.findById(conferenceId);
+        List<User> chairs = userService.getChairs(conference);
+        return new ResponseEntity<>(chairs.stream().map(UserConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("get-accepted-not-assigned-papers/{conferenceId}")
+    public ResponseEntity<List<PaperDto>> getAcceptedNotAssignedPapers(@PathVariable Long conferenceId){
+        Conference conference = conferenceService.findById(conferenceId);
+        List<Paper> papers = paperService.getAcceptedNotAssigned(conference);
+        return new ResponseEntity<>(papers.stream().map(PaperConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("get-sections/{conferenceId}")
+    public ResponseEntity<List<SectionDto>> getSections(@PathVariable Long conferenceId){
+        Conference conference = conferenceService.findById(conferenceId);
+        List<Section> sections = sectionService.getForConference(conference);
+        return new ResponseEntity<>(sections.stream().map(SectionConverter::convertToDto).collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @GetMapping("get-paper-for-section/{sectionId}")
+    public ResponseEntity<PaperDto> getPaperForSection(@PathVariable Long sectionId){
+        Section section = sectionService.findById(sectionId);
+        Paper paper = paperService.findBySection(section);
+        return new ResponseEntity<>(PaperConverter.convertToDto(paper), HttpStatus.OK);
+    }
+
+    @GetMapping("get-supervisor-for-section/{sectionId}")
+    public ResponseEntity<UserDto> getSupervisorForSection(@PathVariable Long sectionId){
+        Section section = sectionService.findById(sectionId);
+        User supervisor = section.getSupervisor();
+        return new ResponseEntity<>(UserConverter.convertToDto(supervisor), HttpStatus.OK);
+    }
+
+    @PostMapping("add-section")
+    public ResponseEntity<SectionDto> addSection(@Valid @RequestBody SectionDto sectionDto){
+        Section section = new Section();
+        section.setConference(conferenceService.findById(sectionDto.getConferenceId()));
+        section.setSupervisor(userService.findById(sectionDto.getSupervisorId()));
+        section.setName(sectionDto.getName());
+        section = sectionService.addSection(section);
+        return new ResponseEntity<>(SectionConverter.convertToDto(section), HttpStatus.OK);
+    }
+
+    @GetMapping("set-section-for-paper/{paperId}/{sectionId}")
+    public ResponseEntity<PaperDto> setSectionForPaper(@PathVariable Long paperId, @PathVariable Long sectionId){
+        Section section = sectionService.findById(sectionId);
+        Paper paper = paperService.findById(paperId);
+        paper.setSection(section);
+        paper = paperService.updateSection(paper);
+        return new ResponseEntity<>(PaperConverter.convertToDto(paper), HttpStatus.OK);
+    }
 
     @PostMapping("/section")
-    public ResponseEntity<Section> addSection(@Valid @RequestBody SectionDto sectionDto) throws URISyntaxException {
+    public ResponseEntity<Section> addSection1(@Valid @RequestBody SectionDto sectionDto) throws URISyntaxException {
         Section section = Section.builder()
                 .conference(conferenceService.findById(sectionDto.getConferenceId()))
                 .name(sectionDto.getName())
