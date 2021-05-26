@@ -20,6 +20,7 @@ export class FileUploadComponent implements OnInit {
   selected: Section = null;
   user: UserDto;
   conference: Conference
+  currentPaper: Paper
   @Output() fileIdEvent : EventEmitter<number> = new EventEmitter<number>();
   @Input() idOfPaper : number = null;
 
@@ -34,6 +35,8 @@ export class FileUploadComponent implements OnInit {
       this.sections = result;
       console.log("sections = ", this.sections);
     });
+
+
   }
 
 

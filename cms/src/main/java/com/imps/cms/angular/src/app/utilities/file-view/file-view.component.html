@@ -1,7 +1,7 @@
 <div>
-  <div *ngIf="text != null">
+  <div *ngIf="this.showF">
     {{text}}
   </div>
 
-  <button (click)="dis()">Show Text</button>
+  <button class="btn btn-dark" (click)="show()">Show Text</button>
 </div>

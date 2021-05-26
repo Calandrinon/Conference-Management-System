@@ -51,7 +51,7 @@ export class FileService {
 
   getFileContent(id: number) : any {
     return this.httpClient.get(this.url
-      + "files/"
+      + "chair/files/"
       + id,
       {responseType: 'blob'});
   }

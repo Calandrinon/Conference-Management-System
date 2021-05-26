@@ -47,8 +47,8 @@
                   <ul class="list-group">
                     <li class="list-group-item" *ngFor="let user of acceptedUsers[proposal.id]">
                       {{user.fullName}}: {{user.email}}
-                      <button *ngIf="!reviewExists(user, reviews[proposal.id])" class="btn btn-dark" (click)="setCurrentProposalAndUser(proposal, user)" data-bs-target="#assignProposalModal" data-bs-toggle="modal">Assign Proposal</button>
-                      <button *ngIf="reviewExists(user, reviews[proposal.id])" class="btn btn-dark" [disabled]="true">Proposal Already Assigned</button>
+                      <button *ngIf="!reviewExists(user, reviews[proposal?.id])" class="btn btn-dark" (click)="setCurrentProposalAndUser(proposal, user)" data-bs-target="#assignProposalModal" data-bs-toggle="modal">Assign Proposal</button>
+                      <button *ngIf="reviewExists(user, reviews[proposal?.id])" class="btn btn-dark" [disabled]="true">Proposal Already Assigned</button>
                     </li>
                   </ul>
                 </div>

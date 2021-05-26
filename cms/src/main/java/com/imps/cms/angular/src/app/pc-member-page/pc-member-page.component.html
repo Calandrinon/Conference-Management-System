@@ -77,6 +77,9 @@
           Topics: {{papers[proposalsToReview[review.id]?.paperId]?.topics}}
         </li>
         <li class="list-group-item">
+          File: <app-file-view [fileId]="papers[proposalsToReview[review.id]?.paperId]?.id"></app-file-view>
+        </li>
+        <li class="list-group-item">
           <button *ngIf="!reviewSubmitted[review.id]" class="btn btn-dark" (click)="setCurrentReviewAndProposal(review, proposalsToReview[review.id])" data-bs-target="#reviewModal" data-bs-toggle="modal">Review</button>
           <button *ngIf="reviewSubmitted[review.id]" class="btn btn-dark" [disabled]="true">Already Reviewed</button>
         </li>
