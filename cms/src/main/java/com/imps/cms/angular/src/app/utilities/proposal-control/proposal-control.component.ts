@@ -21,6 +21,7 @@ export class ProposalControlComponent implements OnInit {
   submitted: boolean = false;
   user: UserDto;
   conference: Conference
+  canPropose = false;
 
   defaultValue = {
     id : null
@@ -62,6 +63,11 @@ export class ProposalControlComponent implements OnInit {
           this.paperWebList = result;
           console.log(result);
         });
+
+    console.log(new Date())
+    console.log(this.conference.submitProposal)
+    if (this.conference.submitProposal < new Date())
+      this.canPropose = false;
   }
 
   uploadComplete($event: number) {

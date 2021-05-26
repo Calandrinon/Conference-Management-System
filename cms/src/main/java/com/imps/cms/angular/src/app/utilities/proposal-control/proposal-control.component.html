@@ -45,7 +45,9 @@
           class="btn btn-dark"
           data-bs-toggle="modal"
           data-bs-target="#exampleModal"
-          (click)="idToReturn=null; paperToSend=defaultValue">
+          (click)="idToReturn=null; paperToSend=defaultValue"
+          [disabled]="!canPropose ? 'disabled': null">
+
     {{buttonMessages[0]}}
   </button>
 </div>
