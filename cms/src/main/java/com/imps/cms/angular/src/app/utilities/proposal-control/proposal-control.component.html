@@ -37,7 +37,11 @@
 
 
 
-
+<div *ngIf="!checkDate(conference.createSections)" style="display: flex ; justify-content: center">
+  <button class="btn btn-dark" [disabled]="true">
+    Deadline to Submit Proposals has passed
+  </button>
+</div>
 
 <!-- Button trigger modal -->
 <div style="display: flex; justify-content: center">
