@@ -41,15 +41,17 @@
 
 <!-- Button trigger modal -->
 <div style="display: flex; justify-content: center">
-  <button type="button"
-          class="btn btn-dark"
-          data-bs-toggle="modal"
-          data-bs-target="#exampleModal"
-          (click)="idToReturn=null; paperToSend=defaultValue"
-          [disabled]="!canPropose ? 'disabled': null">
 
-    {{buttonMessages[0]}}
-  </button>
+  <div *ngIf="checkDate(conference.submitProposal)">
+    <button type="button"
+            class="btn btn-dark"
+            data-bs-toggle="modal"
+            data-bs-target="#exampleModal"
+            (click)="idToReturn=null; paperToSend=defaultValue">
+
+      {{buttonMessages[0]}}
+    </button>
+  </div>
 </div>
 <!-- Modal -->
 

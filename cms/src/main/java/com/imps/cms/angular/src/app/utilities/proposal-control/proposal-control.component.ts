@@ -41,6 +41,8 @@ export class ProposalControlComponent implements OnInit {
 
   idToReturn : number = null;
 
+  today = null;
+
   buttonMessages = {
     0:"Add Proposal"
     , 1:"Cancel"
@@ -64,10 +66,11 @@ export class ProposalControlComponent implements OnInit {
           console.log(result);
         });
 
-    console.log(new Date())
-    console.log(this.conference.submitProposal)
-    if (this.conference.submitProposal < new Date())
-      this.canPropose = false;
+    this.today = new Date();
+  }
+
+  checkDate(givenDate: Date) {
+      return this.today < givenDate;
   }
 
   uploadComplete($event: number) {
