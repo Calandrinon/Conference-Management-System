@@ -21,15 +21,29 @@ export class ProposalControlComponent implements OnInit {
   submitted: boolean = false;
   user: UserDto;
   conference: Conference
+
+  defaultValue = {
+    id : null
+    , title : ""
+    , subject : ""
+    , topics : ""
+    , keywords : ""
+    , userId : null
+    , sectionId : null
+    , status : ""
+    , proposalId : null
+  };
+
   selectedPaper: PaperWeb = null;
+
+  paperToSend : PaperWeb = this.defaultValue;
+
   idToReturn : number = null;
 
   buttonMessages = {
     0:"Add Proposal"
     , 1:"Cancel"
   }
-  show: boolean = true;
-
 
   constructor(
     private fileService : FileService
@@ -50,16 +64,6 @@ export class ProposalControlComponent implements OnInit {
         });
   }
 
-  showReviews(paper : PaperWeb) {
-    this.reviewService.getReviewsForProposal(paper.proposalId)
-      .subscribe(
-        result =>
-        {
-          this.reviewList = result;
-          console.log(result);
-        });
-  }
-
   uploadComplete($event: number) {
     document.getElementById('exampleModal').click();
     this.showUpload = false;
@@ -73,11 +77,14 @@ export class ProposalControlComponent implements OnInit {
         , comments : null
       }).subscribe(() => {
         this.ngOnInit();
+        this.selectedPaper = this.defaultValue;
       });
     }else{
-      this.ngOnInit()
+      this.ngOnInit();
+      this.selectedPaper = this.defaultValue;
     }
     this.idToReturn = null;
+
   }
 
   select(paper) {

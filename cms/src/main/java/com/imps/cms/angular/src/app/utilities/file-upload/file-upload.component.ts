@@ -6,6 +6,7 @@ import {SectionService} from "../../other-services/section-service";
 import {UserDto} from "../../authentication/model/UserDto";
 import {Conference} from "../../presentations/model/conference";
 import {Paper} from "../shared/file-model";
+import {PaperWeb} from "../shared/paper-web-model";
 
 
 @Component({
@@ -20,9 +21,15 @@ export class FileUploadComponent implements OnInit {
   selected: Section = null;
   user: UserDto;
   conference: Conference
-  currentPaper: Paper
+  @Input() currentPaper: PaperWeb;
   @Output() fileIdEvent : EventEmitter<number> = new EventEmitter<number>();
   @Input() idOfPaper : number = null;
+  buttonValue = {
+    0 : "Add"
+    , 1 : "Update"
+  }
+
+  buttonText = this.buttonValue[((id) => id == null ? 0 : 1)(this.idOfPaper)];
 
   constructor(private fileService : FileService, private sectionService : SectionService) { }
 
@@ -35,10 +42,7 @@ export class FileUploadComponent implements OnInit {
       this.sections = result;
       console.log("sections = ", this.sections);
     });
-
-
   }
-
 
   // handleFileInput(files: FileList) {
   //   this.fileToUpload = files.item(0);

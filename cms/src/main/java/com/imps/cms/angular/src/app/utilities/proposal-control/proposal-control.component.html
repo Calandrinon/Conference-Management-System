@@ -26,8 +26,8 @@
         Status: {{paper.status}}
         <button [ngStyle]="{'display': paper.status == 'ACCEPTED' ? 'block' : 'none' }"
                 class="btn btn-dark"
-                type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                (click)="idToReturn=selectedPaper.id">
+                type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                (click)="idToReturn=selectedPaper.id; paperToSend=paper">
           Update
         </button>
       </div>
@@ -40,7 +40,11 @@
 
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="idToReturn=null">
+<button type="button"
+        class="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        (click)="idToReturn=null; paperToSend=defaultValue">
   {{buttonMessages[0]}}
 </button>
 <!-- Modal -->
@@ -63,7 +67,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-file-upload [idOfPaper]="idToReturn" (fileIdEvent)="uploadComplete($event)"></app-file-upload>
+        <app-file-upload [currentPaper]="paperToSend"
+                         [idOfPaper]="idToReturn"
+                         (fileIdEvent)="uploadComplete($event)"></app-file-upload>
       </div>
     </div>
   </div>

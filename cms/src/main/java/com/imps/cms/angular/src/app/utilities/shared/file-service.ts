@@ -57,11 +57,9 @@ export class FileService {
   }
 
   getPaperWebFormat(id: number) : Observable<PaperWeb[]>{
-    let ooga : any = this.httpClient.get<PaperWeb[]>(this.url
+    return this.httpClient.get<PaperWeb[]>(this.url
       + "chair/webPapers/"
       + id
     );
-    console.log(ooga);
-    return ooga;
   }
 }
