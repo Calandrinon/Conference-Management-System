@@ -1,30 +1,46 @@
-<table class="table table-dark table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Title</th>
-      <th scope="col">Subject</th>
-      <th scope="col">Topics</th>
-      <th scope="col">Keywords</th>
-      <th scope="col">Status</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let paper of paperWebList">
-      <th scope="row">{{paper.title}}</th>
-      <td>{{paper.subject}}</td>
-      <td>{{paper.topics}}</td>
-      <td>{{paper.keywords}}</td>
-      <td>{{paper.status}}</td>
-    </tr>
-  </tbody>
+<br>
 
-  <ol>
-    <li *ngFor="let rev of reviewList">{{rev.notes}}</li>
-  </ol>
-</table>
+<div class="list-group"
+     *ngFor="let paper of paperWebList" (click)="select(paper)">
+  <ul>
+    <li>
+      <div href="#" class="list-group-item list-group-item-action active" aria-current="true">
+        {{paper.title}}
+      </div>
+    </li>
+
+    <li [ngStyle]="{'display': paper==selectedPaper ? 'block' : 'none' }">
+      <div class="list-group-item list-group-item-action">Subject: {{paper.subject}}</div>
+    </li>
+
+    <li [ngStyle]="{'display': paper==selectedPaper ? 'block' : 'none' }">
+      <div class="list-group-item list-group-item-action">Topics: {{paper.topics}}</div>
+    </li>
+
+    <li [ngStyle]="{'display': paper==selectedPaper ? 'block' : 'none' }">
+      <div class="list-group-item list-group-item-action"> Keywords: {{paper.keywords}}</div>
+    </li>
+
+    <li [ngStyle]="{'display': paper==selectedPaper ? 'block' : 'none' }">
+      <div class="list-group-item list-group-item-action">
+        Status: {{paper.status}}
+        <button [ngStyle]="{'display': paper.status == 'ACCEPTED' ? 'block' : 'none' }"
+                class="btn btn-dark"
+                type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                (click)="idToReturn=selectedPaper.id">
+          Update
+        </button>
+      </div>
+    </li>
+  </ul>
+</div>
+
+
+
+
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="idToReturn=null">
   {{buttonMessages[0]}}
 </button>
 <!-- Modal -->
@@ -47,7 +63,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <app-file-upload (fileIdEvent)="uploadComplete($event)"></app-file-upload>
+        <app-file-upload [idOfPaper]="idToReturn" (fileIdEvent)="uploadComplete($event)"></app-file-upload>
       </div>
     </div>
   </div>

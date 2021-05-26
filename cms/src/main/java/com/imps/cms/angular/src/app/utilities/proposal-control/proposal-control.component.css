@@ -1,0 +1,12 @@
+.active {
+  background-color: darkslategrey;
+}
+
+.list-group-item {
+  width: 85%;
+  left: 5%;
+}
+
+ul {
+  list-style: none;
+}
