@@ -386,7 +386,7 @@ public class ChairController {
         );
     }
 
-    @PostMapping("/update-paper/{title}/{subject}/{keywords}/{topics}/{userId}/{sectionId}/{conferenceId}/{paperId}")
+    @PostMapping("/update-paper/{title}/{subject}/{keywords}/{topics}/{userId}/{conferenceId}/{paperId}")
     public ResponseEntity<Long> updatePaper(
             @Valid @RequestBody MultipartFile file
             , @PathVariable String title
@@ -394,7 +394,6 @@ public class ChairController {
             , @PathVariable String keywords
             , @PathVariable String topics
             , @PathVariable Long userId
-            , @PathVariable Long sectionId
             , @PathVariable Long conferenceId
             , @PathVariable Long paperId) throws IOException {
         return ResponseEntity.ok(
@@ -405,7 +404,6 @@ public class ChairController {
                         , keywords
                         , topics
                         , userService.findById(userId)
-                        , sectionService.findById(sectionId)
                         , conferenceService.findById(conferenceId)
                         , paperId
                 )

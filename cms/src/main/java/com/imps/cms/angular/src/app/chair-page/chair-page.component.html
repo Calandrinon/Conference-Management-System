@@ -193,7 +193,7 @@
           Supervisor: {{supervisorForSection[section.id]?.fullName}} Email: {{supervisorForSection[section.id]?.email}}
         </li>
         <li class="list-group-item">
-          Paper: <app-file-view [fileId]="paperForSection[section.id]?.id"></app-file-view>
+          Paper: <app-file-view *ngIf="paperForSection[section.id] != null" [fileId]="paperForSection[section?.id]?.id"></app-file-view>
         </li>
       </ul>
     </li>

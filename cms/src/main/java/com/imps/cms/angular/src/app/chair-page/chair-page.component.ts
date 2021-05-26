@@ -262,7 +262,7 @@ export class ChairPageComponent implements OnInit {
 
   reviewExists(user: UserDto, reviews: Review[]) {
     if(reviews === null)return false
-    for(let i = 0; i < reviews.length; i++){
+    for(let i = 0; i < reviews?.length; i++){
       if(reviews[i].userId === user.id){
         return true
       }
@@ -339,6 +339,7 @@ export class ChairPageComponent implements OnInit {
   private getPaperForSection(section: Section) {
     this.chairService.getPaperForSection(section.id).subscribe(
       (response: Paper) => {
+        console.log("Paper for section")
         console.log(response)
         this.paperForSection[section.id] = response
       }
